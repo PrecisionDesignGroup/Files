@@ -19,9 +19,6 @@ html.pg-ready .pg-toggle{display:block}
 .pg-view{position:fixed;left:0;right:0;bottom:0;top:var(--pg-top,64px);z-index:100;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;opacity:0;transition:opacity .35s ease}
 .pg-view.on{opacity:1}
 .pg-in{padding:18px var(--pg-x,16px) calc(110px + env(safe-area-inset-bottom,0px))}
-.pg-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:2px 2px 16px}
-.pg-head h2{margin:0;font-family:var(--f-display);font-weight:900;font-size:clamp(28px,6vw,52px);line-height:.9;text-transform:uppercase;color:var(--ink)}
-.pg-head span{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .pg-grid{column-count:2;column-gap:10px}
 @media (min-width:640px){.pg-grid{column-count:3;column-gap:14px}}
 @media (min-width:1000px){.pg-grid{column-count:4;column-gap:16px}}
@@ -63,7 +60,7 @@ const tg=document.createElement("div");tg.className="pg-toggle";
 tg.innerHTML=`<button type="button" aria-label="Show the portfolio as a grid">${gridIcon}<span>Grid view</span></button>`;
 wrap.appendChild(tg);
 const view=document.createElement("div");view.className="pg-view";view.setAttribute("aria-label","Portfolio grid");view.hidden=true;
-view.innerHTML=`<div class="pg-in"><div class="pg-head"><h2></h2><span></span></div><div class="pg-grid"></div></div>`;
+view.innerHTML=`<div class="pg-in"><div class="pg-grid"></div></div>`;
 const back=document.createElement("div");back.className="pg-back";back.hidden=true;
 back.innerHTML=`<button type="button" aria-label="Back to card view">${cardIcon}<span>Card view</span></button>`;
 document.body.append(view,back);
@@ -100,8 +97,6 @@ function tile(p,i){
 }
 function render(){
   const L0=list(),cat=typeof pcat!=="undefined"?pcat:"All";
-  view.querySelector(".pg-head h2").textContent=cat==="All"?"All projects":cat;
-  view.querySelector(".pg-head span").textContent=`${L0.length} project${L0.length===1?"":"s"}`;
   if(io)io.disconnect();grid.innerHTML="";
   if(!L0.length){grid.innerHTML=`<p class="pg-empty">${esc(cat)} projects coming soon.</p>`;return}
   const tiles=L0.map(tile);tiles.forEach(t=>grid.appendChild(t));
