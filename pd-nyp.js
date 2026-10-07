@@ -1,6 +1,7 @@
 /* ---------- SHOP: "Name Your Price" promotion card ----------
    First card in Shop > Graphics while the promotion runs. Live countdown on the card and in the sheet; tapping the card,
    its pill button, swiping it right or the cart button opens the offer sheet (it never goes in the cart).
+   Also the 2nd card in the portfolio (under "All").
    Sheet: follow on Instagram + X (unlocks the form), the offer form, and a share bonus. Offers go to Webflow Forms through
    the hidden "Studio Inquiry" form (same route as the service intakes), with an email fallback.
    To run it again: change END (and COVER for a new photo). After END the card stops showing. */
@@ -19,6 +20,9 @@ const NYP={id:"nyp",nyp:true,kind:"Graphics",title:"Name Your Price",type:"Limit
   blurb:"For one week only, you set the price. Tell us what you want made and what you want to pay. We'll accept or counter your offer within 1–3 hours, and if we accept, work starts the next day.",
   style:"type",bg:"#F2C649",fg:"#141414",inks:["#F2C649","#141414","#F4F2EC"],client:"Limited-time offer",year:"Shop",cat:"Graphics"};
 {const at=SHOP.findIndex(p=>p.kind==="Graphics");SHOP.splice(at<0?SHOP.length:at,0,NYP)}
+/* the same offer as the 2nd card in the portfolio, like an ad between projects (only under "All") */
+const PNYP=Object.assign({},NYP,{kind:undefined,cat:"Limited time",formats:[],gallery:[],image:COVER,imageBg:"#101010"});
+const ppos=1;
 
 const css=`
 .nyp-art{position:absolute;inset:0;overflow:hidden;container-type:size;background:#F2C649;color:#141414}
@@ -80,7 +84,7 @@ html.shopsw .dcard[data-pid="nyp"] .foot>span.mono::after{content:none}
 .nyp-bonus .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .nyp-toggle{position:absolute;left:10px;bottom:82px;height:50px;box-sizing:border-box;z-index:20;display:none;padding:5px;border-radius:999px;background:color-mix(in srgb,var(--surface) 72%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 24px -12px var(--shadow)}
 html.nyp-ready .nyp-toggle{display:block}
-html.nyp-ready .gm-toggle{display:none!important}
+html.nyp-ready .gm-toggle,html.nyp-ready .pg-toggle{display:none!important}
 .nyp-toggle button{display:inline-flex;align-items:center;gap:5px;height:40px;padding:0 12px 0 10px;border-radius:999px;background:#F2C649;border:1px solid #F2C649;font:inherit;font-weight:700;font-size:11px;letter-spacing:-.01em;line-height:1.05;color:#141414;cursor:pointer;white-space:nowrap;transition:transform .15s;animation:nypNudge 2.8s ease-in-out 1.2s infinite}
 .nyp-toggle button:active{transform:scale(.94)}
 .nyp-toggle svg{width:13px;height:13px;flex:none}
@@ -120,7 +124,11 @@ document.addEventListener("pointerdown",e=>{if(e.target.closest&&e.target.closes
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(".dcard .nyp-cta");if(b){e.stopPropagation();e.preventDefault();openNYP()}},true);
 /* tap / swipe up / Enter */
 if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){return p&&p.nyp?openNYP():_op.apply(this,arguments)}}
-if(typeof openDetail==="function"){const _od=openDetail;openDetail=function(p){return p&&p.nyp?openNYP():_od.apply(this,arguments)}}
+if(typeof openDetail==="function"){let lastI=-1;const _od=openDetail;openDetail=function(p){
+  if(p&&p.nyp){const sh=document.querySelector(".scrim .sheet");const L0=PL(),i=L0.indexOf(p);
+    if(sh&&!sh.classList.contains("nyp")&&lastI>=0&&i>=0&&L0.length>1)return openDetail(L0[(i+(lastI>i?-1:1)+L0.length)%L0.length]);
+    return openNYP()}
+  lastI=PL().indexOf(p);return _od.apply(this,arguments)}}
 /* swipe right / cart button: never goes in the cart, opens the sheet instead */
 if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
   const p=idx<L().length?L()[idx]:null;if(!(p&&p.nyp)||dir<=0)return _fly.apply(this,arguments);
@@ -131,7 +139,11 @@ if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
 /* desktop info panel: show when it ends instead of "Coming soon" */
 if(typeof renderMeta==="function"){const _rm=renderMeta;renderMeta=function(){const r=_rm.apply(this,arguments);
   const p=typeof mode!=="undefined"&&mode==="wallet"&&idx<L().length?L()[idx]:null,s=document.querySelector("#swipeMeta .sprice span");
-  if(p&&p.nyp&&s)s.textContent="Ends Wed, Oct 14 · 6 PM ET";return r}}
+  if(p&&p.nyp&&s)s.textContent="Ends Wed, Oct 14 · 6 PM ET";
+  const m=document.getElementById("swipeMeta"),q=typeof mode!=="undefined"&&mode==="swipe"&&idx<L().length?L()[idx]:null;
+  if(m&&q&&q.nyp)m.innerHTML=`<div class="idx">${pad(idx+1)}<small> / ${pad(L().length)}</small></div><h2>Name Your Price</h2><p>${esc(q.blurb)}</p>
+    <dl class="spec mono"><dt>What</dt><dd>Limited-time offer</dd><dt>Ends</dt><dd>Wed, Oct 14 · 6 PM ET</dd><dt>Projects</dt><dd>${TYPES.join(" · ")}</dd></dl>`;
+  return r}}
 /* live countdowns */
 setInterval(()=>{const t=chipText(),p=parts();
   document.querySelectorAll("[data-nyp-cd]").forEach(e=>{if(e.textContent!==t)e.textContent=t});
@@ -262,7 +274,7 @@ if(wrap){wrap.appendChild(tg);tg.querySelector("button").onclick=e=>{e.stopPropa
 function fitT(){const c=wrap&&wrap.querySelector(".controls");tg.classList.remove("nyp-tight","nyp-stack");if(!c)return;
   const ok=()=>{const a=tg.getBoundingClientRect(),b=c.getBoundingClientRect();return !(a.width&&b.width&&a.right>b.left-4)};
   if(ok())return;tg.classList.add("nyp-tight");if(ok())return;tg.classList.remove("nyp-tight");tg.classList.add("nyp-stack")}
-function syncT(){const p=typeof mode!=="undefined"&&mode==="wallet"&&idx<L().length?L()[idx]:null,on=!!(p&&p.nyp);
+function syncT(){const p=typeof mode!=="undefined"&&idx<L().length?L()[idx]:null,on=!!(p&&p.nyp);
   document.documentElement.classList.toggle("nyp-ready",on);if(on)requestAnimationFrame(fitT)}
 if(typeof renderMeta==="function"){const _rm2=renderMeta;renderMeta=function(){const r=_rm2.apply(this,arguments);syncT();return r}}
 if(typeof setMode==="function"){const _sm=setMode;setMode=function(){const r=_sm.apply(this,arguments);syncT();return r}}
@@ -294,7 +306,10 @@ let Z=5;
 
 /* the shop may already be on screen: redraw it with the card in front */
 if(typeof mode!=="undefined"&&mode==="wallet"&&typeof scat!=="undefined"&&scat==="Graphics"){idx=0;try{history.length=0}catch(e){}try{renderDeck();renderMeta()}catch(e){}}
+if(typeof PROJECTS!=="undefined"&&PROJECTS.length>ppos){PROJECTS.splice(ppos,0,PNYP);
+  if(typeof mode!=="undefined"&&mode==="swipe"&&pcat==="All"&&idx<=ppos+2){try{renderDeck();renderMeta()}catch(e){}}}
 try{if(typeof renderPockets==="function")renderPockets()}catch(e){}
+syncT();
 /* shared link: /shop?nyp=1 opens the offer straight away */
 if(/[?&]nyp\b/.test(location.search)){
   if(typeof setMode==="function"&&mode!=="wallet")setMode("wallet");
