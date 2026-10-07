@@ -111,12 +111,12 @@ function setTop(){const h=document.querySelector("header"),r=h&&h.getBoundingCli
 function openGrid(){
   if(open||mode!=="swipe")return;open=true;setTop();view.hidden=false;back.hidden=false;view.scrollTop=0;render();
   requestAnimationFrame(()=>{view.classList.add("on");back.classList.add("on")});
-  try{history.replaceState(null,"","#grid")}catch(e){}
+  try{window.history.replaceState(null,"","#grid")}catch(e){}
   if(typeof sfx==="function")try{sfx("soft")}catch(e){}
 }
 function close(){
   if(!open)return;open=false;view.classList.remove("on");back.classList.remove("on");
-  if(location.hash==="#grid")try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+  if(location.hash==="#grid")try{window.history.replaceState(null,"",location.pathname+location.search)}catch(e){}
   setTimeout(()=>{if(!open){view.hidden=true;back.hidden=true;if(io)io.disconnect();grid.innerHTML=""}},reduce?0:380);
 }
 tg.querySelector("button").onclick=openGrid;
