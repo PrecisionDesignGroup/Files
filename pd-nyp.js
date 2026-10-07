@@ -46,10 +46,23 @@ html.shopsw .dcard[data-pid="nyp"] .foot>span.mono::after{content:none}
 .bigart{position:relative}.bigart .nyp-art{position:relative;width:100%;height:100%;min-height:260px}
 .bigart .nyp-art svg.nyp-tag{bottom:12%;right:8%}
 /* sheet */
-.nyp-cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.nyp-cd div{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:10px 6px 8px;text-align:center}
-.nyp-cd b{display:block;font-family:var(--f-display);font-weight:900;font-size:34px;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
-.nyp-cd span{font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.nyp-cd{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(6px,2vw,14px);padding:6px 2px 4px}
+.nyp-cd>div{position:relative;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;container-type:inline-size;
+  box-shadow:0 6px 14px -6px rgba(0,0,0,.55),inset 0 0 0 1px rgba(0,0,0,.08);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.nyp-cd>div::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.28),transparent 45%),repeating-linear-gradient(115deg,rgba(0,0,0,.025) 0 2px,transparent 2px 5px)}
+.nyp-cd b{position:relative;display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(22px,38cqw,52px);line-height:.9;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.nyp-cd span{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(8px,11.5cqw,13px);letter-spacing:.04em;text-transform:uppercase;line-height:1}
+.nyp-cd .sk-d{background:#F7A51F;color:#3A2509;transform:rotate(-6deg)}
+.nyp-cd .sk-d span{border-bottom:2px dashed rgba(58,37,9,.55);padding-bottom:2px;margin-bottom:3px}
+.nyp-cd .sk-h{background:#EE5A1C;transform:rotate(4deg)}
+.nyp-cd .sk-h::after{content:"";position:absolute;inset:10%;background:#F4E9D2;clip-path:polygon(50% 0,59% 13%,74% 6%,76% 22%,93% 25%,86% 40%,100% 50%,86% 60%,93% 75%,76% 78%,74% 94%,59% 87%,50% 100%,41% 87%,26% 94%,24% 78%,7% 75%,14% 60%,0 50%,14% 40%,7% 25%,24% 22%,26% 6%,41% 13%)}
+.nyp-cd .sk-h>*{z-index:1;color:#E2501A}
+.nyp-cd .sk-m{background:#FF2A8E;color:#1B0A12;transform:rotate(-3deg)}
+.nyp-cd .sk-m::after{content:"";position:absolute;inset:6%;border-radius:50%;border:3px dotted rgba(27,10,18,.75);pointer-events:none}
+.nyp-cd .sk-s{background:#9EF25B;color:#0F1A07;transform:rotate(7deg)}
+.nyp-cd .sk-s span{font-style:italic}
+.nyp-cd>div.tk{transform:rotate(7deg) scale(1.07)}
 .nyp-steps{display:flex;flex-direction:column;gap:6px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.45}
 .nyp-steps li{display:flex;gap:10px}.nyp-steps li>i{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-style:normal;font-family:var(--f-mono);font-size:11px;font-weight:600}
 .nyp-follow{display:flex;flex-wrap:wrap;gap:8px}
@@ -65,6 +78,23 @@ html.shopsw .dcard[data-pid="nyp"] .foot>span.mono::after{content:none}
 .nyp-bonus{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:10px;font-size:13px;line-height:1.5;background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
 .nyp-bonus b{color:var(--ink)}
 .nyp-bonus .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.nyp-toggle{position:absolute;left:10px;bottom:82px;height:50px;box-sizing:border-box;z-index:20;display:none;padding:5px;border-radius:999px;background:color-mix(in srgb,var(--surface) 72%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 24px -12px var(--shadow)}
+html.nyp-ready .nyp-toggle{display:block}
+html.nyp-ready .gm-toggle{display:none!important}
+.nyp-toggle button{display:inline-flex;align-items:center;gap:5px;height:40px;padding:0 12px 0 10px;border-radius:999px;background:#F2C649;border:1px solid #F2C649;font:inherit;font-weight:700;font-size:11px;letter-spacing:-.01em;line-height:1.05;color:#141414;cursor:pointer;white-space:nowrap;transition:transform .15s;animation:nypNudge 2.8s ease-in-out 1.2s infinite}
+.nyp-toggle button:active{transform:scale(.94)}
+.nyp-toggle svg{width:13px;height:13px;flex:none}
+.nyp-toggle.nyp-tight button{font-size:10px;padding:0 9px;white-space:normal;text-align:left;width:66px;line-height:1.05}
+.nyp-toggle.nyp-tight button>svg{display:none}
+.nyp-toggle.nyp-stack{bottom:138px}
+@keyframes nypNudge{0%,86%,100%{transform:none}90%{transform:rotate(-3deg) scale(1.04)}95%{transform:rotate(2deg) scale(1.04)}}
+@media (prefers-reduced-motion:reduce){.nyp-toggle button{animation:none}}
+.nyp-stk{inset:0;pointer-events:none;z-index:210}
+.nyp-stk img{position:absolute;height:auto;pointer-events:auto;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;filter:drop-shadow(0 8px 12px rgba(0,0,0,.45));
+  transform:rotate(var(--r));animation:nypSlap .55s cubic-bezier(.2,1.6,.4,1) var(--d) both}
+.nyp-stk img.grab{cursor:grabbing;filter:drop-shadow(0 16px 22px rgba(0,0,0,.5));scale:1.06}
+@keyframes nypSlap{0%{opacity:0;transform:rotate(calc(var(--r) - 25deg)) scale(1.9)}60%{opacity:1}100%{opacity:1;transform:rotate(var(--r)) scale(1)}}
+@media (prefers-reduced-motion:reduce){.nyp-stk img{animation:none}}
 .nyp-end{padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:14px}
 `;
 const st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
@@ -72,6 +102,7 @@ const st=document.createElement("style");st.textContent=css;document.head.append
 const pad2=n=>String(n).padStart(2,"0");
 function parts(){const s=Math.floor(left()/1000);return{d:Math.floor(s/86400),h:Math.floor(s%86400/3600),m:Math.floor(s%3600/60),s:s%60}}
 const chipText=()=>{if(left()<=0)return"Offer ended";const p=parts();return`${p.d}d ${pad2(p.h)}:${pad2(p.m)}:${pad2(p.s)}`};
+const tagIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.6" fill="currentColor"/></svg>';
 const arrow='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
 const tag=`<svg class="nyp-tag" viewBox="0 0 80 100" aria-hidden="true"><path d="M14 4h52l10 14v74a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V18z" fill="#141414"/><circle cx="40" cy="20" r="6" fill="#F2C649"/><text x="40" y="70" text-anchor="middle" font-family="Big Shoulders Display,Impact,sans-serif" font-weight="900" font-size="40" fill="#F2C649">$?</text></svg>`;
 function art(uid){
@@ -79,7 +110,7 @@ function art(uid){
   return `<div class="nyp-art${ph?" ph":""}">${ph?`<img class="nyp-ph" src="${esc(COVER)}" alt="Name Your Price" draggable="false">`:`${tag}<div class="nyp-type">Name<br><em>your</em><br>price</div>`}
     <i class="nyp-fr"></i>
     <span class="nyp-chip" aria-label="Time left"><i></i>Ends in <b data-nyp-cd>${chipText()}</b></span>
-    <button type="button" class="nyp-cta">Click here to name your price ${arrow}</button></div>`;
+    </div>`;
 }
 const _artFor=artFor;
 artFor=function(p,uid){return p&&p.nyp?art(uid):_artFor.apply(this,arguments)};
@@ -104,7 +135,8 @@ if(typeof renderMeta==="function"){const _rm=renderMeta;renderMeta=function(){co
 /* live countdowns */
 setInterval(()=>{const t=chipText(),p=parts();
   document.querySelectorAll("[data-nyp-cd]").forEach(e=>{if(e.textContent!==t)e.textContent=t});
-  document.querySelectorAll("[data-nyp-big]").forEach(e=>{const v=pad2(p[e.dataset.nypBig]);if(e.textContent!==v)e.textContent=v});
+  document.querySelectorAll("[data-nyp-big]").forEach(e=>{const v=pad2(p[e.dataset.nypBig]);if(e.textContent!==v){e.textContent=v;
+    if(e.dataset.nypBig==="s"&&!reduce){const d=e.parentNode;d.classList.add("tk");setTimeout(()=>d.classList.remove("tk"),180)}}});
   if(left()<=0){const f=document.querySelector(".nyp-form");if(f&&!f.dataset.ended){f.dataset.ended=1;f.outerHTML=`<div class="nyp-end"><b>This offer has ended.</b> Follow us to catch the next one.</div>`}}
 },1000);
 
@@ -121,10 +153,9 @@ function openNYP(){
   const s=showSheet(`<div class="bigart">${art("xnyp")}</div>
   <div class="body">
     <div class="top"><span class="mono">Graphics · Limited time</span><button class="x" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-    <div><div class="client">Limited-time offer</div><h3>Name Your Price</h3></div>
     <div class="nyp-cd" role="timer" aria-label="Time left in the offer">
-      <div><b data-nyp-big="d">${pad2(p.d)}</b><span>Days</span></div><div><b data-nyp-big="h">${pad2(p.h)}</b><span>Hours</span></div>
-      <div><b data-nyp-big="m">${pad2(p.m)}</b><span>Min</span></div><div><b data-nyp-big="s">${pad2(p.s)}</b><span>Sec</span></div></div>
+      <div class="sk-d"><span>Days</span><b data-nyp-big="d">${pad2(p.d)}</b></div><div class="sk-h"><span>Hours</span><b data-nyp-big="h">${pad2(p.h)}</b></div>
+      <div class="sk-m"><span>Min</span><b data-nyp-big="m">${pad2(p.m)}</b></div><div class="sk-s"><span>Sec</span><b data-nyp-big="s">${pad2(p.s)}</b></div></div>
     <p>${esc(NYP.blurb)}</p>
     <ol class="nyp-steps"><li><i>1</i><span>Follow Precision Design on Instagram <b>and</b> X.</span></li><li><i>2</i><span>Tell us about your project and what you want to pay.</span></li><li><i>3</i><span>We'll accept or counter your offer within <b>1–3 hours</b>. If we accept, we start the next day.</span></li></ol>
     <form class="cform sform nyp-form" data-locked="${both?0:1}" novalidate>
@@ -221,6 +252,45 @@ function wire(s){
   });
 }
 window.openNYP=openNYP;
+
+/* ---- "Name your price" pill, inline with the card's controls (same spot as See on Garment / Grid view) ---- */
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const wrap=document.querySelector("#swipeView .deckwrap");
+const tg=document.createElement("div");tg.className="nyp-toggle";
+tg.innerHTML=`<button type="button" aria-label="Name your price: open the offer">${tagIco}<span>Name your price</span>${arrow}</button>`;
+if(wrap){wrap.appendChild(tg);tg.querySelector("button").onclick=e=>{e.stopPropagation();openNYP()}}
+function fitT(){const c=wrap&&wrap.querySelector(".controls");tg.classList.remove("nyp-tight","nyp-stack");if(!c)return;
+  const ok=()=>{const a=tg.getBoundingClientRect(),b=c.getBoundingClientRect();return !(a.width&&b.width&&a.right>b.left-4)};
+  if(ok())return;tg.classList.add("nyp-tight");if(ok())return;tg.classList.remove("nyp-tight");tg.classList.add("nyp-stack")}
+function syncT(){const p=typeof mode!=="undefined"&&mode==="wallet"&&idx<L().length?L()[idx]:null,on=!!(p&&p.nyp);
+  document.documentElement.classList.toggle("nyp-ready",on);if(on)requestAnimationFrame(fitT)}
+if(typeof renderMeta==="function"){const _rm2=renderMeta;renderMeta=function(){const r=_rm2.apply(this,arguments);syncT();return r}}
+if(typeof setMode==="function"){const _sm=setMode;setMode=function(){const r=_sm.apply(this,arguments);syncT();return r}}
+addEventListener("resize",()=>{if(document.documentElement.classList.contains("nyp-ready"))fitT()});
+
+/* ---- real stickers from the cover, slapped around the open card; drag them around ---- */
+const SK="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@c72b841e0971d8a7f82a1b59a116b05538f2069b/stickers/";
+const STK=[["pink198",150,-12],["three25",170,8],["c299",160,10],["green479",128,-8],["radio",150,-6],["star100o",140,14],["red_npp",190,-5],["blue100",120,9],["y23",170,6],["c387",140,-10],["barcode",180,4],["c596",120,12]];
+function scatter(sc){
+  const sheet=sc&&sc.querySelector(".sheet");if(!sheet)return;
+  const box=document.createElement("div");box.className="nyp-stk";
+  const r=sheet.getBoundingClientRect(),big=innerWidth>=1240&&r.left>=150;
+  let spots;
+  if(big){const L0=r.left,R0=r.right,T0=r.top,B0=r.bottom,W=r.width,H=r.height;
+    spots=[[L0-112,T0+24,1],[L0-138,T0+H*.4,1],[L0-108,B0-200,1],[R0-4,T0+120,0],[R0-10,T0+H*.5,0],[R0-6,B0-190,0]];box.style.position="fixed"}
+  else{const bg=sheet.querySelector(".bigart");if(!bg)return;const w=bg.clientWidth,h=bg.clientHeight;box.style.position="absolute";
+    spots=[[-14,h-58],[w-96,h-70],[w*.42,h-44]];bg.appendChild(box)}
+  spots.forEach(([x,y,lft],i)=>{const [n,w,rot]=STK[(i*5+Math.floor(Date.now()/86400000))%STK.length];const im=document.createElement("img");
+    im.src=SK+n+".webp";im.alt="";im.draggable=false;const sz=big?Math.min(w,150):Math.round(w*.55);if(big&&lft)x=r.left-sz*.78+(x-r.left+118)*.2;
+    im.style.cssText=`left:${Math.round(x)}px;top:${Math.round(y)}px;width:${sz}px;--r:${rot}deg;--d:${180+i*90}ms`;box.appendChild(im);drag(im)});
+  if(big)sc.appendChild(box);
+}
+function drag(im){let s=null;im.addEventListener("pointerdown",e=>{e.preventDefault();e.stopPropagation();im.setPointerCapture(e.pointerId);
+    const m=new DOMMatrix(getComputedStyle(im).transform);s={x:e.clientX,y:e.clientY,ox:+im.dataset.x||0,oy:+im.dataset.y||0};im.classList.add("grab");im.style.zIndex=++Z;if(typeof sfx==="function")try{sfx("pop")}catch(_){}});
+  im.addEventListener("pointermove",e=>{if(!s)return;const x=s.ox+e.clientX-s.x,y=s.oy+e.clientY-s.y;im.dataset.x=x;im.dataset.y=y;im.style.translate=`${x}px ${y}px`});
+  const up=()=>{if(s){s=null;im.classList.remove("grab")}};im.addEventListener("pointerup",up);im.addEventListener("pointercancel",up)}
+let Z=5;
+{const _o=openNYP;openNYP=function(){const r=_o.apply(this,arguments);const sc=document.querySelector(".scrim");requestAnimationFrame(()=>requestAnimationFrame(()=>scatter(sc)));return r};window.openNYP=openNYP}
 
 /* the shop may already be on screen: redraw it with the card in front */
 if(typeof mode!=="undefined"&&mode==="wallet"&&typeof scat!=="undefined"&&scat==="Graphics"){idx=0;try{history.length=0}catch(e){}try{renderDeck();renderMeta()}catch(e){}}
