@@ -7,7 +7,7 @@
 (function(){
 if(typeof SHOP==="undefined"||typeof artFor!=="function")return;
 const END=new Date("2026-10-14T18:00:00-04:00").getTime();   /* Wed Oct 14, 6:00 PM Eastern */
-const COVER="";                                              /* cover photo URL; empty = the designed cover */
+const COVER="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@d7be65274fc0680bbd835c25a55c5f74666ce1fa/name-your-price-cover.webp";                                              /* cover photo URL; empty = the designed cover */
 const IG="https://www.instagram.com/precisiondesigngroup",X="https://x.com/prcsndesigns";
 const SHARE_URL="https://precisiondesign.club/shop?nyp=1";
 const TYPES=["Graphics","Logos","Branding","Website","Collection Design"];
@@ -22,6 +22,8 @@ const NYP={id:"nyp",nyp:true,kind:"Graphics",title:"Name Your Price",type:"Limit
 
 const css=`
 .nyp-art{position:absolute;inset:0;overflow:hidden;container-type:size;background:#F2C649;color:#141414}
+.nyp-art.ph{background:#101010}
+.nyp-art .nyp-ph{object-fit:contain!important}
 .nyp-art .nyp-ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
 .nyp-art.ph::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.55),transparent 42%),linear-gradient(to bottom,rgba(0,0,0,.35),transparent 22%);pointer-events:none}
 .nyp-fr{position:absolute;inset:min(4cqw,14px);border:1px solid rgba(20,20,20,.35);pointer-events:none;z-index:1}
