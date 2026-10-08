@@ -1,6 +1,7 @@
 /* ---------- PORTFOLIO: video ad card ----------
    The 6th card under "All" is the studio's 2002-style commercial, playing full-card like an ad (muted until the
-   speaker button is tapped). It plays only while it's the top card; tapping it opens the full video with sound.
+   speaker button is tapped). It plays only while it's the top card. It doesn't open; it's only swiped past,
+   and it stays out of grid view.
    Swiping either way moves past it (it never goes on the shortlist). To swap the video, change SRC and POSTER. */
 (function(){
 if(typeof PROJECTS==="undefined"||typeof artFor!=="function")return;
@@ -8,7 +9,7 @@ const BASE="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@9125d657ae599
 const SRC=BASE+"precision-2002-commercial.mp4",POSTER=BASE+"precision-2002-commercial-poster.webp";
 const POS=5;   /* 0-based: the 6th card */
 const AD={id:"pd-ad",ad:true,cat:"Studio",client:"Precision Design",title:"The Commercial",discipline:"Studio ad",year:"2002",
-  blurb:"Our 30-second spot, made like it's 2002: dial-up blue, bubbly logos and a VHS finish. Tap for the full thing with sound.",
+  blurb:"Our 30-second spot, made like it's 2002: dial-up blue, bubbly logos and a VHS finish. Tap the speaker for sound.",
   bg:"#1B2DB8",fg:"#F4F2EC",inks:["#1B2DB8","#F4F2EC","#F2C649"],formats:["30 sec","VHS finish"],gallery:[],image:POSTER,imageBg:"#0E1A7A"};
 const isAd=p=>!!(p&&p.ad);
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -29,9 +30,8 @@ const st=document.createElement("style");st.textContent=`
 .ad-bar{position:absolute;left:0;right:0;bottom:0;height:3px;z-index:2;background:rgba(255,255,255,.18)}
 .ad-bar b{display:block;height:100%;width:0;background:#F2C649}
 .dcard:not(.top) .ad-snd{pointer-events:none}
-.sheet.adsheet .bigart{position:relative;background:#070c3d;aspect-ratio:4/3;min-height:0;display:grid;place-items:center}
-.sheet.adsheet .bigart video{width:100%;height:100%;object-fit:contain;display:block;background:#070c3d}
 @media (prefers-reduced-motion:reduce){.ad-snd::after{animation:none}}
+.pg-tile[aria-label^="Precision Design, The Commercial."]{display:none!important}
 `;document.head.appendChild(st);
 
 const spk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>';
@@ -79,28 +79,13 @@ if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
   if(!had&&shortlist.has(p.id)){shortlist.delete(p.id);persist();updateCount();const t=document.getElementById("toast");if(t)t.classList.remove("on")}
   return r}}
 
-/* tap / swipe up / Enter / grid: the full video with sound; detail-sheet arrows step over it */
-function openAd(){
-  if(typeof showSheet!=="function")return;
-    const s=showSheet(`<div class="bigart"><video src="${SRC}" poster="${POSTER}" controls playsinline preload="auto" aria-label="Precision Design commercial"></video></div>
-  <div class="body">
-    <div class="top"><span class="mono">Studio ad · 0:30</span><button class="x" aria-label="Close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
-    <div><div class="client">Precision Design</div><h3>The Commercial</h3></div>
-    <p>${esc(AD.blurb.replace(" Tap for the full thing with sound.",""))}</p>
-    <dl class="spec mono"><dt>Client</dt><dd>Precision Design</dd><dt>Format</dt><dd>30 sec · VHS finish</dd><dt>Style</dt><dd>2002 TV spot</dd></dl>
-    <div class="actions"><button class="pill solid" data-start>Start a project</button><button class="pill" data-shop>Visit the shop</button></div>
-  </div>`,"adsheet");
-  const v=s.querySelector("video");v.muted=false;v.play().catch(()=>{v.muted=true;v.play().catch(()=>{})});
-  const a=s.querySelector("[data-start]"),b=s.querySelector("[data-shop]");
-  if(a)a.onclick=()=>{if(typeof closeSheetNow==="function")closeSheetNow();if(typeof openStudio==="function")openStudio()};
-  if(b)b.onclick=()=>{if(typeof closeSheet==="function")closeSheet();if(typeof setMode==="function")setMode("wallet")};
-}
+/* tap / swipe up / Enter do nothing on it; detail-sheet arrows step over it */
 if(typeof openDetail==="function"){let lastI=-1;const _od=openDetail;openDetail=function(p){
   if(isAd(p)){const sh=document.querySelector(".scrim .sheet"),L0=PL(),i=L0.indexOf(p);
-    if(sh&&!sh.classList.contains("adsheet")&&lastI>=0&&i>=0&&L0.length>1)return openDetail(L0[(i+(lastI>i?-1:1)+L0.length)%L0.length]);
-    return openAd()}
+    if(sh&&lastI>=0&&i>=0&&L0.length>1)return openDetail(L0[(i+(lastI>i?-1:1)+L0.length)%L0.length]);
+    return}
   lastI=PL().indexOf(p);return _od.apply(this,arguments)}}
-if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){return isAd(p)?openAd():_op.apply(this,arguments)}}
+if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){return isAd(p)?undefined:_op.apply(this,arguments)}}
 
 /* desktop info panel */
 if(typeof renderMeta==="function"){const _rm=renderMeta;renderMeta=function(){const r=_rm.apply(this,arguments);
