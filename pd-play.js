@@ -92,7 +92,9 @@ function build(){
   board.querySelectorAll(".pc,.ps").forEach(e=>e.remove());els={};cards={};
   const slot=(cls,html="")=>{const d=document.createElement("div");d.className="ps "+cls;d.innerHTML=html;board.appendChild(d);return d};
   slots.stock=slot("stock",newIco);slots.waste=slot("waste");slots.found=[0,1,2,3].map(i=>slot("found",SUITS[i]+"︎"));slots.tab=[0,1,2,3,4,5,6].map(()=>slot("tab","K"));
-  slots.stock.addEventListener("click",drawStock);
+  /* the empty stock reacts to the press itself, like the cards do, so one tap is one action (a click after drawing
+     the last card used to land on the now-empty pile and recycle it straight away) */
+  slots.stock.addEventListener("pointerdown",e=>{e.preventDefault();drawStock()});
   all().forEach(c=>{cards[c.id]=c;const e=document.createElement("div");e.className="pc"+(RED(c.s)?" red":"");e.dataset.id=c.id;
     const face=c.r>10?`<span class="ft">${RANK[c.r]}</span>`:`<em>${SUITS[c.s]}︎</em>`;
     e.innerHTML=`<div class="fc"><b>${RANK[c.r]}</b><i>${SUITS[c.s]}︎</i>${face}</div><div class="bk" style="background:${c.bg}">${c.img?`<img alt="" loading="lazy" decoding="async" src="${wix(c.img)}" onerror="this.remove()">`:""}<i></i></div>`;
