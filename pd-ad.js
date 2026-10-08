@@ -1,16 +1,22 @@
-/* ---------- PORTFOLIO: video ad card ----------
-   The 6th card under "All" is the studio's 2002-style commercial, playing full-card like an ad (muted until the
-   speaker button is tapped). It plays only while it's the top card. It doesn't open; it's only swiped past,
-   and it stays out of grid view.
-   Swiping either way moves past it (it never goes on the shortlist). To swap the video, change SRC and POSTER. */
+/* ---------- PORTFOLIO: video ad cards ----------
+   Commercials that play full-card like ads between the projects under "All" (muted until the speaker button is tapped).
+   A video plays only while its card is on top. Swiping either way moves past it (never onto the shortlist) and the
+   cards stay out of grid view. An ad with tap:"shop" takes you to the shop when tapped; the others only swipe.
+   To add or swap one, edit ADS (pos is 0-based: 5 = the 6th card). */
 (function(){
 if(typeof PROJECTS==="undefined"||typeof artFor!=="function")return;
-const BASE="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@9125d657ae599436a35dac74a4227b77db805e18/ad/";
-const SRC=BASE+"precision-2002-commercial.mp4",POSTER=BASE+"precision-2002-commercial-poster.webp";
-const POS=5;   /* 0-based: the 6th card */
-const AD={id:"pd-ad",ad:true,cat:"Studio",client:"Precision Design",title:"The Commercial",discipline:"Studio ad",year:"2002",
-  blurb:"Our 30-second spot, made like it's 2002: dial-up blue, bubbly logos and a VHS finish. Tap the speaker for sound.",
-  bg:"#1B2DB8",fg:"#F4F2EC",inks:["#1B2DB8","#F4F2EC","#F2C649"],formats:["30 sec","VHS finish"],gallery:[],image:POSTER,imageBg:"#0E1A7A"};
+const B1="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@9125d657ae599436a35dac74a4227b77db805e18/ad/";
+const B2="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@fcafd03fe79af3659dc38459b0a185bb062c61ea/ad/";
+const ADS=[
+  {id:"pd-ad",pos:5,src:B1+"precision-2002-commercial.mp4",poster:B1+"precision-2002-commercial-poster.webp",chip:"Ad · 0:30",
+   title:"The Commercial",discipline:"Studio ad",year:"2002",bg:"#1B2DB8",imageBg:"#0E1A7A",fill:"radial-gradient(120% 90% at 50% 45%,#2a3fd6,#0b1466 70%,#070c3d)",
+   blurb:"Our 30-second spot, made like it's 2002: dial-up blue, bubbly logos and a VHS finish. Tap the speaker for sound.",
+   spec:[["What","Studio ad"],["Length","30 seconds"],["Style","2002 TV spot"]]},
+  {id:"pd-ad2",pos:9,tap:"shop",src:B2+"precision-internet-commercial.mp4",poster:B2+"precision-internet-commercial-poster.webp",chip:"Ad · Tap to shop",
+   title:"Hot Off the Press",discipline:"Shop ad",year:"2000",bg:"#C4121B",imageBg:"#5e0409",fill:"radial-gradient(120% 90% at 50% 45%,#e2343a,#8f0c14 70%,#3d0306)",
+   blurb:"Pick a premade, press it, wear it, all in a 30-second internet ad straight out of 2000. Tap the card to shop the graphics.",
+   spec:[["What","Shop ad"],["Length","30 seconds"],["Style","2000 internet ad"]]}
+].map(a=>Object.assign({ad:true,cat:"Studio",client:"Precision Design",fg:"#F4F2EC",inks:[a.bg,"#F4F2EC","#F2C649"],formats:["30 sec","VHS finish"],gallery:[],image:a.poster},a));
 const isAd=p=>!!(p&&p.ad);
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -31,22 +37,23 @@ const st=document.createElement("style");st.textContent=`
 .ad-bar b{display:block;height:100%;width:0;background:#F2C649}
 .dcard:not(.top) .ad-snd{pointer-events:none}
 @media (prefers-reduced-motion:reduce){.ad-snd::after{animation:none}}
-.pg-tile[aria-label^="Precision Design, The Commercial."]{display:none!important}
+${ADS.map(a=>`.pg-tile[aria-label^="Precision Design, ${a.title}."]`).join(",")}{display:none!important}
+.ad-art.tap{cursor:pointer}
 `;document.head.appendChild(st);
 
 const spk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>';
 const sndIcons=spk+'<g class="on"><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></g><g class="off"><path d="M17 9.5l5 5M22 9.5l-5 5"/></g></svg>';
 let soundOn=false;
 
-function art(){
-  return `<div class="ad-art"><canvas class="ad-fill" width="40" height="30"></canvas>
-    <video class="ad-vid" muted playsinline loop preload="metadata" poster="${POSTER}" src="${SRC}" aria-label="Precision Design commercial"></video>
-    <span class="ad-chip"><i></i>Ad · 0:30</span>
+function art(a){
+  return `<div class="ad-art${a.tap?" tap":""}" style="background:${a.fill}"><canvas class="ad-fill" width="40" height="30"></canvas>
+    <video class="ad-vid" muted playsinline loop preload="metadata" poster="${a.poster}" src="${a.src}" aria-label="Precision Design commercial: ${esc(a.title)}"></video>
+    <span class="ad-chip"><i></i>${esc(a.chip)}</span>
     <button type="button" class="ad-snd" aria-pressed="${soundOn}" aria-label="Sound">${sndIcons}</button>
     <i class="ad-bar"><b></b></i></div>`;
 }
 const _artFor=artFor;
-artFor=function(p){return isAd(p)?art():_artFor.apply(this,arguments)};
+artFor=function(p){return isAd(p)?art(p):_artFor.apply(this,arguments)};
 
 /* the blurred fill behind the video and the progress bar follow the playing frame */
 const loops=new WeakSet();
@@ -79,25 +86,31 @@ if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
   if(!had&&shortlist.has(p.id)){shortlist.delete(p.id);persist();updateCount();const t=document.getElementById("toast");if(t)t.classList.remove("on")}
   return r}}
 
-/* tap / swipe up / Enter do nothing on it; detail-sheet arrows step over it */
+/* tap / swipe up / Enter: the shop ad goes to the shop, the others do nothing; detail-sheet arrows step over them */
+function goShop(){
+  if(typeof closeSheetNow==="function")closeSheetNow();
+  if(typeof setMode==="function"&&mode!=="wallet")setMode("wallet");
+  if(typeof setCat==="function"&&typeof scat!=="undefined"&&scat!=="Graphics")setCat("Graphics");
+  idx=0;try{history.length=0}catch(e){}try{renderDeck();renderMeta()}catch(e){}
+}
 if(typeof openDetail==="function"){let lastI=-1;const _od=openDetail;openDetail=function(p){
   if(isAd(p)){const sh=document.querySelector(".scrim .sheet"),L0=PL(),i=L0.indexOf(p);
     if(sh&&lastI>=0&&i>=0&&L0.length>1)return openDetail(L0[(i+(lastI>i?-1:1)+L0.length)%L0.length]);
-    return}
+    if(p.tap==="shop")goShop();return}
   lastI=PL().indexOf(p);return _od.apply(this,arguments)}}
-if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){return isAd(p)?undefined:_op.apply(this,arguments)}}
+if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){if(isAd(p)){if(p.tap==="shop")goShop();return}return _op.apply(this,arguments)}}
 
 /* desktop info panel */
 if(typeof renderMeta==="function"){const _rm=renderMeta;renderMeta=function(){const r=_rm.apply(this,arguments);
   const m=document.getElementById("swipeMeta"),p=typeof mode!=="undefined"&&mode==="swipe"&&idx<L().length?L()[idx]:null;
-  if(m&&isAd(p))m.innerHTML=`<div class="idx">${pad(idx+1)}<small> / ${pad(L().length)}</small></div><h2>The Commercial</h2><p>${esc(AD.blurb)}</p>
-    <dl class="spec mono"><dt>What</dt><dd>Studio ad</dd><dt>Length</dt><dd>30 seconds</dd><dt>Style</dt><dd>2002 TV spot</dd></dl>`;
+  if(m&&isAd(p))m.innerHTML=`<div class="idx">${pad(idx+1)}<small> / ${pad(L().length)}</small></div><h2>${esc(p.title)}</h2><p>${esc(p.blurb)}</p>
+    <dl class="spec mono">${p.spec.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`;
   return r}}
 if(typeof setMode==="function"){const _sm=setMode;setMode=function(){const r=_sm.apply(this,arguments);requestAnimationFrame(sync);return r}}
 
-/* slot it in as the 6th card (under "All"); only redraw if that part of the deck is already on screen */
-PROJECTS.splice(Math.min(POS,PROJECTS.length),0,AD);
-if(typeof mode!=="undefined"&&mode==="swipe"&&pcat==="All"&&idx>=POS-2&&idx<=POS){try{renderDeck()}catch(e){}}
+/* slot them in (under "All"); only redraw if that part of the deck is already on screen */
+ADS.slice().sort((a,b)=>a.pos-b.pos).forEach(a=>PROJECTS.splice(Math.min(a.pos,PROJECTS.length),0,a));
+if(typeof mode!=="undefined"&&mode==="swipe"&&pcat==="All"&&ADS.some(a=>idx>=a.pos-2&&idx<=a.pos)){try{renderDeck()}catch(e){}}
 try{if(typeof renderPockets==="function")renderPockets()}catch(e){}
 sync();
 })();
