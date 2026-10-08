@@ -251,6 +251,8 @@ function load(){try{const o=JSON.parse(localStorage.getItem(KEY)||"null");if(!o|
 /* ---------- the tabs: All + Play ---------- */
 const playIco='<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>';
 function enter(){if(playing)return;playing=true;
+  /* grid view sits on top of everything: close it first */
+  {const gv=document.querySelector(".pg-view"),gb=document.querySelector(".pg-back button");if(gv&&!gv.hidden&&gb)gb.click()}
   if(typeof pcat!=="undefined"&&pcat!=="All"){pcat="All";idx=0}
   sv.hidden=true;pv.hidden=false;if(!G&&!load())deal();else{layout(true);if(G.won&&!board.querySelector(".play-win"))win()}
   document.querySelectorAll("#deck video").forEach(v=>v.pause());
