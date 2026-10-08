@@ -21,7 +21,17 @@ const st=document.createElement("style");st.textContent=`
 .play-top button{height:34px;padding:0 13px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .play-top button:disabled{opacity:.4;cursor:default}
 .play-top button svg{width:14px;height:14px}
-.play-board{position:relative;width:min(100%,900px);margin:0 auto;height:calc(100svh - var(--hdr,56px) - 86px);min-height:430px;touch-action:none;user-select:none;-webkit-user-select:none}
+@media (max-width:440px){.play-top button{padding:0 10px}.play-top button[data-undo] span,.play-top button[data-new] span{display:none}}
+.play-win .acts{display:flex;gap:8px;flex-wrap:wrap}
+.play-win .share{height:40px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.play-win .share svg{width:16px;height:16px}
+.play-win .share:disabled{opacity:.5}
+.sheet.deckshot .bigart{display:grid;place-items:center;background:#0b0b0c;padding:14px;aspect-ratio:auto;min-height:280px}
+.sheet.deckshot .bigart img{max-width:100%;max-height:min(64vh,660px);border-radius:12px;display:block}
+.deckshot .pds-btns{display:flex;flex-direction:column;gap:8px}
+.deckshot .pds-btns button{display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:15px;cursor:pointer;text-align:left}
+.deckshot .pds-btns svg{width:20px;height:20px;flex:none}
+.play-board{position:relative;isolation:isolate;width:min(100%,900px);margin:0 auto;height:calc(100svh - var(--hdr,56px) - 86px);min-height:430px;touch-action:none;user-select:none;-webkit-user-select:none}
 .ps{position:absolute;border-radius:var(--pr);border:1.5px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-family:var(--f-display);font-weight:700;font-size:calc(var(--cw)*.36)}
 .ps.stock{cursor:pointer;border-style:solid}
 .ps.stock svg{width:40%;height:40%;opacity:.6}
@@ -54,10 +64,11 @@ const st=document.createElement("style");st.textContent=`
 
 /* ---------- the view ---------- */
 const undoIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>';
+const backIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>';
 const newIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>';
 const pv=document.createElement("section");pv.className="view";pv.id="playView";pv.hidden=true;
 pv.innerHTML=`<div class="play-top"><div><h2>Solitaire</h2><div class="stat"><span data-mv>0 moves</span><span data-tm>0:00</span></div></div>
-  <div class="btns"><button type="button" data-undo aria-label="Undo">${undoIco}<span>Undo</span></button><button type="button" data-new aria-label="New game">${newIco}<span>New</span></button></div></div>
+  <div class="btns"><button type="button" data-back aria-label="Back to portfolio">${backIco}<span>Portfolio</span></button><button type="button" data-undo aria-label="Undo">${undoIco}<span>Undo</span></button><button type="button" data-new aria-label="New game">${newIco}<span>New</span></button></div></div>
   <div class="play-board" aria-label="Solitaire board"></div>`;
 sv.after(pv);
 const board=pv.querySelector(".play-board"),mvEl=pv.querySelector("[data-mv]"),tmEl=pv.querySelector("[data-tm]"),undoBtn=pv.querySelector("[data-undo]");
@@ -143,9 +154,69 @@ function win(){G.won=true;save();snd("save");
   if(!reduce)G.found.forEach((f,i)=>f.forEach((c,k)=>{const e=els[c.id];e.animate([{transform:e.style.transform},{transform:`${e.style.transform} translateY(-24px) rotate(${(k%2?1:-1)*8}deg)`},{transform:e.style.transform}],{duration:600,delay:i*90+k*30,easing:"ease-out"})}));
   const seen=[],ids=new Set();all().forEach(c=>{if(c.pid&&!ids.has(c.pid)){ids.add(c.pid);const p=PROJECTS.find(x=>x.id===c.pid);if(p)seen.push(p)}});
   const d=document.createElement("div");d.className="play-win";
-  d.innerHTML=`<div><h3>You won!</h3><p>${G.moves} moves · ${fmt(G.time)}. You uncovered these projects:</p><div class="pw-row">${seen.map(p=>`<button type="button" data-p="${esc(p.id)}" aria-label="${esc(p.client+", "+p.title)}"><img alt="" src="${wix(p.image)}" onerror="this.remove()"></button>`).join("")}</div><button class="go" type="button">Play again</button></div>`;
+  d.innerHTML=`<div><h3>You won!</h3><p>${G.moves} moves · ${fmt(G.time)}. You uncovered these projects:</p><div class="pw-row">${seen.map(p=>`<button type="button" data-p="${esc(p.id)}" aria-label="${esc(p.client+", "+p.title)}"><img alt="" src="${wix(p.image)}" onerror="this.remove()"></button>`).join("")}</div><div class="acts"><button class="share" type="button">${shareIco}<span>Share my deck</span></button><button class="go" type="button">Play again</button></div></div>`;
   board.appendChild(d);d.querySelector(".go").onclick=()=>{d.remove();deal()};
+  const sb=d.querySelector(".share");sb.onclick=async()=>{sb.disabled=true;sb.querySelector("span").textContent="Making your image…";
+    try{await shareDeck(seen)}catch(e){}sb.disabled=false;sb.querySelector("span").textContent="Share my deck"};
   d.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>{const p=PROJECTS.find(x=>x.id===b.dataset.p);if(p&&typeof openDetail==="function")openDetail(p)})}
+
+/* ---------- share the winning deck: all its covers as cards on one branded image ---------- */
+const shareIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M7 8l5-5 5 5"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/></svg>';
+const xIco='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.17h1.7L7.4 4.74H5.58l11.09 14.43Z"/></svg>';
+const dlIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>';
+const closeIco='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>';
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function loadCors(u){return new Promise(res=>{if(!u)return res(null);const im=new Image();im.crossOrigin="anonymous";let done=false;const fin=v=>{if(!done){done=true;res(v)}};
+  im.onload=()=>fin(im);im.onerror=()=>fin(null);setTimeout(()=>fin(null),8000);im.src=wix(u)+(u.includes("?")?"&":"?")+"pdcors=1"})}
+function rrect(x,X,Y,w,h,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+w,Y,X+w,Y+h,r);x.arcTo(X+w,Y+h,X,Y+h,r);x.arcTo(X,Y+h,X,Y,r);x.arcTo(X,Y,X+w,Y,r);x.closePath()}
+async function deckCanvas(list){
+  const DSP=cssv("--f-display")||"Impact,sans-serif",MONO=cssv("--f-mono")||"monospace",BODY=cssv("--f-body")||"sans-serif";
+  try{await Promise.all([document.fonts.load(`900 80px ${DSP}`),document.fonts.load(`500 20px ${MONO}`),document.fonts.load(`700 28px ${BODY}`)])}catch(e){}
+  const W=1080,H=1350,c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");
+  const g=x.createRadialGradient(W/2,H*.45,60,W/2,H*.5,H*.8);g.addColorStop(0,"#1d1e22");g.addColorStop(1,"#0b0c0e");x.fillStyle=g;x.fillRect(0,0,W,H);
+  x.strokeStyle="rgba(255,255,255,.035)";x.lineWidth=1;for(let i=0;i<W;i+=54){x.beginPath();x.moveTo(i+.5,0);x.lineTo(i+.5,H);x.stroke()}for(let j=0;j<H;j+=54){x.beginPath();x.moveTo(0,j+.5);x.lineTo(W,j+.5);x.stroke()}
+  const M=48;x.fillStyle="#F4F2EC";x.textBaseline="alphabetic";
+  x.strokeStyle="#F4F2EC";x.lineWidth=3;x.beginPath();x.arc(M+15,M+18,14,0,7);x.stroke();x.beginPath();x.arc(M+15,M+18,6,0,7);x.stroke();
+  x.font=`800 30px ${DSP}`;x.fillText("PRECISION DESIGN GROUP",M+42,M+29);
+  x.fillStyle="rgba(244,242,236,.55)";x.font=`500 20px ${MONO}`;x.textAlign="right";x.fillText("SOLITAIRE",W-M,M+26);x.textAlign="left";
+  x.fillStyle="#F4F2EC";x.font=`900 96px ${DSP}`;x.fillText(`${list.length} PROJECTS UNCOVERED`.toUpperCase(),M,M+140,W-2*M);
+  x.fillStyle="rgba(244,242,236,.6)";x.font=`500 24px ${MONO}`;x.fillText(`I BEAT PRECISION SOLITAIRE · ${G.moves} MOVES · ${fmt(G.time)}`,M,M+182);
+  /* 9 x 6 cards: the deck's covers, then the ace of spades and king of hearts */
+  const cols=9,rows=6,gap=10,top0=M+214,cw=(W-2*M-(cols-1)*gap)/cols,ch=cw*1.4,r=9;
+  const imgs=await Promise.all(list.map(p=>loadCors(p.image)));
+  const slotsN=cols*rows;
+  for(let i=0;i<slotsN;i++){const X=M+(i%cols)*(cw+gap),Y=top0+Math.floor(i/cols)*(ch+gap);
+    x.save();x.shadowColor="rgba(0,0,0,.45)";x.shadowBlur=10;x.shadowOffsetY=4;rrect(x,X,Y,cw,ch,r);
+    if(i<list.length){const p=list[i],im=imgs[i];x.fillStyle=p.imageBg||p.bg||"#222";x.fill();x.restore();x.save();rrect(x,X,Y,cw,ch,r);x.clip();
+      if(im){const s=Math.max(cw/im.naturalWidth,ch/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;x.drawImage(im,X+(cw-w)/2,Y+(ch-h)/2,w,h)}
+      else{x.fillStyle=p.fg||"#F4F2EC";x.font=`900 ${Math.round(cw*.2)}px ${DSP}`;x.textAlign="center";x.fillText(String(p.client||p.title||"").toUpperCase().slice(0,10),X+cw/2,Y+ch/2,cw-10);x.textAlign="left"}
+      x.restore();x.save();rrect(x,X+5,Y+5,cw-10,ch-10,r*.7);x.strokeStyle="rgba(255,255,255,.85)";x.lineWidth=1.6;x.stroke();
+      x.beginPath();x.arc(X+cw-15,Y+ch-15,7,0,7);x.fillStyle="rgba(0,0,0,.3)";x.fill();x.strokeStyle="#fff";x.lineWidth=1.5;x.stroke();x.beginPath();x.arc(X+cw-15,Y+ch-15,2.6,0,7);x.fillStyle="#fff";x.fill();x.restore()}
+    else{const k=i-list.length,face=[[1,0],[13,1],[12,2],[11,3]][k%4];x.fillStyle="#F6F4EE";x.fill();x.restore();x.save();
+      x.fillStyle=RED(face[1])?"#C8282D":"#141414";x.font=`900 ${Math.round(cw*.34)}px ${DSP}`;x.fillText(RANK[face[0]],X+8,Y+cw*.36);
+      x.font=`${Math.round(cw*.5)}px serif`;x.textAlign="center";x.fillText(SUITS[face[1]]+"\uFE0E",X+cw/2,Y+ch*.82);x.textAlign="left";x.restore()}}
+  /* call to action */
+  const py=H-M-8,label="Play at precisiondesign.club";x.font=`700 30px ${BODY}`;const pw=x.measureText(label).width+60;
+  x.fillStyle="#F2C649";rrect(x,M,py-50,pw,66,33);x.fill();x.fillStyle="#141414";x.fillText(label,M+30,py-6);
+  x.fillStyle="rgba(244,242,236,.6)";x.font=`500 22px ${MONO}`;x.textAlign="right";x.fillText("@precisiondesigngroup",W-M,py-8);x.textAlign="left";
+  return c}
+async function shareDeck(list){
+  if(typeof showSheet!=="function")return;
+  const c=await deckCanvas(list);let blob=null;try{blob=await new Promise(r=>c.toBlob(r,"image/png"))}catch(e){}
+  if(!blob)return;const name="precision-solitaire-deck.png",file=new File([blob],name,{type:"image/png"}),url=URL.createObjectURL(blob);
+  const coarse=matchMedia("(pointer:coarse)").matches,canFiles=(()=>{try{return !!(navigator.canShare&&navigator.canShare({files:[file]}))}catch(e){return false}})();
+  const LINK="https://precisiondesign.club/#play",text=`I beat Precision Solitaire in ${G.moves} moves and uncovered ${list.length} projects by @prcsndesigns. Your turn:`;
+  const s=showSheet(`<div class="bigart"><img src="${url}" alt="Your solitaire deck"></div><div class="body">
+    <div class="top"><span class="mono">Share your deck</span><button class="x" aria-label="Close">${closeIco}</button></div>
+    <div><h3>Show off the win</h3></div><p>Every card in your deck, with the projects on the back. Tag <b>@precisiondesigngroup</b> when you post it.</p>
+    <div class="pds-btns">${canFiles?`<button type="button" data-a="share">${shareIco}<span>Share image</span></button>`:""}<button type="button" data-a="x">${xIco}<span>Post on X</span></button><button type="button" data-a="dl">${dlIco}<span>Save image</span></button></div>
+    <span class="mono note" data-m style="color:var(--muted)"></span></div>`,"deckshot");
+  const m=s.querySelector("[data-m]"),dl=()=>{const a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove()};
+  const sh=s.querySelector('[data-a="share"]');if(sh)sh.onclick=()=>navigator.share({files:[file],text:text+" "+LINK}).then(()=>{m.textContent="Shared!";snd("save")}).catch(()=>{});
+  s.querySelector('[data-a="x"]').onclick=()=>{if(coarse&&canFiles){navigator.share({files:[file],text:text+" "+LINK}).catch(()=>{});m.textContent="Pick X from the share menu.";return}
+    const w=window.open(`https://x.com/intent/post?text=${encodeURIComponent(text)}&url=${encodeURIComponent(LINK)}`,"_blank");if(w)try{w.opener=null}catch(_){}dl();m.textContent="Image saved. Attach it to your post on X."};
+  s.querySelector('[data-a="dl"]').onclick=()=>{dl();m.textContent="Image saved."};
+}
 
 /* ---------- pointer: drag a card (and what's on it), or tap it ---------- */
 let drag=null;
@@ -165,6 +236,7 @@ const endDrag=e=>{if(!drag||e.pointerId!==drag.id)return;const d=drag;drag=null;
   if(target&&target!==d.from){moveCards(d.list,d.from,target);snd(G.found.includes(target)?"pop":"tick")}else layout()};
 board.addEventListener("pointerup",endDrag);board.addEventListener("pointercancel",endDrag);
 undoBtn.onclick=()=>{if(!hist.length)return;G.auto=false;restore(hist.pop());layout();save();snd("undo")};
+pv.querySelector("[data-back]").onclick=()=>{leave();renderPockets();if(typeof renderDeck==="function")renderDeck()};
 pv.querySelector("[data-new]").onclick=()=>{const w=board.querySelector(".play-win");if(w)w.remove();deal()};
 
 /* ---------- clock + saving ---------- */
