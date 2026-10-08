@@ -99,6 +99,7 @@ html.nyp-ready .gm-toggle,html.nyp-ready .pg-toggle{display:none!important}
 .nyp-stk img.grab{cursor:grabbing;filter:drop-shadow(0 16px 22px rgba(0,0,0,.5));scale:1.06}
 @keyframes nypSlap{0%{opacity:0;transform:rotate(calc(var(--r) - 25deg)) scale(1.9)}60%{opacity:1}100%{opacity:1;transform:rotate(var(--r)) scale(1)}}
 @media (prefers-reduced-motion:reduce){.nyp-stk img{animation:none}}
+#drawer .thumb:has(.nyp-art){position:relative;overflow:hidden}
 .nyp-end{padding:12px 14px;border-radius:12px;background:var(--surface);border:1px solid var(--line);font-size:14px}
 `;
 const st=document.createElement("style");st.textContent=css;document.head.appendChild(st);
@@ -132,8 +133,11 @@ if(typeof openDetail==="function"){let lastI=-1;const _od=openDetail;openDetail=
 /* swipe right / cart button: never goes in the cart, opens the sheet instead */
 if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
   const p=idx<L().length?L()[idx]:null;if(!(p&&p.nyp)||dir<=0)return _fly.apply(this,arguments);
-  const had=shortlist.has(p.id),r=_fly.apply(this,arguments);
-  if(!had&&shortlist.has(p.id)){shortlist.delete(p.id);persist();updateCount();const t=document.getElementById("toast");if(t)t.classList.remove("on");try{renderDrawer()}catch(e){}}
+  /* the shop's cart and the shortlist are Sets the card must never join: block adding it while the swipe runs */
+  const had=shortlist.has(p.id),SA=Set.prototype.add;Set.prototype.add=function(v){return v===p.id?this:SA.call(this,v)};
+  let r;try{r=_fly.apply(this,arguments)}finally{Set.prototype.add=SA}
+  if(!had&&shortlist.has(p.id)){shortlist.delete(p.id);persist()}
+  updateCount();try{renderDrawer()}catch(e){}const t=document.getElementById("toast");if(t)t.classList.remove("on");
   setTimeout(openNYP,320);return r}}
 
 /* desktop info panel: show when it ends instead of "Coming soon" */
