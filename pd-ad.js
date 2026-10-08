@@ -66,7 +66,7 @@ function follow(v){if(loops.has(v))return;loops.add(v);
 /* only the top card plays, and only when nothing covers it */
 function sync(){
   document.querySelectorAll("#deck .ad-vid").forEach(v=>{
-    const card=v.closest(".dcard"),go=!reduce&&!document.hidden&&card&&card.classList.contains("top")&&typeof mode!=="undefined"&&mode==="swipe"&&!document.querySelector(".scrim")&&!document.querySelector(".pg-view:not([hidden])");
+    const card=v.closest(".dcard"),go=!reduce&&!document.hidden&&!document.getElementById("swipeView").hidden&&card&&card.classList.contains("top")&&typeof mode!=="undefined"&&mode==="swipe"&&!document.querySelector(".scrim")&&!document.querySelector(".pg-view:not([hidden])");
     const b=card&&card.querySelector(".ad-snd");if(b)b.setAttribute("aria-pressed",String(soundOn));
     if(go){v.muted=!soundOn;if(v.paused){const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{if(!v.muted){soundOn=false;v.muted=true;if(b)b.setAttribute("aria-pressed","false");v.play().catch(()=>{})}})}follow(v)}
     else if(!v.paused)v.pause();
