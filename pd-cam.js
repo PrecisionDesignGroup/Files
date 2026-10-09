@@ -2,14 +2,13 @@
    A Camera button on the 3D preview swaps the card for a live camera viewfinder (back camera on phones) with the
    graphic laid over it. Drag to move it, pinch or use the sliders to size and rotate.
    Fabric: the graphic bends with the folds and takes on their light and shadow, worked out from the camera image
-   itself every frame (WebGL; the Wrinkle slider sets how strong). Follow body: a pose model (MediaPipe, loaded on
-   first use) finds the person's shoulders and keeps the graphic locked to their chest as they move.
+   itself every frame (WebGL; the Wrinkle slider sets how strong). Zoom: a 1× / 2× / 3× switch styled like the
+   Portfolio / Shop switch; tap a stop or drag the thumb for anything in between. It uses the camera's own zoom where
+   the browser offers it (most Android phones) and zooms into the picture everywhere else.
    The shutter saves or shares a photo. Nothing is uploaded; the video stays on the device. */
 (function(){
 const deck=document.getElementById("deck");if(!deck)return;
 const coarse=matchMedia("(pointer:coarse)").matches;
-const MP="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.1.0";
-const MODEL="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@2bc6d3a9d4b2ba6dd0d6873fc66ddcdf079e73c8/mp/pose_landmarker_lite.task";
 const st=document.createElement("style");st.textContent=`
 .gm-cam{position:absolute;z-index:3;left:10px;top:8px;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px 0 11px;border-radius:999px;border:1px solid var(--line);
   background:color-mix(in srgb,var(--surface) 78%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--ink);font:inherit;font-weight:600;font-size:12px;cursor:pointer;transition:transform .15s}
@@ -40,6 +39,13 @@ html.cam-on .gm-toggle{display:none!important}
 .cam-tray .gm-sl input:disabled{opacity:.35}
 .cam-shot{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cam-shot .gm-chip{min-width:88px}
+.cam-zoom{flex:none;position:relative;display:flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px;touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer}
+.cam-zoom .zm-thumb{position:absolute;top:2px;bottom:2px;left:0;width:0;border-radius:999px;background:var(--ink);box-shadow:0 2px 10px -3px var(--shadow);transition:transform .45s cubic-bezier(.3,1.3,.5,1),width .45s cubic-bezier(.3,1.3,.5,1);will-change:transform;pointer-events:none;display:grid;place-items:center;overflow:hidden;color:var(--bg);font-style:normal;font-weight:600;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cam-zoom button{position:relative;z-index:1;width:42px;padding:6px 0;text-align:center;border:0;border-radius:999px;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:12px;font-variant-numeric:tabular-nums;cursor:pointer;transition:color .22s .06s}
+.cam-zoom button.hid{color:transparent}
+.cam-zoom.dragging{cursor:grabbing}
+.cam-zoom.dragging .zm-thumb{transition:none}
+.cam-zoom.dragging button{transition:none}
 .cam-shutter{flex:none;width:58px;height:58px;border-radius:50%;border:4px solid var(--ink);background:var(--surface);box-shadow:inset 0 0 0 4px var(--surface),inset 0 0 0 30px var(--ink);cursor:pointer;transition:transform .12s}
 .cam-shutter:active{transform:scale(.9)}
 .cam-shutter:disabled{opacity:.35}
@@ -117,12 +123,6 @@ function glFrame(G,video,AB,P,warp,shade){
   gl.uniform2f(u.d2,1./G.levels[3].w,1./G.levels[3].h);gl.uniform1f(u.warp,warp*k);gl.uniform1f(u.shade,shade);gl.uniform1f(u.hasG,G.hasG?1:0);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);return true}
 
-/* ---------- body tracking (MediaPipe pose, loaded on first use) ---------- */
-let poseP=null;
-function loadPose(){if(poseP)return poseP;poseP=(async()=>{const m=await import(MP+"/vision_bundle.mjs");const fs=await m.FilesetResolver.forVisionTasks(MP+"/wasm");
-  const mk=delegate=>m.PoseLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:MODEL,delegate},runningMode:"VIDEO",numPoses:1,minPoseDetectionConfidence:.5,minTrackingConfidence:.5});
-  try{return await mk("GPU")}catch(e){return await mk("CPU")}})();poseP.catch(()=>{poseP=null});return poseP}
-
 let cam=null;
 async function start(facing){
   if(!cam)return;stop(true);const c=cam;c.facing=facing;msg("");
@@ -131,7 +131,10 @@ async function start(facing){
   try{
     const s=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:facing},width:{ideal:1280},height:{ideal:720}}});
     if(cam!==c){s.getTracks().forEach(t=>t.stop());return}
-    c.stream=s;c.video.srcObject=s;c.video.classList.toggle("mirror",facing==="user");await c.video.play().catch(()=>{});msg("");c.shutter.disabled=false;c.loop();
+    c.stream=s;c.video.srcObject=s;c.video.classList.toggle("mirror",facing==="user");
+    try{const tr=s.getVideoTracks()[0],cap=tr&&tr.getCapabilities?tr.getCapabilities():{};c.zcap=cap.zoom&&cap.zoom.max>1?{min:Math.max(1,cap.zoom.min||1),max:cap.zoom.max}:null}catch(e){c.zcap=null}
+    c.zhw=null;if(c.applyZoom)c.applyZoom();
+    await c.video.play().catch(()=>{});msg("");c.shutter.disabled=false;c.loop();
   }catch(e){const n=e&&e.name;
     msg(n==="NotAllowedError"||n==="SecurityError"?`<b>Camera access is off</b>Allow camera access for this site in your browser settings, then try again.`
       :n==="NotFoundError"||n==="OverconstrainedError"?`<b>No camera found</b>This device doesn't seem to have a camera we can use.`
@@ -154,75 +157,80 @@ function open(view){
       <div class="gm-row"><span class="gm-lbl">Graphic</span>${gs.map(x=>`<button class="gm-thumb" data-cg="${x.id}" title="${esc(x.title)}" aria-label="${esc(x.title)}" style="background-image:url('${x.url}')"></button>`).join("")}</div>
       <div class="gm-row"><label class="gm-sl"><span>Size</span><input type="range" min="10" max="100" step="1" value="42" data-size></label><label class="gm-sl"><span>Rotate</span><input type="range" min="-180" max="180" step="1" value="0" data-rot></label></div>
       <div class="gm-row"><label class="gm-sl"><span>Wrinkle</span><input type="range" min="0" max="100" step="1" value="55" data-wr disabled></label></div>
-      <div class="cam-shot"><button class="gm-chip" type="button" data-blend aria-pressed="false">Fabric</button><button class="cam-shutter" type="button" aria-label="Take a photo" disabled></button><button class="gm-chip" type="button" data-body aria-pressed="false">Follow body</button></div>
+      <div class="cam-shot"><button class="gm-chip" type="button" data-blend aria-pressed="false">Fabric</button><button class="cam-shutter" type="button" aria-label="Take a photo" disabled></button><div class="cam-zoom" role="group" aria-label="Zoom"><i class="zm-thumb" aria-hidden="true"></i><button type="button" data-z="1" aria-label="Zoom 1×">1×</button><button type="button" data-z="2" aria-label="Zoom 2×">2×</button><button type="button" data-z="3" aria-label="Zoom 3×">3×</button></div></div>
     </div>`;
   view.appendChild(box);document.documentElement.classList.add("cam-on");
   ["pointerdown","pointermove","pointerup","click","touchstart","touchmove","wheel","dblclick","keydown"].forEach(t=>box.addEventListener(t,e=>e.stopPropagation()));
   const vf=box.querySelector(".cam-vf"),img=box.querySelector(".cam-g"),cv=box.querySelector("canvas.cam-gl"),size=box.querySelector("[data-size]"),rot=box.querySelector("[data-rot]"),wr=box.querySelector("[data-wr]"),hint=box.querySelector("[data-hint]");
   const S=cam={box,view,video:box.querySelector("video"),shutter:box.querySelector(".cam-shutter"),stream:null,facing:"environment",
-    x:.5,y:.45,w:.42,r:0,k:.7,ox:0,oy:0,blend:false,wr:.55,track:false,base:null,seen:0,G:null,dead:false};
+    x:.5,y:.45,w:.42,r:0,blend:false,wr:.55,z:1,dz:1,zcap:null,zhw:null,G:null,dead:false};
   /* WebGL if we can; otherwise the plain overlay */
   try{S.G=glInit(cv)}catch(e){S.G=null}
   if(S.G)vf.classList.add("gl");
   const dims=()=>({W:vf.clientWidth,H:vf.clientHeight});
   const ratio=()=>img.naturalWidth?img.naturalHeight/img.naturalWidth:1;
   /* where the graphic goes this frame, in viewfinder pixels */
-  function place(){const {W,H}=dims();let cx,cy,w,r;
-    if(S.track&&S.base){const b=S.base;w=b.sw*S.k;cx=b.cx+S.ox*b.sw;cy=b.cy+S.oy*b.sw;r=b.ang+S.r}
-    else{cx=S.x*W;cy=S.y*H;w=S.w*W;r=S.r}
-    return{W,H,cx,cy,w,h:w*ratio(),r}}
+  function place(){const {W,H}=dims(),w=S.w*W;return{W,H,cx:S.x*W,cy:S.y*H,w,h:w*ratio(),r:S.r}}
   function css(){const P=place();img.style.width=P.w+"px";img.style.transform=`translate(${P.cx-P.w/2}px,${P.cy-P.h/2}px) rotate(${P.r}deg)`}
-  function sync(){size.value=Math.round((S.track?S.k/1.6:S.w)*100);rot.value=Math.round(S.r)}
+  function sync(){size.value=Math.round(S.w*100);rot.value=Math.round(S.r)}
   function resize(){const {W,H}=dims();if(!W||!H)return;const d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(W*d);cv.height=Math.round(H*d);if(S.G)glLevels(S.G,W,H);css()}
   /* screen <-> video mapping for object-fit:cover (+ mirror for the front camera) */
-  function cover(){const {W,H}=dims(),vw=S.video.videoWidth||W,vh=S.video.videoHeight||H,s=Math.max(W/vw,H/vh),fx=W/(vw*s),fy=H/(vh*s),m=S.facing==="user";
-    return{s,vw,vh,W,H,AB:[[m?-fx:fx,fy],[m?.5+.5*fx:.5-.5*fx,.5-.5*fy]],toVF:(x,y)=>{let px=x*vw*s+(W-vw*s)/2;if(m)px=W-px;return[px,y*vh*s+(H-vh*s)/2]}}}
+  function cover(){const {W,H}=dims(),vw=S.video.videoWidth||W,vh=S.video.videoHeight||H,s=Math.max(W/vw,H/vh),fx=W/(vw*s)/S.dz,fy=H/(vh*s)/S.dz,m=S.facing==="user";
+    return{AB:[[m?-fx:fx,fy],[m?.5+.5*fx:.5-.5*fx,.5-.5*fy]]}}
   const pick=x=>{g=x;img.onload=()=>{css();if(S.G){const gl=S.G.gl;gl.bindTexture(gl.TEXTURE_2D,S.G.gfx);try{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);S.G.hasG=true}catch(e){S.G.hasG=false}}};img.src=x.url;
     box.querySelectorAll("[data-cg]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.cg===x.id)))};
   pick(g);
   box.querySelectorAll("[data-cg]").forEach(b=>b.onclick=()=>pick(gs.find(x=>x.id===b.dataset.cg)));
-  size.oninput=()=>{if(S.track)S.k=size.value/100*1.6;else S.w=size.value/100;css()};rot.oninput=()=>{S.r=+rot.value;css()};
+  size.oninput=()=>{S.w=size.value/100;css()};rot.oninput=()=>{S.r=+rot.value;css()};
   wr.oninput=()=>{S.wr=wr.value/100};
   box.querySelector("[data-blend]").onclick=e=>{S.blend=!S.blend;img.classList.toggle("fabric",S.blend);wr.disabled=!S.blend||!S.G;e.currentTarget.setAttribute("aria-pressed",String(S.blend))};
-  const bodyBtn=box.querySelector("[data-body]");
-  bodyBtn.onclick=async()=>{
-    if(S.track){S.track=false;bodyBtn.setAttribute("aria-pressed","false");if(S.base){const P=place();S.x=P.cx/P.W;S.y=P.cy/P.H;S.w=P.w/P.W;S.r=P.r}S.base=null;hint.classList.remove("on");hint.textContent=coarse?"Drag to move · pinch to size":"Drag to move";sync();return}
-    bodyBtn.disabled=true;hint.textContent="Loading body tracking…";
-    try{S.pose=await loadPose()}catch(e){S.pose=null}
-    bodyBtn.disabled=false;if(S.dead)return;
-    if(!S.pose){hint.textContent="Body tracking isn't available here";setTimeout(()=>{if(!S.track)hint.textContent=coarse?"Drag to move · pinch to size":"Drag to move"},2600);return}
-    S.track=true;S.ox=0;S.oy=0;S.r=0;S.k=.7;bodyBtn.setAttribute("aria-pressed","true");hint.textContent="Looking for a person…";sync()};
+  /* zoom switch: tap 1× / 2× / 3×, or drag the thumb for anything between (camera zoom where offered, else digital) */
+  const zw=box.querySelector(".cam-zoom"),zth=zw.querySelector(".zm-thumb"),zbs=[...zw.querySelectorAll("[data-z]")],stops=zbs.map(b=>+b.dataset.z);
+  const ZMIN=stops[0],ZMAX=stops[stops.length-1],zfmt=z=>(Math.round(z*10)/10).toString().replace(/\.0$/,"")+"×";
+  let zBusy=false,zWant=null,hintT=0;
+  const hwApply=v=>{const tr=S.stream&&S.stream.getVideoTracks()[0];if(!tr||!tr.applyConstraints)return;if(zBusy){zWant=v;return}zBusy=true;
+    tr.applyConstraints({advanced:[{zoom:v}]}).then(()=>{S.zhw=v},()=>{S.zcap=null;S.zhw=null;S.applyZoom()}).finally(()=>{zBusy=false;if(zWant!==null&&S.zcap){const w=zWant;zWant=null;hwApply(w)}})};
+  S.applyZoom=()=>{const hw=S.zcap?Math.min(S.zcap.max,Math.max(S.zcap.min,S.z)):1;if(S.zcap&&hw!==S.zhw)hwApply(hw);
+    S.dz=S.z/hw;S.video.style.transform=(S.facing==="user"?"scaleX(-1) ":"")+(S.dz>1.001?`scale(${S.dz})`:"");css()};
+  const zPos=z=>{let i=0;while(i<stops.length-2&&z>stops[i+1])i++;const t=Math.min(1,Math.max(0,(z-stops[i])/(stops[i+1]-stops[i]))),a=zbs[i],b=zbs[i+1];
+    return[a.offsetLeft+(b.offsetLeft-a.offsetLeft)*t,a.offsetWidth+(b.offsetWidth-a.offsetWidth)*t]};
+  const zDraw=instant=>{const [x,w]=zPos(S.z);if(instant)zth.style.transition="none";zth.style.width=w+"px";zth.style.transform=`translateX(${x}px)`;if(instant){void zth.offsetWidth;zth.style.transition=""}
+    zth.textContent=zfmt(S.z);
+    zbs.forEach((b,i)=>{const c=b.offsetLeft+b.offsetWidth/2;b.classList.toggle("hid",c>x-2&&c<x+w+2);b.setAttribute("aria-pressed",String(Math.abs(stops[i]-S.z)<.05))})};
+  const setZoom=(z,instant)=>{S.z=Math.min(ZMAX,Math.max(ZMIN,z));S.applyZoom();zDraw(instant);
+    hint.textContent="Zoom "+zfmt(S.z);clearTimeout(hintT);hintT=setTimeout(()=>{hint.textContent=coarse?"Drag to move · pinch to size":"Drag to move"},1200)};
+  const zAt=clientX=>{const r=zw.getBoundingClientRect(),x=clientX-r.left,c=zbs.map(b=>b.offsetLeft+b.offsetWidth/2);
+    if(x<=c[0])return ZMIN;for(let i=0;i<c.length-1;i++)if(x<=c[i+1])return stops[i]+(x-c[i])/(c[i+1]-c[i])*(stops[i+1]-stops[i]);return ZMAX};
+  let zd=null;
+  zw.addEventListener("pointerdown",e=>{if(e.button)return;zd={x:e.clientX,id:e.pointerId,moved:false,b:e.target.closest("[data-z]")};try{zw.setPointerCapture(e.pointerId)}catch(_){}});
+  zw.addEventListener("pointermove",e=>{if(!zd||e.pointerId!==zd.id)return;if(!zd.moved){if(Math.abs(e.clientX-zd.x)<4)return;zd.moved=true;zw.classList.add("dragging")}setZoom(zAt(e.clientX),true)});
+  const zEnd=e=>{if(!zd||e.pointerId!==zd.id)return;const d=zd;zd=null;zw.classList.remove("dragging");
+    if(!d.moved&&d.b){setZoom(+d.b.dataset.z);if(typeof sfx==="function")try{sfx("tick")}catch(_){}}
+    else if(d.moved){let n=S.z;stops.forEach(v=>{if(Math.abs(v-S.z)<.12)n=v});if(n!==S.z)setZoom(n)}};
+  zw.addEventListener("pointerup",zEnd);zw.addEventListener("pointercancel",zEnd);
+  zw.addEventListener("click",e=>e.preventDefault());
+  zw.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="ArrowUp"){e.preventDefault();setZoom(S.z+.1,true)}else if(e.key==="ArrowLeft"||e.key==="ArrowDown"){e.preventDefault();setZoom(S.z-.1,true)}});
+  zbs.forEach(b=>b.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setZoom(+b.dataset.z)}}));
+  new ResizeObserver(()=>zDraw(true)).observe(zw);zDraw(true);
   box.querySelector("[data-close]").onclick=close;
   box.querySelector("[data-flip]").onclick=()=>start(S.facing==="environment"?"user":"environment");
-  vf.addEventListener("dblclick",()=>{if(S.track){S.ox=0;S.oy=0;S.r=0}else{S.x=.5;S.y=.45;S.r=0}sync();css()});
-  /* drag to move; two fingers pinch/twist to size and rotate (relative to the body when following it) */
+  vf.addEventListener("dblclick",()=>{S.x=.5;S.y=.45;S.r=0;sync();css()});
+  /* drag to move; two fingers pinch/twist to size and rotate */
   const pts=new Map();let g0=null;
   vf.addEventListener("pointerdown",e=>{if(e.target.closest("button"))return;vf.setPointerCapture(e.pointerId);pts.set(e.pointerId,{x:e.clientX,y:e.clientY});g0=snap()});
   vf.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});const {W,H}=dims(),P=[...pts.values()];
-    if(P.length===1){const dx=P[0].x-g0.p[0].x,dy=P[0].y-g0.p[0].y;
-      if(S.track&&S.base){S.ox=g0.ox+dx/S.base.sw;S.oy=g0.oy+dy/S.base.sw}else{S.x=Math.min(1,Math.max(0,g0.x+dx/W));S.y=Math.min(1,Math.max(0,g0.y+dy/H))}}
+    if(P.length===1){const dx=P[0].x-g0.p[0].x,dy=P[0].y-g0.p[0].y;S.x=Math.min(1,Math.max(0,g0.x+dx/W));S.y=Math.min(1,Math.max(0,g0.y+dy/H))}
     else if(P.length>=2&&g0.p.length>=2){const d0=Math.hypot(g0.p[1].x-g0.p[0].x,g0.p[1].y-g0.p[0].y),d1=Math.hypot(P[1].x-P[0].x,P[1].y-P[0].y);
       const a0=Math.atan2(g0.p[1].y-g0.p[0].y,g0.p[1].x-g0.p[0].x),a1=Math.atan2(P[1].y-P[0].y,P[1].x-P[0].x),f=d1/Math.max(20,d0);
-      if(S.track)S.k=Math.min(1.6,Math.max(.16,g0.k*f));else S.w=Math.min(1,Math.max(.1,g0.w*f));S.r=((g0.r+(a1-a0)*180/Math.PI+540)%360)-180}
+      S.w=Math.min(1,Math.max(.1,g0.w*f));S.r=((g0.r+(a1-a0)*180/Math.PI+540)%360)-180}
     sync();css()});
   const up=e=>{pts.delete(e.pointerId);g0=snap()};vf.addEventListener("pointerup",up);vf.addEventListener("pointercancel",up);
-  vf.addEventListener("wheel",e=>{e.preventDefault();const f=1-e.deltaY*.001;if(S.track)S.k=Math.min(1.6,Math.max(.16,S.k*f));else S.w=Math.min(1,Math.max(.1,S.w*f));sync();css()},{passive:false});
-  function snap(){return{x:S.x,y:S.y,w:S.w,r:S.r,k:S.k,ox:S.ox,oy:S.oy,p:[...pts.values()].map(p=>({...p}))}}
+  vf.addEventListener("wheel",e=>{e.preventDefault();const f=1-e.deltaY*.001;S.w=Math.min(1,Math.max(.1,S.w*f));sync();css()},{passive:false});
+  function snap(){return{x:S.x,y:S.y,w:S.w,r:S.r,p:[...pts.values()].map(p=>({...p}))}}
   new ResizeObserver(resize).observe(vf);
-  /* per frame: track the body (about 15 times a second), then draw */
-  let lastPose=0;
+  /* per frame: draw */
   S.loop=()=>{if(S.looping)return;S.looping=true;const tick=now=>{if(S.dead||!S.stream){S.looping=false;return}
       const v=S.video;
-      if(S.track&&S.pose&&v.readyState>=2&&now-lastPose>66){lastPose=now;let res=null;try{res=S.pose.detectForVideo(v,now)}catch(e){}
-        const lm=res&&res.landmarks&&res.landmarks[0];
-        if(lm&&lm[11]&&lm[12]&&(lm[11].visibility??1)>.4&&(lm[12].visibility??1)>.4){const C=cover(),a=C.toVF(lm[11].x,lm[11].y),b=C.toVF(lm[12].x,lm[12].y);
-          const sx=(a[0]+b[0])/2,sy=(a[1]+b[1])/2,sw=Math.hypot(a[0]-b[0],a[1]-b[1]);let ang=Math.atan2(a[1]-b[1],a[0]-b[0])*180/Math.PI;if(ang>90)ang-=180;if(ang<-90)ang+=180;
-          let cx,cy;const hl=lm[23],hr=lm[24];
-          if(hl&&hr&&(hl.visibility??0)>.5&&(hr.visibility??0)>.5){const p=C.toVF(hl.x,hl.y),q=C.toVF(hr.x,hr.y);cx=sx+((p[0]+q[0])/2-sx)*.3;cy=sy+((p[1]+q[1])/2-sy)*.3}
-          else{const t=ang*Math.PI/180;cx=sx-Math.sin(t)*sw*.38;cy=sy+Math.cos(t)*sw*.38}
-          const n={cx,cy,sw,ang},o=S.base,e=.45;S.base=o?{cx:o.cx+(n.cx-o.cx)*e,cy:o.cy+(n.cy-o.cy)*e,sw:o.sw+(n.sw-o.sw)*e,ang:o.ang+(n.ang-o.ang)*e}:n;
-          S.seen=now;hint.textContent="Following body";hint.classList.add("on")}
-        else if(now-S.seen>700){hint.textContent="Looking for a person…";hint.classList.remove("on")}}
       const P=place();
       if(S.G&&v.readyState>=2){const C=cover();const on=S.blend?S.wr:0;if(!glFrame(S.G,v,C.AB,P,on*50,on*.9)){S.G=null;vf.classList.remove("gl")}}
       else css();
@@ -238,7 +246,7 @@ function shoot(g){
   let c,k;
   if(S.G){const src=S.G.gl.canvas;c=document.createElement("canvas");c.width=src.width;c.height=src.height;c.getContext("2d").drawImage(src,0,0);k=c.width/W}
   else{k=Math.min(3,Math.max(1.5,Math.max(vw/W,vh/H)));c=document.createElement("canvas");c.width=Math.round(W*k);c.height=Math.round(H*k);const x=c.getContext("2d");
-    const s=Math.max(W/vw,H/vh),dw=vw*s*k,dh=vh*s*k;x.save();if(S.facing==="user"){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,(c.width-dw)/2,(c.height-dh)/2,dw,dh);x.restore();
+    const s=Math.max(W/vw,H/vh)*(S.dz||1),dw=vw*s*k,dh=vh*s*k;x.save();if(S.facing==="user"){x.translate(c.width,0);x.scale(-1,1)}x.drawImage(v,(c.width-dw)/2,(c.height-dh)/2,dw,dh);x.restore();
     const m=/translate\(([-\d.]+)px,\s*([-\d.]+)px\)\s*rotate\(([-\d.]+)deg\)/.exec(img.style.transform||""),gw=parseFloat(img.style.width)||W*.4,gh=img.naturalWidth?gw*img.naturalHeight/img.naturalWidth:gw;
     if(m){x.save();x.translate((+m[1]+gw/2)*k,(+m[2]+gh/2)*k);x.rotate(+m[3]*Math.PI/180);if(S.blend){x.globalCompositeOperation="hard-light";x.globalAlpha=.92}try{x.drawImage(img,-gw/2*k,-gh/2*k,gw*k,gh*k)}catch(e){}x.restore()}}
   const x=c.getContext("2d"),fs=Math.round(13*k);x.font=`600 ${fs}px ${getComputedStyle(document.documentElement).getPropertyValue("--f-mono")||"monospace"}`;x.textAlign="right";
