@@ -2,7 +2,8 @@
    A "Grid view" pill sits where "See on Garment" sits in the shop (bottom left of the card, inline with the card
    buttons). It opens every project in the current portfolio tab as a masonry grid under the header: tiles cascade in,
    images fade up as they load, hovering lifts a tile, the ribbon saves to the shortlist, and tapping opens the project.
-   The header tabs filter the grid; "Card view" (or Esc) goes back to the cards. Opens straight away on #grid. */
+   A row of category tabs sits right above the grid and filters it (the header only shows All and Play);
+   "Card view" (or Esc) goes back to the cards. Opens straight away on #grid. */
 (function(){
 if(typeof PL!=="function"||typeof openDetail!=="function")return;
 const wrap=document.querySelector("#swipeView .deckwrap");if(!wrap)return;
@@ -19,6 +20,9 @@ html.pg-ready .pg-toggle{display:block}
 .pg-view{position:fixed;left:0;right:0;bottom:0;top:var(--pg-top,64px);z-index:100;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;opacity:0;transition:opacity .35s ease}
 .pg-view.on{opacity:1}
 .pg-in{padding:18px var(--pg-x,16px) calc(110px + env(safe-area-inset-bottom,0px))}
+.pg-cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 0 16px;padding:2px 0}
+.pg-cats::-webkit-scrollbar{display:none}
+.pg-cats .pocket-tab{cursor:pointer;font:inherit;font-weight:600;font-size:12px}
 .pg-grid{column-count:2;column-gap:10px}
 @media (min-width:640px){.pg-grid{column-count:3;column-gap:14px}}
 @media (min-width:1000px){.pg-grid{column-count:4;column-gap:16px}}
@@ -60,12 +64,12 @@ const tg=document.createElement("div");tg.className="pg-toggle";
 tg.innerHTML=`<button type="button" aria-label="Show the portfolio as a grid">${gridIcon}<span>Grid view</span></button>`;
 wrap.appendChild(tg);
 const view=document.createElement("div");view.className="pg-view";view.setAttribute("aria-label","Portfolio grid");view.hidden=true;
-view.innerHTML=`<div class="pg-in"><div class="pg-grid"></div></div>`;
+view.innerHTML=`<div class="pg-in"><nav class="pg-cats" aria-label="Categories"></nav><div class="pg-grid"></div></div>`;
 const back=document.createElement("div");back.className="pg-back";back.hidden=true;
 back.innerHTML=`<button type="button" aria-label="Back to card view">${cardIcon}<span>Card view</span></button>`;
 document.body.append(view,back);
-const grid=view.querySelector(".pg-grid");
-let open=false,io=null;
+const grid=view.querySelector(".pg-grid"),cats=view.querySelector(".pg-cats");
+let open=false,io=null,gcat="All";
 
 /* Same fit rule as the garment pill: one line, then two short lines, then stacked above the buttons. */
 function fit(){const c=wrap.querySelector(".controls");tg.classList.remove("pg-stack","pg-tight");if(!c)return;
@@ -73,7 +77,17 @@ function fit(){const c=wrap.querySelector(".controls");tg.classList.remove("pg-s
   if(ok())return;tg.classList.add("pg-tight");if(ok())return;tg.classList.remove("pg-tight");tg.classList.add("pg-stack")}
 function sync(){const on=mode==="swipe";document.documentElement.classList.toggle("pg-ready",on);if(on)requestAnimationFrame(fit);if(!on&&open)close()}
 
-const list=()=>PL().filter(p=>!p.nl);
+/* the grid keeps its own category (the header is pinned to All while Play is installed) */
+const inCat=(p,c)=>c==="All"||(typeof catsOf==="function"?catsOf(p):[p.cat]).includes(c);
+const list=()=>PROJECTS.filter(p=>!p.nl&&inCat(p,gcat));
+function renderCats(){
+  const all=PROJECTS.filter(p=>!p.nl);
+  const tabs=["All",...(typeof CATS!=="undefined"?CATS:[])];
+  cats.innerHTML=tabs.map(c=>`<button type="button" class="pocket-tab" aria-pressed="${c===gcat}" data-cat="${esc(c)}">${esc(c)}<span>${all.filter(p=>inCat(p,c)).length}</span></button>`).join("");
+}
+cats.addEventListener("click",e=>{const b=e.target.closest(".pocket-tab");if(!b||b.dataset.cat===gcat)return;
+  gcat=b.dataset.cat;renderCats();view.scrollTop=0;render();
+  if(typeof sfx==="function")try{sfx("soft")}catch(e){}});
 function tile(p,i){
   const a=document.createElement("div");a.className="pg-tile";a.tabIndex=0;a.setAttribute("role","button");
   a.setAttribute("aria-label",`${p.client}, ${p.title}. Open project.`);
@@ -96,7 +110,7 @@ function tile(p,i){
   return a;
 }
 function render(){
-  const L0=list(),cat=typeof pcat!=="undefined"?pcat:"All";
+  const L0=list(),cat=gcat;
   if(io)io.disconnect();grid.innerHTML="";
   if(!L0.length){grid.innerHTML=`<p class="pg-empty">${esc(cat)} projects coming soon.</p>`;return}
   const tiles=L0.map(tile);tiles.forEach(t=>grid.appendChild(t));
@@ -109,7 +123,7 @@ function render(){
 }
 function setTop(){const h=document.querySelector("header"),r=h&&h.getBoundingClientRect();view.style.setProperty("--pg-top",(r?Math.max(0,r.bottom):64)+"px");if(r&&r.width){const x=Math.max(16,Math.round(r.left))+"px";view.style.setProperty("--pg-x",x);back.style.setProperty("--pg-x",x)}}
 function openGrid(){
-  if(open||mode!=="swipe")return;open=true;setTop();view.hidden=false;back.hidden=false;view.scrollTop=0;render();
+  if(open||mode!=="swipe")return;open=true;setTop();view.hidden=false;back.hidden=false;view.scrollTop=0;renderCats();render();
   requestAnimationFrame(()=>{view.classList.add("on");back.classList.add("on")});
   try{window.history.replaceState(null,"","#grid")}catch(e){}
   if(typeof sfx==="function")try{sfx("soft")}catch(e){}
@@ -127,11 +141,9 @@ addEventListener("keydown",e=>{if(!open||document.querySelector(".scrim"))return
   if(e.key==="Escape"){e.stopImmediatePropagation();close();return}
   if(["ArrowLeft","ArrowRight","ArrowUp","z","Z"].includes(e.key)&&!(e.target&&e.target.closest&&e.target.closest("input,textarea")))e.stopImmediatePropagation()},true);
 
-/* header tabs filter the grid; switching to the shop closes it */
-if(typeof setCat==="function"){const _setCat=setCat;setCat=function(){const r=_setCat.apply(this,arguments);if(open&&pcat!==lastCat){lastCat=pcat;view.scrollTop=0;render()}return r}}
+/* switching to the shop closes the grid */
 if(typeof setMode==="function"){const _setMode=setMode;setMode=function(){const r=_setMode.apply(this,arguments);sync();return r}}
-let lastCat=typeof pcat!=="undefined"?pcat:"All";
-if(typeof renderPockets==="function"){const _rp=renderPockets;renderPockets=function(){const r=_rp.apply(this,arguments);if(open){setTop();if(pcat!==lastCat){lastCat=pcat;view.scrollTop=0;render()}}else lastCat=pcat;return r}}
+if(typeof renderPockets==="function"){const _rp=renderPockets;renderPockets=function(){const r=_rp.apply(this,arguments);if(open)setTop();return r}}
 sync();
 if(location.hash==="#grid"&&mode==="swipe")openGrid();
 })();
