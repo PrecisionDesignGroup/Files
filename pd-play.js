@@ -1,5 +1,6 @@
 /* ---------- PORTFOLIO: "Play" — solitaire with project covers on the card backs ----------
-   The portfolio's category row shows just "All" and "Play". Play swaps the card deck for a game of Klondike
+   "Play" is the third button of the Portfolio / Shop switch (Portfolio | Shop | Play); the portfolio has no category
+   row of its own (the grid view keeps its categories). Play swaps the card deck for a game of Klondike
    solitaire (draw 1): every face-down card shows a real project cover. Drag cards, or tap one to send it to the
    best spot; tap the stock to draw. Undo, New game, moves and time; the game is saved between visits.
    Winning shows the projects whose covers were in the deck; tapping one opens it. */
@@ -238,7 +239,7 @@ const endDrag=e=>{if(!drag||e.pointerId!==drag.id)return;const d=drag;drag=null;
   if(target&&target!==d.from){moveCards(d.list,d.from,target);snd(G.found.includes(target)?"pop":"tick")}else layout()};
 board.addEventListener("pointerup",endDrag);board.addEventListener("pointercancel",endDrag);
 undoBtn.onclick=()=>{if(!hist.length)return;G.auto=false;restore(hist.pop());layout();save();snd("undo")};
-pv.querySelector("[data-back]").onclick=()=>{leave();renderPockets();if(typeof renderDeck==="function")renderDeck()};
+pv.querySelector("[data-back]").onclick=()=>{leave();renderPockets();if(typeof renderDeck==="function")renderDeck();requestAnimationFrame(swSync)};
 pv.querySelector("[data-new]").onclick=()=>{const w=board.querySelector(".play-win");if(w)w.remove();deal()};
 
 /* ---------- clock + saving ---------- */
@@ -248,7 +249,7 @@ function load(){try{const o=JSON.parse(localStorage.getItem(KEY)||"null");if(!o|
   const map=c=>cards[c.id];G.stock=G.stock.map(map);G.waste=G.waste.map(map);G.found=G.found.map(f=>f.map(map));G.tab=G.tab.map(t=>t.map(map));
   all().forEach((c,i)=>{const o2=[...o.G.stock,...o.G.waste,...o.G.found.flat(),...o.G.tab.flat()].find(x=>x.id===c.id);c.up=o2.up});return true}catch(e){return false}}
 
-/* ---------- the tabs: All + Play ---------- */
+/* ---------- Play in the Portfolio / Shop switch ---------- */
 const playIco='<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M7 4v16l13-8z"/></svg>';
 function enter(){if(playing)return;playing=true;
   /* grid view sits on top of everything: close it first */
@@ -257,20 +258,37 @@ function enter(){if(playing)return;playing=true;
   sv.hidden=true;pv.hidden=false;if(!G&&!load())deal();else{layout(true);if(G.won&&!board.querySelector(".play-win"))win()}
   document.querySelectorAll("#deck video").forEach(v=>v.pause());
   clearInterval(tick);tick=setInterval(()=>{if(G&&G.started&&!G.won&&!document.hidden){G.time++;tmEl.textContent=fmt(G.time);if(G.time%5===0)save()}},1000);tmEl.textContent=fmt(G.time||0);
-  renderPockets();try{window.history.replaceState(null,"",location.pathname+location.search+"#play")}catch(e){}}
+  renderPockets();requestAnimationFrame(swSync);try{window.history.replaceState(null,"",location.pathname+location.search+"#play")}catch(e){}}
 function leave(){if(!playing)return;playing=false;clearInterval(tick);pv.hidden=true;if(typeof mode!=="undefined"&&mode==="swipe")sv.hidden=false;save();
   try{if(location.hash==="#play")window.history.replaceState(null,"",location.pathname+location.search)}catch(e){}}
 window.pdPlaying=()=>playing;
 window.__pdSol=()=>({G,layout,after,cards});
+/* Play sits in the Portfolio / Shop switch (Portfolio | Shop | Play), so the portfolio needs no category row:
+   in the portfolio the tabs are empty (the grid view keeps its own categories). */
 const _rp=renderPockets;renderPockets=function(){const r=_rp.apply(this,arguments);
-  if(typeof mode!=="undefined"&&mode==="swipe"){const nav=document.getElementById("pockets");if(nav){
-    nav.querySelectorAll(".pocket-tab").forEach(b=>{if(b.dataset.cat!=="All")b.remove();else b.setAttribute("aria-pressed",String(!playing))});
-    const b=document.createElement("button");b.className="pocket-tab";b.dataset.cat="__play";b.setAttribute("aria-pressed",String(playing));b.innerHTML=`${playIco}Play`;
-    b.onclick=e=>{e.stopPropagation();enter()};nav.appendChild(b);
-}}
+  const port=typeof mode!=="undefined"&&mode==="swipe",nav=document.getElementById("pockets");
+  if(port&&nav)nav.innerHTML="";
+  document.documentElement.classList.toggle("pd-no-tabs",port);
   return r};
-const _sc=setCat;setCat=function(c){if(typeof mode!=="undefined"&&mode==="swipe"&&c!=="All")c="All";if(playing&&c==="All"){leave();renderPockets();renderDeck();return}return _sc.call(this,c)};
-const _sm=setMode;setMode=function(m){if(playing&&m!=="swipe")leave();return _sm.apply(this,arguments)};
+const swEl=document.querySelector(".switch"),bS=document.getElementById("modeSwipe"),bW=document.getElementById("modeWallet");
+let bP=null;
+function swSync(){if(!bP)return;const m=typeof mode!=="undefined"?mode:"swipe";
+  bS.setAttribute("aria-pressed",String(m==="swipe"&&!playing));bW.setAttribute("aria-pressed",String(m==="wallet"));bP.setAttribute("aria-pressed",String(playing));
+  const t=swEl.querySelector(".sw-thumb"),b=playing?bP:m==="wallet"?bW:bS;
+  if(t&&b){t.style.width=b.offsetWidth+"px";t.style.transform="translateX("+b.offsetLeft+"px)"}}
+if(swEl&&bS&&bW){
+  const st=document.createElement("style");st.textContent=`html.pd-no-tabs .pockets,html.pd-no-tabs .bar-div{display:none}
+.switch #modePlay{display:inline-flex;align-items:center;gap:4px}.switch #modePlay svg{width:10px;height:10px;flex:none}`;document.head.appendChild(st);
+  bP=document.createElement("button");bP.id="modePlay";bP.type="button";bP.setAttribute("aria-pressed","false");bP.innerHTML=`${playIco}Play`;
+  bW.insertAdjacentElement("afterend",bP);
+  bP.addEventListener("click",e=>{e.stopPropagation();if(playing)return;if(typeof mode!=="undefined"&&mode!=="swipe")setMode("swipe");enter();swSync();if(typeof sfx==="function")try{sfx("pop")}catch(_){}});
+  /* Portfolio while playing goes back to the cards */
+  bS.addEventListener("click",()=>{if(playing){leave();renderPockets();if(typeof renderDeck==="function")renderDeck();requestAnimationFrame(swSync)}},true);
+  if(window.ResizeObserver)new ResizeObserver(()=>requestAnimationFrame(swSync)).observe(swEl);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>requestAnimationFrame(swSync));
+}
+const _sc=setCat;setCat=function(c){if(typeof mode!=="undefined"&&mode==="swipe"&&c!=="All")c="All";if(playing&&c==="All"){leave();renderPockets();renderDeck();requestAnimationFrame(swSync);return}return _sc.call(this,c)};
+const _sm=setMode;setMode=function(m){if(playing&&m!=="swipe")leave();const r=_sm.apply(this,arguments);requestAnimationFrame(swSync);return r};
 /* keys that swipe the deck do nothing in the game; Z undoes a move */
 addEventListener("keydown",e=>{if(!playing||document.querySelector(".scrim"))return;if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Enter"," "].includes(e.key)){e.stopImmediatePropagation();e.preventDefault()}
   if(e.key.toLowerCase()==="z"&&!e.metaKey&&!e.ctrlKey){e.stopImmediatePropagation();e.preventDefault();undoBtn.click()}},true);
