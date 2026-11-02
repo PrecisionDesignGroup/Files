@@ -1740,6 +1740,11 @@ if(pk&&hdr&&bar){
   fit();
 }
 
+/* ===== TAB ORDER: Services first, then Graphics, then Gift Cards; the shop opens on Services ===== */
+{const ORDER=["Services","Graphics","Gift Cards"],rank=k=>{const i=ORDER.indexOf(k);return i<0?99:i};
+  if(typeof SCATS!=="undefined"&&Array.isArray(SCATS)){SCATS.sort((a,b)=>rank(a)-rank(b));
+    if(typeof scat!=="undefined"&&scat!==SCATS[0]&&!location.hash.startsWith("#p/")){scat=SCATS[0];idx=0;history=[]}}}
+
 /* ===== KEEP THE PAGE STILL ON PHONES AND TABLETS =====
    The app fills the screen exactly, but Safari still lets a drag pull the whole page down (rubber-band) and can leave
    it scrolled a little; the header then slides under Safari's top edge, which frosts it. Stop the pull, and put the
