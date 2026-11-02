@@ -1609,7 +1609,8 @@ try{
    were already in a visitor's cart show "Sold out" there with no checkout. To bring items back, take them out of SOLD.
    TABS: on screens too narrow to fit the category tabs in the header (most phones), the tabs move to their own
    full-width row right under the header, sharing the width evenly, so every tab is visible at once. When the header
-   has room (laptops, tablets), they stay in the header as before. */
+   has room (laptops, tablets), they stay in the header as before.
+   STILL PAGE: no rubber-band pull, and the page snaps back to the top if Safari leaves it scrolled. */
 (function(){
 if(typeof SHOP==="undefined"||typeof renderPockets!=="function")return;
 
@@ -1738,6 +1739,17 @@ if(pk&&hdr&&bar){
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
   fit();
 }
+
+/* ===== KEEP THE PAGE STILL ON PHONES AND TABLETS =====
+   The app fills the screen exactly, but Safari still lets a drag pull the whole page down (rubber-band) and can leave
+   it scrolled a little; the header then slides under Safari's top edge, which frosts it. Stop the pull, and put the
+   page back at the top whenever it drifts while nothing that scrolls (a sheet, the cart, a form field) is open. */
+{const s=document.createElement("style");s.textContent="html,body{overscroll-behavior:none}";document.head.appendChild(s);
+  let t=0;const settle=()=>{t=0;const a=document.activeElement;
+    if(window.scrollY>0&&!document.querySelector(".scrim")&&!(document.getElementById("drawer")||{}).classList?.contains("on")&&!(a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))
+      &&document.documentElement.scrollHeight<=innerHeight+4)window.scrollTo(0,0)};
+  addEventListener("scroll",()=>{if(!t)t=setTimeout(settle,180)},{passive:true});
+  addEventListener("resize",()=>{if(!t)t=setTimeout(settle,180)})}
 
 /* redraw whatever is on screen now */
 try{renderPockets();if(mode==="wallet"&&document.documentElement.classList.contains("shopsw"))renderDeck();else if(mode==="wallet")renderWallet();renderDrawer()}catch(e){}
