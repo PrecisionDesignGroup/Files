@@ -183,10 +183,14 @@ html.shopsw #deck .dcard .foot>span.mono::after{display:inline;margin:0 0 0 8px}
    so the deck stops above it (not in a home-screen app or other browsers) */
 {const u=navigator.userAgent,ios=/iP(hone|od|ad)/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1);
  if(ios&&/Safari/.test(u)&&!/CriOS|FxiOS|EdgiOS|OPiOS|GSA|Instagram|FBAN|FBAV|Line\//.test(u)&&!navigator.standalone&&!matchMedia("(display-mode: standalone)").matches){
-  document.documentElement.classList.add("pd-iosbar");
+  /* Only when Safari's bar floats over the page. When Safari already keeps the page above its bar, the small viewport
+     (svh) is clearly shorter than the large one (lvh) and no extra room is needed. */
+  const de=document.documentElement,probe=u=>{const d=document.createElement("div");d.style.cssText="position:fixed;left:-9px;top:0;width:1px;visibility:hidden;pointer-events:none;height:100"+u;document.body.appendChild(d);const h=d.getBoundingClientRect().height;d.remove();return h};
   const s=document.createElement("style");
   s.textContent="html.pd-iosbar #deck.deck{height:calc(100svh - var(--hdr,56px) - 24px - var(--pd-bar,78px))}";
-  document.head.appendChild(s)}}
+  document.head.appendChild(s);
+  const chk=()=>{let floats=true;try{const sv=probe("svh"),lv=probe("lvh");if(sv&&lv&&lv-sv>=40)floats=false}catch(e){}de.classList.toggle("pd-iosbar",floats)};
+  chk();addEventListener("resize",chk);addEventListener("orientationchange",()=>setTimeout(chk,300))}}
 
 /* redraw whatever is on screen now */
 try{renderPockets();if(mode==="wallet"&&document.documentElement.classList.contains("shopsw"))renderDeck();else if(mode==="wallet")renderWallet();renderDrawer()}catch(e){}
