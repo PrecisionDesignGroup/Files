@@ -1745,6 +1745,33 @@ if(pk&&hdr&&bar){
   if(typeof SCATS!=="undefined"&&Array.isArray(SCATS)){SCATS.sort((a,b)=>rank(a)-rank(b));
     if(typeof scat!=="undefined"&&scat!==SCATS[0]&&!location.hash.startsWith("#p/")){scat=SCATS[0];idx=0;history=[]}}}
 
+/* ===== CARD FOOTERS: every card's bottom strip is the same height =====
+   Two fixed lines: the title gets the whole first line (its font steps down to fit long titles, "…" only as a last
+   resort), and the client sits on the second line with the discipline / price on the right ("Sold out" beside the
+   price, not under it). The "Swipe left to start" hint on the first card sits in the top-right corner, and that
+   card's title fits to the space beside it. */
+{const s=document.createElement("style");s.textContent=`
+#deck .dcard .foot{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:12px;row-gap:2px;align-items:end}
+#deck .dcard .foot>div{display:contents}
+#deck .dcard .foot b{grid-column:1/-1;grid-row:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:22px;height:22px}
+#deck .dcard .foot>div>span{grid-column:1;grid-row:2;display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#deck .dcard .foot>span.mono{grid-column:2;grid-row:2;white-space:nowrap;text-align:right}
+#deck .dcard .foot>span.mono::before{position:absolute;top:15px;right:16px;margin:0}
+html.shopsw #deck .dcard .foot>span.mono::after{display:inline;margin:0 0 0 8px}
+@media (max-width:420px){#deck .dcard .foot>span.mono::before{font-size:10px;letter-spacing:.05em}}`;document.head.appendChild(s);
+  const hintW=sp=>{const cs=getComputedStyle(sp,"::before");if(cs.display==="none"||cs.visibility==="hidden"||cs.content==="none")return 0;
+    const t=document.createElement("span");t.textContent=(cs.content||"").replace(/^"|"$/g,"").replace(/\\2190/g,"\u2190").replace(/\\00a0 ?/g,"\u00a0");
+    t.style.cssText=`position:absolute;visibility:hidden;white-space:nowrap;font:${cs.font};letter-spacing:${cs.letterSpacing};text-transform:${cs.textTransform}`;
+    document.body.appendChild(t);const w=t.getBoundingClientRect().width;t.remove();return w};
+  const fitFoot=()=>document.querySelectorAll("#deck .dcard .foot b").forEach(b=>{
+    const sp=b.closest(".foot").querySelector(":scope>span.mono"),hw=sp?hintW(sp):0;
+    b.style.fontSize="";b.style.paddingRight=hw?(hw+12)+"px":"";
+    const max=parseFloat(getComputedStyle(b).fontSize)||20;let f=max;
+    while(b.scrollWidth>b.clientWidth+1&&f>12){f-=.5;b.style.fontSize=f+"px"}});
+  const dk=document.getElementById("deck");let q=0;const run=()=>{if(!q)q=requestAnimationFrame(()=>{q=0;fitFoot()})};
+  if(dk)new MutationObserver(run).observe(dk,{childList:true,attributes:true,attributeFilter:["class"]});
+  addEventListener("resize",run);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(run);run()}
+
 /* ===== KEEP THE PAGE STILL ON PHONES AND TABLETS =====
    The app fills the screen exactly, but Safari still lets a drag pull the whole page down (rubber-band) and can leave
    it scrolled a little; the header then slides under Safari's top edge, which frosts it. Stop the pull, and put the
