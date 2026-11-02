@@ -179,6 +179,15 @@ html.shopsw #deck .dcard .foot>span.mono::after{display:inline;margin:0 0 0 8px}
   addEventListener("scroll",()=>{if(!t)t=setTimeout(settle,180)},{passive:true});
   addEventListener("resize",()=>{if(!t)t=setTimeout(settle,180)})}
 
+/* iPhone/iPad Safari: the floating address bar sits over the bottom of the page,
+   so the deck stops above it (not in a home-screen app or other browsers) */
+{const u=navigator.userAgent,ios=/iP(hone|od|ad)/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1);
+ if(ios&&/Safari/.test(u)&&!/CriOS|FxiOS|EdgiOS|OPiOS|GSA|Instagram|FBAN|FBAV|Line\//.test(u)&&!navigator.standalone&&!matchMedia("(display-mode: standalone)").matches){
+  document.documentElement.classList.add("pd-iosbar");
+  const s=document.createElement("style");
+  s.textContent="html.pd-iosbar #deck.deck{height:calc(100svh - var(--hdr,56px) - 24px - var(--pd-bar,78px))}";
+  document.head.appendChild(s)}}
+
 /* redraw whatever is on screen now */
 try{renderPockets();if(mode==="wallet"&&document.documentElement.classList.contains("shopsw"))renderDeck();else if(mode==="wallet")renderWallet();renderDrawer()}catch(e){}
 })();
