@@ -1942,7 +1942,11 @@ try{
         quote:   { text:"…", by:"Name, Role" }          → a client quote under the description
         mockups: ["https://…jpg", …]                    → an "In use" strip (garments, packaging, signage…)
         video:   "https://…mp4"                         → a short looping clip (muted, plays inline)
-      Add them in EXTRAS below, keyed by the project id. Projects without extras look as before. */
+      Add them in EXTRAS below, keyed by the project id. Projects without extras look as before.
+   4. DEPTH: on a laptop/desktop the top card tilts a few degrees toward the mouse (the existing light sheen follows it).
+      On Android phones the artwork drifts a few pixels as the phone tilts. iPhones would show a motion-permission
+      prompt for this, so they're left still. All of it is off for reduced-motion visitors and while a card is dragged.
+   5. TYPE & SPACE: on large screens the side columns get calmer, consistent sizes and a little more room. */
 (function(){
 if(typeof openDetail!=="function"||typeof showSheet!=="function")return;
 const reduce=()=>matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -1969,6 +1973,21 @@ img.pd-ld{opacity:0;filter:blur(14px);transform:scale(1.03)}
 .sheet.pd-grow .body>*{animation:pdIn .5s cubic-bezier(.22,1,.36,1) both}
 .sheet.pd-grow .body>*:nth-child(2){animation-delay:.04s}.sheet.pd-grow .body>*:nth-child(3){animation-delay:.08s}
 .sheet.pd-grow .body>*:nth-child(4){animation-delay:.12s}.sheet.pd-grow .body>*:nth-child(n+5){animation-delay:.16s}
+#deck{perspective:1400px}
+#deck .dcard.top{transition:rotate .18s ease-out}
+#deck .dcard.top.pd-tilt-off{transition:rotate .6s cubic-bezier(.22,1,.36,1)}
+#deck .dcard.top .fx-glare{transition:opacity .35s}
+#deck .dcard.top .art img{translate:var(--pd-px,0) var(--pd-py,0)}
+@media (min-width:1100px){
+  header{padding-block:16px}
+  .swipe{padding-block:24px;gap:clamp(28px,3.4vw,52px)}
+  .meta{gap:16px}
+  .meta h2{font-size:26px;letter-spacing:-.005em;line-height:1.05}
+  .meta p{font-size:15px;line-height:1.6;max-width:32ch}
+  .meta .spec,.meta dl{font-size:11px;letter-spacing:.06em;row-gap:8px}
+  .hints{gap:12px;font-size:11px;letter-spacing:.06em}
+  .hints div:last-child{font-size:13px!important;line-height:1.55;max-width:26ch!important}
+}
 @keyframes pdIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 `;
 const st=document.createElement("style");st.id="pd-premium";st.textContent=css;document.body.appendChild(st);
@@ -2039,5 +2058,34 @@ openDetail=function(p){
   }catch(e){}
   return r;
 };
+/* ---- 4. depth ---- */
+if(!reduce()){
+  const deck=document.getElementById("deck");
+  if(deck&&matchMedia("(hover:hover) and (pointer:fine)").matches){
+    let raf=0,ev=null,down=false;
+    const top=()=>deck.querySelector(".dcard.top");
+    const reset=c=>{if(!c)return;c.classList.add("pd-tilt-off");c.style.rotate="";setTimeout(()=>c.classList.remove("pd-tilt-off"),600)};
+    deck.addEventListener("pointerdown",()=>{down=true;reset(top())});
+    addEventListener("pointerup",()=>{down=false});
+    deck.addEventListener("pointermove",e=>{
+      if(e.pointerType!=="mouse"||down||e.buttons)return;ev=e;if(raf)return;
+      raf=requestAnimationFrame(()=>{raf=0;const c=top();if(!c||!ev||c.classList.contains("fx-gone"))return;
+        const r=c.getBoundingClientRect(),nx=Math.max(-1,Math.min(1,(ev.clientX-r.left)/r.width*2-1)),ny=Math.max(-1,Math.min(1,(ev.clientY-r.top)/r.height*2-1));
+        const a=5*Math.min(1,Math.hypot(nx,ny));
+        c.style.rotate=a<.05?"":`${(-ny).toFixed(3)} ${nx.toFixed(3)} 0 ${a.toFixed(2)}deg`});
+    });
+    deck.addEventListener("pointerleave",()=>reset(top()));
+    /* a flung card shouldn't keep its tilt */
+    if(typeof fly==="function"){const _f=fly;fly=function(el){const c=el||top();if(c)c.style.rotate="";return _f.apply(this,arguments)}}
+  }else if(deck&&typeof DeviceOrientationEvent!=="undefined"&&typeof DeviceOrientationEvent.requestPermission!=="function"){
+    let raf=0,b0=null;
+    addEventListener("deviceorientation",e=>{
+      if(e.gamma==null||raf)return;
+      raf=requestAnimationFrame(()=>{raf=0;if(b0===null)b0=e.beta;
+        const x=Math.max(-1,Math.min(1,e.gamma/25)),y=Math.max(-1,Math.min(1,(e.beta-b0)/25));
+        deck.style.setProperty("--pd-px",(x*6).toFixed(1)+"px");deck.style.setProperty("--pd-py",(y*6).toFixed(1)+"px")});
+    });
+  }
+}
 })();
 }catch(e){console.error("pd-premium.js",e)}
