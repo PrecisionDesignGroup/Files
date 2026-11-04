@@ -2451,6 +2451,47 @@ openDetail=function(s){
 })();
 /* 2026-11-04: the header switch reads Portfolio | Services | Play (was "Shop") */
 (function(){const b=document.getElementById("modeWallet");if(b&&/^\s*Shop\s*$/.test(b.textContent))b.textContent="Services"})();
+/* 2026-11-04: on phones the Services / Graphics / Gift Cards tabs no longer take a full row above the card. They float as
+   small vertical pills over the card's left edge (the empty strip beside the graphic), so the card gets that height back. */
+(function(){
+const pk=document.getElementById("pockets"),row=document.querySelector(".pd-tabrow"),hdr=document.querySelector("header"),de=document.documentElement;
+if(!pk||!row||!hdr)return;
+const css=`
+html.pd-tabs-side .pd-tabrow{display:none!important}
+.pd-side{position:fixed;z-index:25;display:none;pointer-events:none}
+html.pd-tabs-side .pd-side{display:block}
+html.pd-tabs-side.pd-no-tabs .pd-side{display:none}
+.pd-side .pockets{display:flex!important;flex-direction:column;gap:6px;padding:0;margin:0;overflow:visible;-webkit-mask-image:none;mask-image:none;pointer-events:auto}
+.pd-side .pocket-tab{writing-mode:vertical-rl;transform:rotate(180deg);flex:none;justify-content:center;gap:5px;padding:9px 2px;width:auto;min-width:0;border-radius:999px;
+  font-size:9.5px;line-height:1;letter-spacing:.02em;white-space:nowrap;background:color-mix(in srgb,var(--surface) 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  box-shadow:0 6px 16px -10px rgba(0,0,0,.6)}
+.pd-side .pocket-tab:active{transform:rotate(180deg) scale(.94)}
+.pd-side .pocket-tab span{font-size:8.5px}
+.pd-side .pocket-tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pd-side .pocket-tab[aria-pressed="true"] span{opacity:.75}
+`;
+const st=document.createElement("style");st.id="pd-side";st.textContent=css;document.head.appendChild(st);
+const side=document.createElement("div");side.className="pd-side";document.body.appendChild(side);
+function place(){
+  if(!side.contains(pk))return;const d=document.getElementById("deck"),r=d&&d.getBoundingClientRect();if(!r||!r.width)return;
+  side.style.left=Math.round(r.left-side.offsetWidth/2)+"px";
+  const h=side.offsetHeight;side.style.top=Math.round(r.top+Math.max(12,(r.height-90-h)/2))+"px";
+}
+function go(){
+  if(row.contains(pk)){side.appendChild(pk);de.classList.add("pd-tabs-side")}
+  else if(!side.contains(pk))de.classList.remove("pd-tabs-side");
+  if(side.contains(pk)&&!de.classList.contains("pd-tabs-row"))de.classList.add("pd-tabs-row");
+  try{de.style.setProperty("--hdr",hdr.offsetHeight+"px")}catch(e){}
+  requestAnimationFrame(place);
+}
+/* the header measure in pd-shop.js puts the tabs back in the header first; if they don't fit there they go to the side */
+const _set=window.setHdr;
+window.setHdr=function(){if(side.contains(pk)||row.contains(pk)){if(row.contains(pk))side.appendChild(pk);de.classList.add("pd-tabs-side");de.style.setProperty("--hdr",hdr.offsetHeight+"px");requestAnimationFrame(place)}else{de.classList.remove("pd-tabs-side");_set&&_set()}};
+if(typeof renderPockets==="function"){const _rp=renderPockets;renderPockets=function(){const r=_rp.apply(this,arguments);go();return r}}
+addEventListener("resize",()=>requestAnimationFrame(()=>{go()}));
+const d=document.getElementById("deck");if(d)new ResizeObserver(()=>place()).observe(d);
+go();setTimeout(go,500);
+})();
 }catch(e){console.error("pd-svcwork.js",e)}
 /* ===== pd-dock.js ===== */
 try{
