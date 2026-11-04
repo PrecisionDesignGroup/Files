@@ -76,12 +76,12 @@ html.pd-tabs-side .pd-tabrow{display:none!important}
 .pd-side{position:fixed;z-index:25;display:none;pointer-events:none}
 html.pd-tabs-side .pd-side{display:block}
 html.pd-tabs-side.pd-no-tabs .pd-side{display:none}
-.pd-side .pockets{display:flex!important;flex-direction:column;gap:6px;padding:0;margin:0;overflow:visible;-webkit-mask-image:none;mask-image:none;pointer-events:auto}
-.pd-side .pocket-tab{writing-mode:vertical-rl;transform:rotate(180deg);flex:none;justify-content:center;gap:5px;padding:9px 2px;width:auto;min-width:0;border-radius:999px;
-  font-size:9.5px;line-height:1;letter-spacing:.02em;white-space:nowrap;background:color-mix(in srgb,var(--surface) 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+.pd-side .pockets{display:flex!important;flex-direction:column;gap:8px;padding:0;margin:0;overflow:visible;-webkit-mask-image:none;mask-image:none;pointer-events:auto}
+.pd-side .pocket-tab{writing-mode:vertical-rl;transform:rotate(180deg);flex:none;justify-content:center;gap:5px;padding:14px 7px;width:auto;min-width:0;border-radius:999px;
+  font-size:12px;line-height:1;letter-spacing:.02em;white-space:nowrap;background:color-mix(in srgb,var(--surface) 70%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
   box-shadow:0 6px 16px -10px rgba(0,0,0,.6)}
 .pd-side .pocket-tab:active{transform:rotate(180deg) scale(.94)}
-.pd-side .pocket-tab span{font-size:8.5px}
+.pd-side .pocket-tab span{font-size:10px}
 .pd-side .pocket-tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .pd-side .pocket-tab[aria-pressed="true"] span{opacity:.75}
 `;
@@ -89,7 +89,7 @@ const st=document.createElement("style");st.id="pd-side";st.textContent=css;docu
 const side=document.createElement("div");side.className="pd-side";document.body.appendChild(side);
 function place(){
   if(!side.contains(pk))return;const d=document.getElementById("deck"),r=d&&d.getBoundingClientRect();if(!r||!r.width)return;
-  side.style.left=Math.round(r.left-side.offsetWidth/2)+"px";
+  side.style.left=Math.round(r.left+8)+"px";
   const h=side.offsetHeight;side.style.top=Math.round(r.top+Math.max(12,(r.height-90-h)/2))+"px";
 }
 function go(){
