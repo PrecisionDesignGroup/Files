@@ -2222,6 +2222,15 @@ const PRESS={
 };
 window.PD_PRESS=PRESS;
 
+/* ---- every project opens on its flat, textured graphic: some older projects used a product or model photo
+   (hosted on the old Wix site) as the cover; their textured "pd-cover-…" graphic in the gallery takes its place
+   and the photo moves into the gallery right after it. ---- */
+if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS))PROJECTS.forEach(p=>{
+  if(!p||!p.image||/pd-cover-|webflow-prod-assets/.test(p.image)&&!/wixstatic/.test(p.image))return;
+  const g=(p.gallery||[]).slice(),k=g.findIndex(u=>typeof u==="string"&&/pd-cover-/.test(u));if(k<0)return;
+  const cov=g.splice(k,1)[0];p.gallery=[p.image,...g];p.image=cov;
+});
+
 /* ---- projects with press come first in the deck, then ones with only shop links, then the rest (each group keeps its order).
    Special cards (newsletter, ads) stay in their slots. ---- */
 if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)){
