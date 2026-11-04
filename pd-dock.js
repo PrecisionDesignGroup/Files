@@ -27,11 +27,12 @@ html.pd-iosfit #deck.deck{height:calc(100svh - var(--hdr,56px) - 12px - var(--pd
 .pd-bar>.controls>*{flex:none}
 @media (max-width:380px){
   .pd-bar{gap:4px;padding:4px}
-  .pd-bar>.gm-toggle button{font-size:0!important;gap:0!important;width:40px;padding:0!important;justify-content:center}
-  .pd-bar>.gm-toggle button svg{width:17px;height:17px}
   .pd-bar>.nyp-toggle button{font-size:10px!important;padding:0 8px!important;white-space:normal!important;text-align:left;width:62px;line-height:1.05}
   .pd-bar>.nyp-toggle button>svg{display:none}
 }
+/* the views button sits beside "See on garment" in Graphics: the garment pill goes icon-only on phones */
+@media (max-width:440px){.pd-bar>.gm-toggle button{font-size:0!important;gap:0!important;width:40px;padding:0!important;justify-content:center}
+  .pd-bar>.gm-toggle button svg{width:17px;height:17px}}
 .pd-bar .pd-sep{flex:none;width:1px;height:22px;background:var(--line)}
 .pd-bar .pd-sep:first-child,.pd-bar .pd-sep:last-child{display:none}
 .pd-bar>.pg-toggle.pg-tight button{width:40px}
@@ -109,7 +110,7 @@ function placeViews(){
       if(t.classList.contains("pg-tile")&&Math.abs(r.top-m.getBoundingClientRect().top)<4){t.animate([{transform:"scale(1)"},{transform:"scale(1.04)"},{transform:"scale(1)"}],{duration:300});return}
       view.scrollBy({top:(r.top+r.bottom)/2-(vr.top+(vr.height-62)/2),behavior:"smooth"})}}
   const act={btnUndo:()=>go(-1),btnPass:()=>go(1),
-    btnSave:()=>{const m=mid(),s=m&&m.querySelector(".pg-save");if(s)s.click()},
+    btnSave:()=>{const m=mid();if(!m)return;if(view.classList.contains("pg-shop")){const o=m.querySelector(".pg-open");(o||m).click();return}const s=m.querySelector(".pg-save");if(s)s.click()},
     btnOpen:()=>{const m=mid();if(!m)return;const o=m.querySelector(".pg-open");(o||m).click()}};
   document.addEventListener("click",e=>{if(!isOpen())return;const b=e.target.closest&&e.target.closest("#btnUndo,#btnPass,#btnSave,#btnOpen");if(!b)return;
     e.preventDefault();e.stopImmediatePropagation();act[b.id]()},true);

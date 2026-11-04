@@ -90,13 +90,13 @@ html.pg-ready .pg-toggle{display:block}
 .pg-tile{position:relative;display:block;break-inside:avoid;margin:0 0 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;opacity:0;transform:translateY(28px) scale(.97);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
 .pg-tile.in{opacity:1;transform:none}
 .pg-img{position:relative;border-radius:14px;overflow:hidden;background:var(--c,#222);aspect-ratio:var(--ar,.72);box-shadow:0 1px 0 var(--line);transition:box-shadow .3s,transform .3s cubic-bezier(.2,.8,.2,1)}
-.pg-img img,.pg-img svg{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .7s ease,transform 1.1s cubic-bezier(.2,.8,.2,1)}
-.pg-img svg{opacity:1;transform:none}
-.pg-img img.ld{opacity:1;transform:scale(1)}
+.pg-img>img,.pg-img>svg,.pg-img>div{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity .7s ease,transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.pg-img>svg,.pg-img>div{opacity:1;transform:none}
+.pg-img>img.ld{opacity:1;transform:scale(1)}
 .pg-img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.45),transparent 45%);opacity:0;transition:opacity .3s}
 @media (hover:hover){
   .pg-tile:hover .pg-img{transform:translateY(-4px);box-shadow:0 18px 36px -18px var(--shadow)}
-  .pg-tile:hover .pg-img img.ld{transform:scale(1.04)}
+  .pg-tile:hover .pg-img>img.ld{transform:scale(1.04)}
   .pg-tile:hover .pg-img::after{opacity:1}
   .pg-tile:hover .pg-save{opacity:1;transform:none}
 }
@@ -134,7 +134,7 @@ html.pg-ready .pg-toggle{display:block}
 .pg-post{opacity:0;transform:translateY(30px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
 .pg-post.in{opacity:1;transform:none}
 .pg-post .pg-img{aspect-ratio:var(--ar,.8);border-radius:18px;cursor:pointer}
-.pg-post .pg-img img{object-fit:contain;background:var(--c)}
+.pg-post .pg-img>img{object-fit:contain;background:var(--c)}
 .pg-post .pg-save{opacity:.92;transform:none}
 .pg-meta{padding:14px 2px 0;display:grid;gap:6px}
 .pg-meta .cl{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -143,6 +143,7 @@ html.pg-ready .pg-toggle{display:block}
 .pg-meta .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .pg-meta .tags span{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .pg-meta .tags span.press{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.pg-shop .pg-save{display:none!important}
 .pg-meta .row{display:flex;gap:8px;margin-top:10px}
 .pg-meta .row button.pg-open{flex:1;margin:0 -2px;justify-content:center;height:34px;font-size:12px}
 .pg-meta .row button{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
@@ -173,12 +174,17 @@ let open=false,io=null,gcat="All",layout="grid";
 function fit(){const c=wrap.querySelector(".controls");tg.classList.remove("pg-stack","pg-tight");if(!c)return;
   const ok=()=>{const a=tg.getBoundingClientRect(),b=c.getBoundingClientRect();return !(a.width&&b.width&&a.right>b.left-4)};
   if(ok())return;tg.classList.add("pg-tight");if(ok())return;tg.classList.remove("pg-tight");tg.classList.add("pg-stack")}
-function sync(){const on=mode==="swipe";document.documentElement.classList.toggle("pg-ready",on);if(on)requestAnimationFrame(fit);if(!on&&open)close()}
+function sync(){const on=mode==="swipe"||mode==="wallet";document.documentElement.classList.toggle("pg-ready",on);if(on)requestAnimationFrame(fit);if(open&&gmode!==mode)close()}
 
 /* the grid keeps its own category (the header is pinned to All while Play is installed) */
 const inCat=(p,c)=>c==="All"||(typeof catsOf==="function"?catsOf(p):[p.cat]).includes(c);
-const list=()=>PROJECTS.filter(p=>!p.nl&&inCat(p,gcat));
+/* 2026-11-04: the Services section (mode "wallet") gets the same Grid / Scroll views, one tab per shop category */
+let gmode="swipe";const shopOn=()=>gmode==="wallet";
+const shopCats=()=>typeof SCATS!=="undefined"?SCATS:["Services","Graphics","Gift Cards"];
+const list=()=>shopOn()?SHOP.filter(p=>p.kind===gcat):PROJECTS.filter(p=>!p.nl&&inCat(p,gcat));
+const artOf=(p,u)=>typeof artFor==="function"?artFor(p,u):cover(p,u);
 function renderCats(){
+  if(shopOn()){cats.innerHTML=shopCats().map(c=>`<button type="button" class="pocket-tab" aria-pressed="${c===gcat}" data-cat="${esc(c)}">${esc(c)}<span>${SHOP.filter(p=>p.kind===c).length}</span></button>`).join("");return}
   const all=PROJECTS.filter(p=>!p.nl);
   const tabs=["All",...(typeof CATS!=="undefined"?CATS:[])];
   cats.innerHTML=tabs.map(c=>`<button type="button" class="pocket-tab" aria-pressed="${c===gcat}" data-cat="${esc(c)}">${esc(c)}<span>${all.filter(p=>inCat(p,c)).length}</span></button>`).join("");
@@ -192,10 +198,10 @@ function tile(p,i){
   const saved=typeof shortlist!=="undefined"&&shortlist.has(p.id);
   const c=p.image?(p.imageBg||"#111"):p.bg;
   a.style.setProperty("--c",c);
-  a.innerHTML=`<div class="pg-img">${p.image?`<img alt="" draggable="false" loading="${i<12?"eager":"lazy"}" decoding="async">`:cover(p,"pg"+i)}</div>
+  a.innerHTML=`<div class="pg-img">${shopOn()?artOf(p,"pg"+i):p.image?`<img alt="" draggable="false" loading="${i<12?"eager":"lazy"}" decoding="async">`:cover(p,"pg"+i)}</div>
     <button class="pg-save" type="button" aria-pressed="${saved}" aria-label="${saved?"Remove from":"Add to"} shortlist">${ribbon}</button>
     <div class="pg-cap"><b>${esc(p.title)}</b><span>${esc(p.client)}</span></div>`;
-  const im=a.querySelector("img");
+  const im=shopOn()?null:a.querySelector("img");
   if(im){im.onload=()=>{if(im.naturalWidth)a.style.setProperty("--ar",(im.naturalWidth/im.naturalHeight).toFixed(4));im.classList.add("ld")};
     im.onerror=()=>{im.replaceWith(Object.assign(document.createElement("div"),{innerHTML:cover(p,"pge"+i)}).firstChild)};im.src=p.image}
   else a.style.setProperty("--ar",".75");
@@ -213,11 +219,11 @@ function post(p,i){
   a.style.setProperty("--c",p.image?(p.imageBg||"#111"):p.bg);
   const x=(window.PD_PRESS||{})[p.id]||{},pr=(x.press||[]);
   const tags=[...pr.slice(0,3).map(l=>`<span class="press">${esc(l.pub)}</span>`),p.discipline?`<span>${esc(p.discipline)}</span>`:"",p.year?`<span>${esc(p.year)}</span>`:""].join("");
-  a.innerHTML=`<div class="pg-img" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${p.image?`<img alt="${esc(p.title)}" draggable="false" loading="${i<3?"eager":"lazy"}" decoding="async">`:cover(p,"ps"+i)}
+  a.innerHTML=`<div class="pg-img" role="button" tabindex="0" aria-label="Open ${esc(p.title)}">${shopOn()?artOf(p,"ps"+i):p.image?`<img alt="${esc(p.title)}" draggable="false" loading="${i<3?"eager":"lazy"}" decoding="async">`:cover(p,"ps"+i)}
       <button class="pg-save" type="button" aria-pressed="${saved}" aria-label="${saved?"Remove from":"Add to"} shortlist">${ribbon}</button></div>
     <div class="pg-meta"><span class="cl">${esc(p.client)}</span><h3>${esc(p.title)}</h3>${p.blurb?`<p>${esc(p.blurb)}</p>`:""}<div class="tags">${tags}</div>
-      <div class="row"><button type="button" class="solid pg-open">View project</button></div></div>`;
-  const im=a.querySelector("img");
+      <div class="row"><button type="button" class="solid pg-open">${shopOn()?"View details":"View project"}</button></div></div>`;
+  const im=shopOn()?null:a.querySelector("img");
   if(im){im.onload=()=>{if(im.naturalWidth)a.style.setProperty("--ar",(im.naturalWidth/im.naturalHeight).toFixed(4));im.classList.add("ld")};
     im.onerror=()=>{im.replaceWith(Object.assign(document.createElement("div"),{innerHTML:cover(p,"pse"+i)}).firstChild)};im.src=p.image}
   else a.style.setProperty("--ar",".8");
@@ -248,13 +254,16 @@ function setTop(){const h=document.querySelector("header"),r=h&&h.getBoundingCli
 function openGrid(v){
   if(typeof v==="string")layout=v;menu(false);
   if(open){view.scrollTop=0;render();try{window.history.replaceState(null,"","#"+layout)}catch(e){}return}
-  if(mode!=="swipe")return;open=true;setTop();view.hidden=false;back.hidden=false;view.scrollTop=0;renderCats();render();
+  if(mode!=="swipe"&&mode!=="wallet")return;gmode=mode;
+  if(shopOn())gcat=typeof scat!=="undefined"&&shopCats().includes(scat)?scat:shopCats()[0];else if(shopCats().includes(gcat))gcat="All";
+  view.classList.toggle("pg-shop",shopOn());open=true;setTop();view.hidden=false;back.hidden=false;view.scrollTop=0;renderCats();render();
   requestAnimationFrame(()=>{view.classList.add("on");back.classList.add("on")});
   try{window.history.replaceState(null,"","#"+layout)}catch(e){}
   if(typeof sfx==="function")try{sfx("soft")}catch(e){}
 }
 function close(){
-  if(!open)return;open=false;view.classList.remove("on");back.classList.remove("on");
+  if(!open)return;open=false;
+  if(shopOn()&&typeof setCat==="function"&&typeof scat!=="undefined"&&gcat!==scat)try{setCat(gcat)}catch(e){}view.classList.remove("on");back.classList.remove("on");
   if(location.hash==="#grid"||location.hash==="#scroll")try{window.history.replaceState(null,"",location.pathname+location.search)}catch(e){}
   setTimeout(()=>{if(!open){view.hidden=true;back.hidden=true;if(io)io.disconnect();grid.innerHTML=""}},reduce?0:380);
 }
@@ -2531,11 +2540,12 @@ html.pd-iosfit #deck.deck{height:calc(100svh - var(--hdr,56px) - 12px - var(--pd
 .pd-bar>.controls>*{flex:none}
 @media (max-width:380px){
   .pd-bar{gap:4px;padding:4px}
-  .pd-bar>.gm-toggle button{font-size:0!important;gap:0!important;width:40px;padding:0!important;justify-content:center}
-  .pd-bar>.gm-toggle button svg{width:17px;height:17px}
   .pd-bar>.nyp-toggle button{font-size:10px!important;padding:0 8px!important;white-space:normal!important;text-align:left;width:62px;line-height:1.05}
   .pd-bar>.nyp-toggle button>svg{display:none}
 }
+/* the views button sits beside "See on garment" in Graphics: the garment pill goes icon-only on phones */
+@media (max-width:440px){.pd-bar>.gm-toggle button{font-size:0!important;gap:0!important;width:40px;padding:0!important;justify-content:center}
+  .pd-bar>.gm-toggle button svg{width:17px;height:17px}}
 .pd-bar .pd-sep{flex:none;width:1px;height:22px;background:var(--line)}
 .pd-bar .pd-sep:first-child,.pd-bar .pd-sep:last-child{display:none}
 .pd-bar>.pg-toggle.pg-tight button{width:40px}
@@ -2613,7 +2623,7 @@ function placeViews(){
       if(t.classList.contains("pg-tile")&&Math.abs(r.top-m.getBoundingClientRect().top)<4){t.animate([{transform:"scale(1)"},{transform:"scale(1.04)"},{transform:"scale(1)"}],{duration:300});return}
       view.scrollBy({top:(r.top+r.bottom)/2-(vr.top+(vr.height-62)/2),behavior:"smooth"})}}
   const act={btnUndo:()=>go(-1),btnPass:()=>go(1),
-    btnSave:()=>{const m=mid(),s=m&&m.querySelector(".pg-save");if(s)s.click()},
+    btnSave:()=>{const m=mid();if(!m)return;if(view.classList.contains("pg-shop")){const o=m.querySelector(".pg-open");(o||m).click();return}const s=m.querySelector(".pg-save");if(s)s.click()},
     btnOpen:()=>{const m=mid();if(!m)return;const o=m.querySelector(".pg-open");(o||m).click()}};
   document.addEventListener("click",e=>{if(!isOpen())return;const b=e.target.closest&&e.target.closest("#btnUndo,#btnPass,#btnSave,#btnOpen");if(!b)return;
     e.preventDefault();e.stopImmediatePropagation();act[b.id]()},true);
