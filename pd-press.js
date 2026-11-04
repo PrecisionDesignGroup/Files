@@ -50,6 +50,8 @@ const PRESS={
   "cardi-b-bodega":{press:[
     {pub:"CBS New York",what:"Cardi B's Bodega Baddie pop-up in Washington Heights",url:"https://www.cbsnews.com/amp/newyork/news/cardi-b-bodega-baddie-pop-up-washington-heights"},
     {pub:"Complex",what:"The turnout at Cardi B's NYC pop-up",url:"https://www.complex.com/music/a/treyalston/cardi-b-atlantic-records-underestimated-nyc-pop-up"}]},
+  "cleveland-collage":{shop:[
+    {store:"Zumiez",item:"EST 19XX Cleveland Collage white tee",url:"https://www.zumiez.com/est-19xx-cleveland-collage-white-t-shirt.html"}]},
   "lll":{shop:[
     {store:"Turntable Lab",item:"Live Laugh Love vinyl LP",url:"https://turntablelab.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"},
     {store:"Good Taste Records",item:"Live Laugh Love vinyl LP",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"}]}
@@ -91,15 +93,18 @@ const st=document.createElement("style");st.id="pd-press";st.textContent=css;doc
 const track=(p,l)=>{try{if(typeof gtag==="function")gtag("event","press_click",{project:p.id,link_domain:host(l.url)})}catch(e){}};
 const arrow='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2.9 6.3 6.8.7-5.1 4.6 1.5 6.7L12 16.9 5.9 20.3l1.5-6.7L2.3 9l6.8-.7z"/></svg>';
 
-/* ---- badge on the portfolio card ---- */
+const bag='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l1 13H5z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>';
+/* ---- badge on the portfolio card ("Seen in …", or "Sold at …" when there are only shop links) ---- */
 function badges(){
   if(document.documentElement.classList.contains("shopsw"))return;
   document.querySelectorAll("#deck .dcard[data-pid]").forEach(c=>{
     const x=PRESS[c.dataset.pid],has=c.querySelector(".pd-seen");
-    if(!x||!(x.press||[]).length){if(has)has.remove();return}
+    const pr=(x&&x.press)||[],sh=(x&&x.shop)||[];
+    if(!pr.length&&!sh.length){if(has)has.remove();return}
     if(has&&has.dataset.pid===c.dataset.pid)return;if(has)has.remove();
-    const n=x.press.length,b=document.createElement("div");b.className="pd-seen";b.dataset.pid=c.dataset.pid;
-    b.innerHTML=`${arrow}<span>Seen in</span><b>${esc(x.press[0].pub)}</b>${n>1?`<i>+${n-1}</i>`:""}`;
+    const b=document.createElement("div");b.className="pd-seen";b.dataset.pid=c.dataset.pid;
+    b.innerHTML=pr.length?`${arrow}<span>Seen in</span><b>${esc(pr[0].pub)}</b>${pr.length>1?`<i>+${pr.length-1}</i>`:""}`
+      :`${bag}<span>Sold at</span><b>${esc(sh[0].store)}</b>`;
     c.appendChild(b);
   });
 }
