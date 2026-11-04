@@ -2353,6 +2353,9 @@ html.pd-iosfit #deck.deck{height:calc(100svh - var(--hdr,56px) - 12px - var(--pd
 .pd-bar .pd-sep{flex:none;width:1px;height:22px;background:var(--line)}
 .pd-bar .pd-sep:first-child,.pd-bar .pd-sep:last-child{display:none}
 .pd-bar>.pg-toggle.pg-tight button{width:40px}
+.pg-back{height:50px;box-sizing:border-box;border:1px solid var(--line);box-shadow:none!important;padding:4px!important;gap:4px}
+.pg-back.pd-matched{right:auto;bottom:auto}
+.pg-back button{flex:1;justify-content:center;height:40px}
 #swipeView .deckwrap.gm-on .pd-bar>.controls,#swipeView .deckwrap.gm-on .pd-bar>.pd-sep{display:none!important}
 #deck .dcard .art img{padding-bottom:0!important}
 .pd-coach{bottom:calc(var(--pd-dock) + 84px)!important}
@@ -2375,6 +2378,15 @@ function bar(){
 bar();setTimeout(bar,400);setTimeout(bar,1500);
 {const w=document.querySelector("#swipeView .deckwrap");if(w)new MutationObserver(()=>bar()).observe(w,{childList:true});
  new MutationObserver(()=>requestAnimationFrame(bar)).observe(document.documentElement,{attributes:true,attributeFilter:["class"]})}
+/* Grid and Scroll keep the same bar: their Cards | Grid | Scroll switch sits exactly where the card bar is */
+function placeViews(){
+  const v=document.querySelector(".pg-back"),b=document.querySelector("#swipeView .pd-bar");if(!v||v.hidden)return;
+  const r=b&&b.getBoundingClientRect();
+  if(r&&r.width){v.classList.add("pd-matched");v.style.left=r.left+"px";v.style.width=r.width+"px";v.style.top=r.top+"px"}
+  else{v.classList.remove("pd-matched");v.style.left=v.style.width=v.style.top=""}
+}
+{const v=document.querySelector(".pg-back");if(v)new MutationObserver(()=>requestAnimationFrame(placeViews)).observe(v,{attributes:true,attributeFilter:["hidden","class"]});
+ addEventListener("resize",()=>requestAnimationFrame(placeViews))}
 /* the desktop help text said the buttons were in the card's corner */
 document.querySelectorAll(".hints div").forEach(d=>{if(/buttons in its corner/.test(d.textContent))d.textContent=d.textContent.replace("buttons in its corner","buttons below it")});
 /* some tablets report a screen-height unit (100svh) taller than what is actually visible; take the difference off */
