@@ -41,8 +41,9 @@ const PRESS={
     {pub:"Hypebeast",what:"The Conversations Amongst Us collection",url:CAU[0].url},
     {pub:"Black Enterprise",what:"Joe Freshgoods releases his New Balance collection",url:"https://blackenterprise.com/chicago-designer-joe-freshgoods-releases-his-new-sneaker-collection-in-collaboration-with-new-balance/"}]},
   "jfgsprite":{press:[
+    {pub:"Essence",what:"ICYMI: the Joe Freshgoods × Sprite launch",url:"https://www.essence.com/fashion/icymi-joe-fresh-goods-sprite-launch/"},
     {pub:"FoodSided",what:"Sprite × Joe Freshgoods, Chicago-inspired cans",url:"https://foodsided.com/sprite-joe-freshgoods-obey-your-thirst"},
-    {pub:"Beverage Industry",what:"Sprite and Joe Freshgoods partner on a capsule",url:"https://bevindustry.com/articles/97116-sprite-joe-freshgoods-partner-on-capsule-collection"},
+    {pub:"Beverage Industry",what:"Sprite and Joe Freshgoods partner on a capsule",url:"https://www.bevindustry.com/articles/97116-sprite-joe-freshgoods-partner-on-capsule-collection"},
     {pub:"Packaging Connections",what:"Sprite launches its Joe Freshgoods collab",url:"https://packagingconnections.com/news/sprite-launches-new-collaboration-joe-freshgoods"}]},
   "ed-sheeran":{press:[
     {pub:"TWTD",what:"The Sheeran Town shirt on sale at the Ipswich pop-up",url:"https://www.twtd.co.uk/amp/news/36542/sheeran-town-shirt-on-sale-at-pop-up-shop-ahead-of-ipswich-gigs"}]},
