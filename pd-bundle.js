@@ -9,6 +9,7 @@ try{
 (function(){
 const BG={"6abf106a77af2ac0cd41f4db_pd-carrots-offroad-1":"21201C","6abf1068e332dcaa9fef2cae_pd-carrots-offroad-2":"21201C","6abf1068eab8e3fe5c85c76f_pd-dreamville-diamond-1":"000000","6abf106b0b448cc8d6181b0e_pd-dreamville-diamond-2":"F4F3EE","6abf10684d34c8b4214b0e77_pd-dreamville-diamond-3":"F20000","6abf106d9e0c3304aadfae55_pd-xlarge-shattered-1":"000000","6abf106d6c64ad816bd55e6c_pd-xlarge-shattered-2":"EAE9E2","6abf106de1110d4a90b9cf9f_pd-xlarge-shattered-3":"000000","6abf10691fc15ed644981725_pd-carrots-alphabet-1":"373632","6abf106977af2ac0cd41f4c1_pd-carrots-alphabet-2":"373632","6abf1069fcf9a7115aa98d15_pd-carrots-alphabet-3":"CCCBC7","6abf10680220514fd7e7d9cf_pd-carrots-alphabet-4":"CCCBC7","6abf106c6b7f3532bec0c9aa_pd-pythia-bubble-1":"000000","6abf106c428d803d6db569b5_pd-pythia-bubble-2":"000000","6abf106cf15f183007a6b910_pd-pythia-bubble-3":"CAC7BD","6abf106c0220514fd7e7daa0_pd-sankofa-1":"5D3304","6abf106c2d83ff3a132d6885_pd-sankofa-2":"5D3304","6abf106cb8cfc396da54047d_pd-sankofa-3":"D4A801","6abf1068ccb51de11adf6d15_pd-cardi-b-bodega-1":"000000","6abf10687087df0ec01db670_pd-cardi-b-bodega-2":"FFFFFD","6abf1068eb40b93313cc2c8e_pd-cardi-b-bodega-3":"000000","6abf1068ccb51de11adf6d27_pd-carrots-neon-1":"000000","6abf1068214c9782510a67c7_pd-lairs-1":"000000","6abf106b0fec45f0eaef8063_pd-lairs-2":"E3E0D7","6abf1069174e7779a8c5a63f_pd-carrots-vertical-1":"ABAAA6","6abf10690220514fd7e7d9f0_pd-carrots-vertical-2":"ABAAA6","6abf106a6c64ad816bd55de5_pd-carrots-vertical-3":"9B9A95","6abf10682d83ff3a132d67ce_pd-archives-dc-1":"E1E0DC","6abf10687e9241b0ba6b8aa2_pd-archives-dc-2":"D8D7D3","6abf1068ccb51de11adf6d3b_pd-archives-dc-3":"D8D7D3","6abf10680220514fd7e7d9bc_pd-archives-dc-4":"D8D7D3","6abf106c62ddc6639395377f_pd-xlarge-bird-1":"21201C","6abf106d7e9241b0ba6b8b5e_pd-xlarge-bird-2":"21201C","6abf106d4d34c8b4214b0fa3_pd-xlarge-bird-3":"21201C","6abf10682d83ff3a132d67bb_pd-carrots-script-1":"141310","6abf10686c2d73c95f6762da_pd-carrots-script-2":"141310","6abf10696b7f3532bec0c91b_pd-carrots-script-3":"B2B1AD","6abf1069eb40b93313cc2d14_pd-carrots-script-4":"A4A49F","6abf106c4d34c8b4214b0f76_pd-psychworld-1":"F4F3EF","6abf106ce1110d4a90b9cf8b_pd-psychworld-2":"010101","6abf106b4d34c8b4214b0efd_pd-high-above-society-1":"33332D","6abf106be332dcaa9fef2d0d_pd-high-above-society-2":"33332D","6abf106cdfef84a0214bd437_pd-high-above-society-3":"DEDDD9","6abf106bcd81a594b902dff1_pd-high-above-society-4":"262521","6abbcf7499e2af74de5ea0e9_pd-cover-lll":"000000","6abf1069479a537e615ab0dc_pd-carrots-logos-1":"F5F5F5","6abf10686c2d73c95f6762d1_pd-carrots-logos-2":"000000","6abf16e4e332dcaa9ff08c5d_pd-hh50-1":"000000","6abf16e462fd1cb1989338bb_pd-hh50-2":"FFFFFF","6abf16e4a21719d7221967cd_pd-hh50-3":"000000","6abf16e4479a537e615bf92a_pd-hh50-4":"000000","6abf16e49e0c3304aae11bba_pd-hh50-5":"000000","6abf1068dfef84a0214bd36b_pd-coachella-2024-1":"000000","6abf10687087df0ec01db683_pd-coachella-2024-2":"000000","6abf10686c64ad816bd55da7_pd-24hrs-1":"000000","6abf1068cc9b5013a8501778_pd-24hrs-2":"000000","6abf10686b7f3532bec0c6e8_pd-24hrs-3":"000000","6abf1068d2b751223ef6f434_pd-24hrs-4":"000000","6abbcf74e789e6df386f9125_pd-cover-jfgsprite":"CBCAC6","6abbcf7490dee55cc29cd41a_pd-cover-jfgflame":"4D4D45","6abbcf74ad3ef816a0cbda82_pd-cover-burna":"36332A","6abf106d9bb9d1e8ee14f879_pd-xlarge-peace-1":"000000","6abf106deb40b93313cc2e7e_pd-xlarge-peace-2":"D5D3CB","6abf106d62fd1cb19891701c_pd-xlarge-peace-3":"3A5F64","6abf106bf15f183007a6b8ab_pd-kiss-1":"844C75","6abf106baa16905340195663_pd-kiss-2":"907FAC","6abf106be1110d4a90b9cf5b_pd-kiss-3":"404947","6abf106bf15f183007a6b895_pd-kiss-4":"41550E","6abf106da21719d72217e02f_pd-xlarge-chrome-1":"000000","6abf106dcc9b5013a8501813_pd-xlarge-chrome-2":"000000","6abf106dcd81a594b902e028_pd-xlarge-chrome-3":"000000","6abf106adfef84a0214bd395_pd-free-lunch-1":"212898","6abf106b2d83ff3a132d6840_pd-free-lunch-2":"D5D26C","6abf106a16955de584328f88_pd-earl-idls-1":"201F1B","6abf106a6c64ad816bd55df7_pd-earl-idls-2":"E3E2DE","6abf106a4d34c8b4214b0ec6_pd-earl-idls-3":"8450FA","6abf106974df9fc46309a4d9_pd-earl-idls-4":"2B2A2F","6abf106c174e7779a8c5a720_pd-sick-street-1":"000000","6abf106c214c9782510a683a_pd-sick-street-2":"000000","6abf106ceb40b93313cc2e4c_pd-sick-street-3":"000000","6abf106cd8c41f53c3060a1d_pd-sick-street-4":"C7C4B7","6abf106b1fc15ed644981785_pd-earl-10-years-1":"0B3B07","6abf106a43ffd8320226bf14_pd-earl-10-years-2":"2E2D29","6abf106bb8cfc396da540419_pd-earl-10-years-3":"2E2D29","6abbcf749b9aa03c4ea2a94c_pd-cover-xlarge":"000000","6abf106a1ffb4b999ac512cf_pd-ed-sheeran-1":"D3D2CE","6abf106b62ddc6639395372b_pd-ed-sheeran-2":"2D2C27","6abf106cf82d031ae87834a5_pd-texas-made-1":"000000","6abf106c0220514fd7e7dac9_pd-texas-made-2":"CAC7BD","6abf106ab8cfc396da5402b4_pd-porch-scene-1":"C9C8C4","6abf106b60b186b48732fa1e_pd-porch-scene-2":"C9C8C4","6abf106a1ffb4b999ac512b3_pd-porch-scene-3":"C9C8C4","6abf106c6c64ad816bd55e4d_pd-sick-face-1":"2EC132","6abf106c1fc15ed64498180a_pd-sick-face-2":"E2E2E2","6abf106c7c5e3afc10d56bc9_pd-sick-face-3":"000000","6abf106a62fd1cb198916f80_pd-dreamville-stereo-1":"E0DED6","6abf10697c8f61c6313ec893_pd-dreamville-stereo-2":"E0DED6","6abf1068f82d031ae8783412_pd-dreamville-stereo-3":"000000","6abf1068eb40b93313cc2ccc_pd-dreamville-stereo-4":"000000","6abbcf74aec19d2ac755f0a0_pd-cover-idls":"000000","6abf106a9e0c3304aadfadc3_pd-carrots-wordmarks-1":"D5D4D0","6abf106a0220514fd7e7da59_pd-carrots-wordmarks-2":"D5D4D0","6abf106962fd1cb198916f5b_pd-carrots-wordmarks-3":"23221E","6abf106ba21719d72217dfc1_pd-carrots-wordmarks-4":"23221E","6abf1068eb40b93313cc2ca0_pd-archives-skateshop-1":"201F1B","6abf1068174e7779a8c5a619_pd-archives-skateshop-2":"5EB040","6abf106916955de584328f45_pd-archives-skateshop-3":"343BBB","6abf106a9bb9d1e8ee14f816_pd-archives-skateshop-4":"B7B6B1","6abbcf7467041a41fc39520d_pd-cover-jfgnb":"F0F0F0","6abf106bf82d031ae8783489_pd-love-first-bite-1":"B0ADA1","6abf106ba21719d72217e009_pd-love-first-bite-2":"D5C609","6abf10692777ec6aef29f432_pd-pooh-shiesty-1":"000000","6abf106a43ffd8320226bef0_pd-pooh-shiesty-2":"EAE9E2","6abf106a5596162a4d66c311_pd-pooh-shiesty-3":"000000","6abf1069ccb51de11adf6d5f_pd-pooh-shiesty-4":"000000","6abf106c0220514fd7e7dae9_pd-wild-east-1":"000000","6abf106c0cbe283c19a3bb2a_pd-wild-east-2":"000000","6abf106cab0045f186765594_pd-wild-east-3":"000000","6abf106c0220514fd7e7dae6_pd-wild-east-4":"000000","6abbcf743ab2e1446d13ed59_pd-cover-carrots":"DAD9D5","6abbcf72e20ae1f71c39262a_pd-carrots-gallery":"000000","6abf1069ab0045f18676554d_pd-archives-tape-1":"C3C2BE","6abf1069f82d031ae8783462_pd-archives-tape-2":"201F1B","6abf10695596162a4d66c2f3_pd-carrots-arch-1":"BDBAAA","6abf1068b8cfc396da540249_pd-carrots-arch-2":"000000","6abbcf7720b1020e327aac1b_pd-cover-jfgtrill":"000000","6abf106bd8c41f53c30609ec_pd-nineteenxx-1":"E3E3E3","6abf106caa16905340195686_pd-nineteenxx-2":"E3E3E3","6abf106a9e0c3304aadfadb0_pd-nineteenxx-3":"21201C","6abf106c60b186b48732fa63_pd-tec-helmet-1":"D9D7CF","6abf106ccd81a594b902e015_pd-tec-helmet-2":"000000","6abf106c0220514fd7e7dab3_pd-tec-helmet-3":"000000","6abf106cf15f183007a6b8e9_pd-pythia-stars-1":"000000","6abf106c479a537e615ab17f_pd-pythia-stars-2":"DADADA","6abf106cb8cfc396da54046b_pd-pythia-stars-3":"B0B0B0","6abf10689bb9d1e8ee14f7a6_pd-burna-space-1":"39651C","6abf106a0b448cc8d6181a81_pd-burna-space-2":"C1BEB3","6abf10699e0c3304aadfad90_pd-burna-space-3":"19160E","6abf10696b7f3532bec0c71b_pd-product-of-the-planet-1":"000000","6abf1069ab0045f186765545_pd-product-of-the-planet-2":"000000","6abf106ce1110d4a90b9cf83_pd-product-of-the-planet-3":"DDDACF","6abf106bf15f183007a6b8c7_pd-product-of-the-planet-4":"000000","6abf106916955de584328f32_pd-carrots-xxl-1":"3C3B36","6abf106a74df9fc46309a4f0_pd-carrots-xxl-2":"3C3B36","6abf10697e9241b0ba6b8adb_pd-carrots-xxl-3":"3C3B36","6abf106accb51de11adf6d98_pd-carrots-xxl-4":"3C3B36","6abf106b7c8f61c6313ec914_pd-feet-of-day-1":"E4D9D1","6abf106b0220514fd7e7da7a_pd-feet-of-day-2":"E4D9D1","6abf106b74df9fc46309a563_pd-feet-of-day-3":"E4D9D1","6abf1068f82d031ae8783430_pd-feet-of-day-4":"000000","6abf10686b7f3532bec0c708_pd-idls-gate-1":"000000","6abf1068cc9b5013a850178b_pd-idls-gate-2":"000000","6abf106ab8cfc396da5402a1_pd-idls-gate-3":"000000","6abbcf74fadbac6f375c2bb4_pd-cover-dreamville-lion":"DCDCDC","6abbcf74fadbac6f375c2bbb_pd-cover-dreamville":"000000","6abf106b6c64ad816bd55e38_pd-limitless-helmet-1":"B3B1A6","6abf106b1fc15ed6449817a7_pd-limitless-helmet-2":"B3B1A6","6abf106adfef84a0214bd3a7_pd-limitless-helmet-3":"C0BDB2"};
 const key=u=>{const m=String(u).match(/([0-9a-f]{6,}_[^/?]+?)(?:\.\w+)?(?:[?#].*)?$/i)||String(u).match(/media\/([^/]+)/);return m?m[1]:u};
+window.PD_BG=BG;window.PD_BGKEY=key;
 let n=0;try{n=(parseInt(localStorage.getItem("pd-cover-n"),10)||0)+1;localStorage.setItem("pd-cover-n",n)}catch(e){n=Math.floor(Math.random()*997)}
 const ORIG=new Map(),changed=[];
 PROJECTS.forEach(p=>{
@@ -2184,6 +2185,11 @@ const CAU=[
   {pub:"Hypebae",what:"Release info for the full range",url:"https://hypebae.com/2022/4/joe-freshgoods-new-balance-conversations-amongst-us-release-info"},
   {pub:"Gear Patrol",what:"A New Balance collab that champions diversity",url:"https://www.gearpatrol.com/style/shoes-boots/g39717051/new-balance-conversations-amongst-us-550"}];
 
+const EARL10=[
+    {pub:"Grimy Goods",what:"Earl's surprise IDLSIDGO 10-year show at the Echoplex, and its anniversary shirts",url:"https://www.grimygoods.com/?p=266690"},
+    {pub:"The Poly Post",what:"A packed one-night-only 10-year anniversary show in LA",url:"https://thepolypost.com/arts-and-culture/2025/04/15/earl-sweatshirt-delivers-nostalgia-humor-for-packed-10-year-anniversary-show-at-las-echoplex/"},
+    {pub:"The FADER",what:"I Don't Like Shit… turns 10",url:"https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"}];
+
 const PRESS={
   "burna":{press:MSG,shop:[{store:"On a Spaceship",item:"Burna Boy official store",url:"https://onaspaceship.com"}]},
   "burna-space":{press:MSG,shop:[{store:"On a Spaceship",item:"Burna Boy official store",url:"https://onaspaceship.com"}]},
@@ -2216,9 +2222,28 @@ const PRESS={
     {pub:"Complex",what:"The turnout at Cardi B's NYC pop-up",url:"https://www.complex.com/music/a/treyalston/cardi-b-atlantic-records-underestimated-nyc-pop-up"}]},
   "cleveland-collage":{shop:[
     {store:"Zumiez",item:"EST 19XX Cleveland Collage white tee",url:"https://www.zumiez.com/est-19xx-cleveland-collage-white-t-shirt.html"}]},
-  "lll":{shop:[
+  "earl-idls":{press:EARL10},
+  "earl-10-years":{press:EARL10},
+  "idls-gate":{press:EARL10},
+  "idls":{press:[
+    {pub:"Hypebeast",what:"Review: I Don't Like Shit, I Don't Go Outside",url:"https://hypebeast.com/2015/4/earl-sweatshirt-i-dont-like-shit-i-dont-go-outside-review"},
+    {pub:"XXL",what:"Review of Earl's second album",url:"https://www.xxlmag.com/earl-sweatshirt-dont-like-shit-go-outside-review/"},
+    {pub:"The FADER",what:"The album turns 10",url:"https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"},
+    {pub:"PopMatters",what:"Review: I Don't Like Shit, I Don't Go Outside",url:"https://popmatters.com/review/191714-earl-sweatshirt-i-dont-like-shit-i-dont-go-outside"},
+    {pub:"Slant",what:"Review of the 2015 album",url:"https://slantmagazine.com/music/earl-sweatshirt-i-dont-do-shit-i-dont-go-outside"}]},
+  "lll":{press:[
+    {pub:"Billboard",what:"Earl Sweatshirt releases Live Laugh Love",url:"https://ca.billboard.com/music/rb-hip-hop/earl-sweatshirt-live-laugh-love-album-release-track-list-1236047511/"},
+    {pub:"The FADER",what:"Review: Earl Sweatshirt unwinds on Live Laugh Love",url:"https://www.thefader.com/2025/08/27/earl-sweatshirt-live-laugh-love-review"},
+    {pub:"Complex",what:"Stream Earl's new album Live Laugh Love",url:"https://www.complex.com/music/a/joshua-espinoza/earl-sweatshirt-live-laugh-love-album-stream"},
+    {pub:"Stereogum",what:"Album of the week: Live Laugh Love",url:"https://stereogum.com/2320176/earl-sweatshirt-live-laugh-love-album-review/columns"},
+    {pub:"Consequence",what:"Live Laugh Love review",url:"https://consequence.net/2025/08/earl-sweatshirt-live-laugh-love-review"},
+    {pub:"SSENSE",what:"The Normal Life of Earl Sweatshirt",url:"https://www.ssense.com/en-lv/editorial/music/earl-sweatshirt-live-laugh-love"},
+    {pub:"Uproxx",what:"Earl Sweatshirt releases Live Laugh Love",url:"https://uproxx.com/music/earl-sweatshirt-releases-live-laugh-love-album"},
+    {pub:"Slant",what:"Live Laugh Love review: keep calm and carry on",url:"https://www.slantmagazine.com/music/earl-sweatshirt-live-laugh-love-album-review"}],
+   shop:[
     {store:"Turntable Lab",item:"Live Laugh Love vinyl LP",url:"https://turntablelab.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"},
-    {store:"Good Taste Records",item:"Live Laugh Love vinyl LP",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"}]}
+    {store:"Good Taste Records",item:"Live Laugh Love vinyl LP",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"},
+    {store:"Good Taste Records",item:"Alternative cover vinyl, black & orange crush",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-alternative-cover-black-orange-crush-color-vinyl-lp"}]}
 };
 window.PD_PRESS=PRESS;
 
@@ -2229,6 +2254,10 @@ if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS))PROJECTS.forEach(p=>{
   if(!p||!p.image||/pd-cover-|webflow-prod-assets/.test(p.image)&&!/wixstatic/.test(p.image))return;
   const g=(p.gallery||[]).slice(),k=g.findIndex(u=>typeof u==="string"&&/pd-cover-/.test(u));if(k<0)return;
   const cov=g.splice(k,1)[0];p.gallery=[p.image,...g];p.image=cov;
+});
+/* ---- the card's background is the cover's own background colour, so the graphic looks full-bleed ---- */
+if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)&&window.PD_BG)PROJECTS.forEach(p=>{
+  if(!p||!p.image||p.nl||p.ad)return;const c=window.PD_BG[window.PD_BGKEY(p.image)];if(c)p.imageBg="#"+c;
 });
 
 /* ---- projects with press come first in the deck, then ones with only shop links, then the rest (each group keeps its order).
@@ -2251,6 +2280,12 @@ const css=`
 .pd-seen svg{flex:none;width:11px;height:11px}
 html.shopsw .pd-seen{display:none}
 .pd-seen{animation:pdSeenIn .45s .3s cubic-bezier(.22,1,.36,1) both}
+/* paper grain over the whole cover area, so the flat colour around the graphic reads as the same printed sheet */
+#deck .dcard .art:has(img)::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.6 -.55'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");background-size:220px 220px}
+.pd-ext{position:absolute;display:block;pointer-events:none;background-repeat:no-repeat;transform:scaleY(-1)}
+.pd-ext-b{-webkit-mask-image:linear-gradient(to top,#000,transparent);mask-image:linear-gradient(to top,#000,transparent)}
+.pd-ext-t{-webkit-mask-image:linear-gradient(to bottom,#000,transparent);mask-image:linear-gradient(to bottom,#000,transparent)}
 @keyframes pdSeenIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pd-seen{animation:none}}
 .pd-press>.mono,.pd-get>.mono{display:flex;justify-content:space-between;color:var(--muted);margin-bottom:10px}
@@ -2298,9 +2333,31 @@ function badges(){
     c.appendChild(b);
   });
 }
+/* ---- the cover graphic looks full-bleed: the strip of card left above/below it continues the graphic's own paper
+   (its edge, mirrored and fading out) on top of the matching flat colour ---- */
+function ext(c){
+  const im=c.querySelector(".art img");if(!im)return;
+  if(!im.complete||!im.naturalWidth){if(!im.dataset.pdExt){im.dataset.pdExt="w";im.addEventListener("load",()=>{im.dataset.pdExt="";ext(c)},{once:true})}return}
+  const W=im.clientWidth,H=im.clientHeight,nw=im.naturalWidth,nh=im.naturalHeight;if(!W||!H)return;
+  const s=Math.min(W/nw,H/nh),dw=nw*s,dh=nh*s,py=(parseFloat((getComputedStyle(im).objectPosition||"50% 50%").split(" ")[1])||50)/100;
+  const top=(H-dh)*py,bot=H-dh-top,src=im.currentSrc||im.src,sig=[src,W,H].join("|");
+  if(im.dataset.pdExtSig===sig)return;im.dataset.pdExtSig=sig;
+  const par=im.parentElement;par.querySelectorAll(":scope>.pd-ext").forEach(e=>e.remove());
+  if(getComputedStyle(par).position==="static")par.style.position="relative";
+  const f=Math.round(Math.min(dh*.06,36));
+  [["b",bot],["t",top]].forEach(([k,g])=>{
+    if(g<3)return;const d=document.createElement("i");d.className="pd-ext pd-ext-"+k;
+    const y=k==="b"?im.offsetTop+top+dh:im.offsetTop+top-Math.min(g,f);
+    d.style.cssText=`left:${im.offsetLeft+(W-dw)/2}px;width:${dw}px;top:${y}px;height:${Math.min(g,f)}px;`+
+      `background-image:url("${src.replace(/"/g,"%22")}");background-size:${dw}px ${dh}px;background-position:center ${k==="b"?"bottom":"top"}`;
+    im.after(d);
+  });
+}
+function exts(){document.querySelectorAll("#deck .dcard[data-pid]").forEach(ext)}
 const deck=document.getElementById("deck");
-if(deck)new MutationObserver(badges).observe(deck,{childList:true,subtree:true,attributes:true,attributeFilter:["data-pid","class"]});
-badges();
+if(deck)new MutationObserver(()=>{badges();exts()}).observe(deck,{childList:true,subtree:true,attributes:true,attributeFilter:["data-pid","class","src"]});
+badges();exts();
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(exts,150)});
 
 /* ---- sections in the opened project ---- */
 const _od=openDetail;

@@ -20,6 +20,11 @@ const CAU=[
   {pub:"Hypebae",what:"Release info for the full range",url:"https://hypebae.com/2022/4/joe-freshgoods-new-balance-conversations-amongst-us-release-info"},
   {pub:"Gear Patrol",what:"A New Balance collab that champions diversity",url:"https://www.gearpatrol.com/style/shoes-boots/g39717051/new-balance-conversations-amongst-us-550"}];
 
+const EARL10=[
+    {pub:"Grimy Goods",what:"Earl's surprise IDLSIDGO 10-year show at the Echoplex, and its anniversary shirts",url:"https://www.grimygoods.com/?p=266690"},
+    {pub:"The Poly Post",what:"A packed one-night-only 10-year anniversary show in LA",url:"https://thepolypost.com/arts-and-culture/2025/04/15/earl-sweatshirt-delivers-nostalgia-humor-for-packed-10-year-anniversary-show-at-las-echoplex/"},
+    {pub:"The FADER",what:"I Don't Like Shit… turns 10",url:"https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"}];
+
 const PRESS={
   "burna":{press:MSG,shop:[{store:"On a Spaceship",item:"Burna Boy official store",url:"https://onaspaceship.com"}]},
   "burna-space":{press:MSG,shop:[{store:"On a Spaceship",item:"Burna Boy official store",url:"https://onaspaceship.com"}]},
@@ -52,9 +57,28 @@ const PRESS={
     {pub:"Complex",what:"The turnout at Cardi B's NYC pop-up",url:"https://www.complex.com/music/a/treyalston/cardi-b-atlantic-records-underestimated-nyc-pop-up"}]},
   "cleveland-collage":{shop:[
     {store:"Zumiez",item:"EST 19XX Cleveland Collage white tee",url:"https://www.zumiez.com/est-19xx-cleveland-collage-white-t-shirt.html"}]},
-  "lll":{shop:[
+  "earl-idls":{press:EARL10},
+  "earl-10-years":{press:EARL10},
+  "idls-gate":{press:EARL10},
+  "idls":{press:[
+    {pub:"Hypebeast",what:"Review: I Don't Like Shit, I Don't Go Outside",url:"https://hypebeast.com/2015/4/earl-sweatshirt-i-dont-like-shit-i-dont-go-outside-review"},
+    {pub:"XXL",what:"Review of Earl's second album",url:"https://www.xxlmag.com/earl-sweatshirt-dont-like-shit-go-outside-review/"},
+    {pub:"The FADER",what:"The album turns 10",url:"https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"},
+    {pub:"PopMatters",what:"Review: I Don't Like Shit, I Don't Go Outside",url:"https://popmatters.com/review/191714-earl-sweatshirt-i-dont-like-shit-i-dont-go-outside"},
+    {pub:"Slant",what:"Review of the 2015 album",url:"https://slantmagazine.com/music/earl-sweatshirt-i-dont-do-shit-i-dont-go-outside"}]},
+  "lll":{press:[
+    {pub:"Billboard",what:"Earl Sweatshirt releases Live Laugh Love",url:"https://ca.billboard.com/music/rb-hip-hop/earl-sweatshirt-live-laugh-love-album-release-track-list-1236047511/"},
+    {pub:"The FADER",what:"Review: Earl Sweatshirt unwinds on Live Laugh Love",url:"https://www.thefader.com/2025/08/27/earl-sweatshirt-live-laugh-love-review"},
+    {pub:"Complex",what:"Stream Earl's new album Live Laugh Love",url:"https://www.complex.com/music/a/joshua-espinoza/earl-sweatshirt-live-laugh-love-album-stream"},
+    {pub:"Stereogum",what:"Album of the week: Live Laugh Love",url:"https://stereogum.com/2320176/earl-sweatshirt-live-laugh-love-album-review/columns"},
+    {pub:"Consequence",what:"Live Laugh Love review",url:"https://consequence.net/2025/08/earl-sweatshirt-live-laugh-love-review"},
+    {pub:"SSENSE",what:"The Normal Life of Earl Sweatshirt",url:"https://www.ssense.com/en-lv/editorial/music/earl-sweatshirt-live-laugh-love"},
+    {pub:"Uproxx",what:"Earl Sweatshirt releases Live Laugh Love",url:"https://uproxx.com/music/earl-sweatshirt-releases-live-laugh-love-album"},
+    {pub:"Slant",what:"Live Laugh Love review: keep calm and carry on",url:"https://www.slantmagazine.com/music/earl-sweatshirt-live-laugh-love-album-review"}],
+   shop:[
     {store:"Turntable Lab",item:"Live Laugh Love vinyl LP",url:"https://turntablelab.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"},
-    {store:"Good Taste Records",item:"Live Laugh Love vinyl LP",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"}]}
+    {store:"Good Taste Records",item:"Live Laugh Love vinyl LP",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"},
+    {store:"Good Taste Records",item:"Alternative cover vinyl, black & orange crush",url:"https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-alternative-cover-black-orange-crush-color-vinyl-lp"}]}
 };
 window.PD_PRESS=PRESS;
 
@@ -65,6 +89,10 @@ if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS))PROJECTS.forEach(p=>{
   if(!p||!p.image||/pd-cover-|webflow-prod-assets/.test(p.image)&&!/wixstatic/.test(p.image))return;
   const g=(p.gallery||[]).slice(),k=g.findIndex(u=>typeof u==="string"&&/pd-cover-/.test(u));if(k<0)return;
   const cov=g.splice(k,1)[0];p.gallery=[p.image,...g];p.image=cov;
+});
+/* ---- the card's background is the cover's own background colour, so the graphic looks full-bleed ---- */
+if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)&&window.PD_BG)PROJECTS.forEach(p=>{
+  if(!p||!p.image||p.nl||p.ad)return;const c=window.PD_BG[window.PD_BGKEY(p.image)];if(c)p.imageBg="#"+c;
 });
 
 /* ---- projects with press come first in the deck, then ones with only shop links, then the rest (each group keeps its order).
@@ -87,6 +115,12 @@ const css=`
 .pd-seen svg{flex:none;width:11px;height:11px}
 html.shopsw .pd-seen{display:none}
 .pd-seen{animation:pdSeenIn .45s .3s cubic-bezier(.22,1,.36,1) both}
+/* paper grain over the whole cover area, so the flat colour around the graphic reads as the same printed sheet */
+#deck .dcard .art:has(img)::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1.6 -.55'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");background-size:220px 220px}
+.pd-ext{position:absolute;display:block;pointer-events:none;background-repeat:no-repeat;transform:scaleY(-1)}
+.pd-ext-b{-webkit-mask-image:linear-gradient(to top,#000,transparent);mask-image:linear-gradient(to top,#000,transparent)}
+.pd-ext-t{-webkit-mask-image:linear-gradient(to bottom,#000,transparent);mask-image:linear-gradient(to bottom,#000,transparent)}
 @keyframes pdSeenIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.pd-seen{animation:none}}
 .pd-press>.mono,.pd-get>.mono{display:flex;justify-content:space-between;color:var(--muted);margin-bottom:10px}
@@ -134,9 +168,31 @@ function badges(){
     c.appendChild(b);
   });
 }
+/* ---- the cover graphic looks full-bleed: the strip of card left above/below it continues the graphic's own paper
+   (its edge, mirrored and fading out) on top of the matching flat colour ---- */
+function ext(c){
+  const im=c.querySelector(".art img");if(!im)return;
+  if(!im.complete||!im.naturalWidth){if(!im.dataset.pdExt){im.dataset.pdExt="w";im.addEventListener("load",()=>{im.dataset.pdExt="";ext(c)},{once:true})}return}
+  const W=im.clientWidth,H=im.clientHeight,nw=im.naturalWidth,nh=im.naturalHeight;if(!W||!H)return;
+  const s=Math.min(W/nw,H/nh),dw=nw*s,dh=nh*s,py=(parseFloat((getComputedStyle(im).objectPosition||"50% 50%").split(" ")[1])||50)/100;
+  const top=(H-dh)*py,bot=H-dh-top,src=im.currentSrc||im.src,sig=[src,W,H].join("|");
+  if(im.dataset.pdExtSig===sig)return;im.dataset.pdExtSig=sig;
+  const par=im.parentElement;par.querySelectorAll(":scope>.pd-ext").forEach(e=>e.remove());
+  if(getComputedStyle(par).position==="static")par.style.position="relative";
+  const f=Math.round(Math.min(dh*.06,36));
+  [["b",bot],["t",top]].forEach(([k,g])=>{
+    if(g<3)return;const d=document.createElement("i");d.className="pd-ext pd-ext-"+k;
+    const y=k==="b"?im.offsetTop+top+dh:im.offsetTop+top-Math.min(g,f);
+    d.style.cssText=`left:${im.offsetLeft+(W-dw)/2}px;width:${dw}px;top:${y}px;height:${Math.min(g,f)}px;`+
+      `background-image:url("${src.replace(/"/g,"%22")}");background-size:${dw}px ${dh}px;background-position:center ${k==="b"?"bottom":"top"}`;
+    im.after(d);
+  });
+}
+function exts(){document.querySelectorAll("#deck .dcard[data-pid]").forEach(ext)}
 const deck=document.getElementById("deck");
-if(deck)new MutationObserver(badges).observe(deck,{childList:true,subtree:true,attributes:true,attributeFilter:["data-pid","class"]});
-badges();
+if(deck)new MutationObserver(()=>{badges();exts()}).observe(deck,{childList:true,subtree:true,attributes:true,attributeFilter:["data-pid","class","src"]});
+badges();exts();
+let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(exts,150)});
 
 /* ---- sections in the opened project ---- */
 const _od=openDetail;
