@@ -87,7 +87,7 @@ html.pg-ready .pg-toggle{display:block}
 .pg-meta .tags span{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .pg-meta .tags span.press{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .pg-meta .row{display:flex;gap:8px;margin-top:10px}
-.pg-meta .row button.pg-open{flex:1;margin:0 -2px;justify-content:center;height:46px;font-size:14px}
+.pg-meta .row button.pg-open{flex:1;margin:0 -2px;justify-content:center;height:34px;font-size:12px}
 .pg-meta .row button{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
 .pg-meta .row button.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .pg-meta .row svg{width:14px;height:14px}
