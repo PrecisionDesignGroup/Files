@@ -2151,6 +2151,17 @@ const PRESS={
 };
 window.PD_PRESS=PRESS;
 
+/* ---- projects with press come first in the deck, then ones with only shop links, then the rest (each group keeps its order).
+   Special cards (newsletter, ads) stay in their slots. ---- */
+if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)){
+  const special=p=>!p||p.kind||p.nl||p.ad||/^pd-/.test(String(p.id));
+  const rank=p=>{const x=PRESS[p.id];return x&&(x.press||[]).length?0:x&&(x.shop||[]).length?1:2};
+  const slots=[],items=[];PROJECTS.forEach((p,i)=>{if(!special(p)){slots.push(i);items.push(p)}});
+  const sorted=items.map((p,k)=>[p,k]).sort((a,b)=>rank(a[0])-rank(b[0])||a[1]-b[1]).map(a=>a[0]);
+  slots.forEach((i,k)=>PROJECTS[i]=sorted[k]);
+  try{if(typeof idx!=="undefined"&&idx===0&&typeof renderDeck==="function"&&(typeof mode==="undefined"||mode==="swipe"))renderDeck()}catch(e){}
+}
+
 const css=`
 .pd-seen{position:absolute;top:12px;left:12px;z-index:4;display:flex;align-items:center;gap:6px;max-width:calc(100% - 24px);box-sizing:border-box;
   padding:5px 10px 5px 8px;border-radius:999px;background:rgba(14,14,16,.62);color:#fff;-webkit-backdrop-filter:blur(10px) saturate(1.4);backdrop-filter:blur(10px) saturate(1.4);
@@ -2159,6 +2170,9 @@ const css=`
 .pd-seen i{font-style:normal;opacity:.6}
 .pd-seen svg{flex:none;width:11px;height:11px}
 html.shopsw .pd-seen{display:none}
+.pd-seen{animation:pdSeenIn .45s .3s cubic-bezier(.22,1,.36,1) both}
+@keyframes pdSeenIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pd-seen{animation:none}}
 .pd-press>.mono,.pd-get>.mono{display:flex;justify-content:space-between;color:var(--muted);margin-bottom:10px}
 .pd-pcards{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:2px 2px 8px;margin:0 -2px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .pd-pcards::-webkit-scrollbar{display:none}
@@ -2191,7 +2205,10 @@ const bag='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 function badges(){
   if(document.documentElement.classList.contains("shopsw"))return;
   document.querySelectorAll("#deck .dcard[data-pid]").forEach(c=>{
-    const x=PRESS[c.dataset.pid],has=c.querySelector(".pd-seen");
+    const has=c.querySelector(".pd-seen");
+    /* only the card on top gets a badge (not the ones waiting underneath, nor the one flying away) */
+    if(!c.classList.contains("top")||c.classList.contains("fx-gone")){if(has)has.remove();return}
+    const x=PRESS[c.dataset.pid];
     const pr=(x&&x.press)||[],sh=(x&&x.shop)||[];
     if(!pr.length&&!sh.length){if(has)has.remove();return}
     if(has&&has.dataset.pid===c.dataset.pid)return;if(has)has.remove();
@@ -2202,7 +2219,7 @@ function badges(){
   });
 }
 const deck=document.getElementById("deck");
-if(deck)new MutationObserver(badges).observe(deck,{childList:true,subtree:true,attributes:true,attributeFilter:["data-pid"]});
+if(deck)new MutationObserver(badges).observe(deck,{childList:true,subtree:true,attributes:true,attributeFilter:["data-pid","class"]});
 badges();
 
 /* ---- sections in the opened project ---- */
