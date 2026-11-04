@@ -88,7 +88,7 @@ html.pd-tabs-side.pd-no-tabs .pd-side{display:none}
 const st=document.createElement("style");st.id="pd-side";st.textContent=css;document.head.appendChild(st);
 const side=document.createElement("div");side.className="pd-side";document.body.appendChild(side);
 function place(){
-  if(!side.contains(pk))return;const d=document.getElementById("deck"),r=d&&d.getBoundingClientRect();if(!r||!r.width)return;
+  if(!side.contains(pk))return;let d=document.getElementById("deck");if(!d||!d.offsetParent)d=document.querySelector("#wallet .wcards")||document.getElementById("wallet");const r=d&&d.getBoundingClientRect();if(!r||!r.width)return;
   side.style.left=Math.round(r.left+8)+"px";
   const h=side.offsetHeight;side.style.top=Math.round(r.top+Math.max(12,(r.height-90-h)/2))+"px";
 }
@@ -106,4 +106,11 @@ if(typeof renderPockets==="function"){const _rp=renderPockets;renderPockets=func
 addEventListener("resize",()=>requestAnimationFrame(()=>{go()}));
 const d=document.getElementById("deck");if(d)new ResizeObserver(()=>place()).observe(d);
 go();setTimeout(go,500);
+})();
+/* 2026-11-04: Gift Cards show just the cards: no wallet pocket in front of them */
+(function(){
+const st=document.createElement("style");st.textContent=`html.pd-gc #wallet .pocket{display:none!important}html.pd-gc #wallet .wcards{clip-path:none!important}`;document.head.appendChild(st);
+const sync=()=>{try{document.documentElement.classList.toggle("pd-gc",mode==="wallet"&&scat==="Gift Cards")}catch(e){}};
+if(typeof renderWallet==="function"){const _rw=renderWallet;renderWallet=function(){const r=_rw.apply(this,arguments);sync();return r}}
+sync();
 })();
