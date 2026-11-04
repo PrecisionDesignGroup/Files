@@ -64,3 +64,5 @@ openDetail=function(s){
   return r;
 };
 })();
+/* 2026-11-04: the header switch reads Portfolio | Services | Play (was "Shop") */
+(function(){const b=document.getElementById("modeWallet");if(b&&/^\s*Shop\s*$/.test(b.textContent))b.textContent="Services"})();
