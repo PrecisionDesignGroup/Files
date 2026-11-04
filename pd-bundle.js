@@ -139,11 +139,12 @@ html.pg-ready .pg-toggle{display:block}
 .pg-meta{padding:14px 2px 0;display:grid;gap:6px}
 .pg-meta .cl{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .pg-meta h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:clamp(26px,7vw,36px);line-height:.95;text-transform:uppercase;color:var(--ink);cursor:pointer}
-.pg-meta p{margin:4px 0 0;font-size:15px;line-height:1.5;color:var(--ink);opacity:.85;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pg-meta p{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--ink);opacity:.85;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .pg-meta .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .pg-meta .tags span{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:5px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .pg-meta .tags span.press{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .pg-meta .row{display:flex;gap:8px;margin-top:10px}
+.pg-meta .row button.pg-open{flex:1;margin:0 -2px;justify-content:center;height:46px;font-size:14px}
 .pg-meta .row button{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer}
 .pg-meta .row button.solid{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .pg-meta .row svg{width:14px;height:14px}
