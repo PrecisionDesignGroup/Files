@@ -95,14 +95,13 @@ if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)&&window.PD_BG)PROJECTS
   if(!p||!p.image||p.nl||p.ad)return;const c=window.PD_BG[window.PD_BGKEY(p.image)];if(c)p.imageBg="#"+c;
 });
 
-/* ---- projects with press come first in the deck, then ones with only shop links, then the rest (each group keeps its order).
+/* ---- the deck order is shuffled on every visit (2026-11-06: replaces "projects with press come first").
    Special cards (newsletter, ads) stay in their slots. ---- */
 if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)){
   const special=p=>!p||p.kind||p.nl||p.ad||/^pd-/.test(String(p.id));
-  const rank=p=>{const x=PRESS[p.id];return x&&(x.press||[]).length?0:x&&(x.shop||[]).length?1:2};
   const slots=[],items=[];PROJECTS.forEach((p,i)=>{if(!special(p)){slots.push(i);items.push(p)}});
-  const sorted=items.map((p,k)=>[p,k]).sort((a,b)=>rank(a[0])-rank(b[0])||a[1]-b[1]).map(a=>a[0]);
-  slots.forEach((i,k)=>PROJECTS[i]=sorted[k]);
+  for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]]}
+  slots.forEach((i,k)=>PROJECTS[i]=items[k]);
   try{if(typeof idx!=="undefined"&&idx===0&&typeof renderDeck==="function"&&(typeof mode==="undefined"||mode==="swipe"))renderDeck()}catch(e){}
 }
 
