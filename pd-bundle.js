@@ -2560,7 +2560,10 @@ html.pd-vopen .pg-back{display:none!important}
 .pd-coach{bottom:calc(var(--pd-dock) + 84px)!important}
 #swipeView .deckwrap>.pg-toggle.pg-stack,#swipeView .deckwrap>.nyp-toggle.nyp-stack{bottom:calc(64px + var(--pd-gap))}
 @media (min-width:1100px){html #deck.deck{height:calc(100svh - var(--hdr,56px) - 48px - var(--pd-dock) - var(--pd-cut,0px))}}
+/* Chrome on iPhone (2026-11-10): its page runs under the bottom toolbar, so the card and button bar stop above it */
+@media (orientation:portrait){html.pd-crios #deck.deck{height:calc(100svh - var(--hdr,56px) - 24px - var(--pd-crbar,40px) - var(--pd-dock) - var(--pd-cut,0px))}}
 `;
+if(/iPhone|iPod/.test(navigator.userAgent)&&/CriOS/.test(navigator.userAgent))document.documentElement.classList.add("pd-crios");
 const st=document.createElement("style");st.id="pd-dock";st.textContent=css;document.body.appendChild(st);
 /* gather the left pill(s) and the card buttons into one bar */
 function bar(){
