@@ -49,6 +49,9 @@ html.pd-vopen .pg-back{display:none!important}
 #swipeView .deckwrap>.pg-toggle.pg-stack,#swipeView .deckwrap>.nyp-toggle.nyp-stack{bottom:calc(64px + var(--pd-gap))}
 @media (min-width:1100px){html #deck.deck{height:calc(100svh - var(--hdr,56px) - 48px - var(--pd-dock) - var(--pd-cut,0px))}}
 /* Chrome on iPhone (2026-11-10): its page runs under the bottom toolbar, so the card and button bar stop above it */
+/* and the page itself is pinned so it can't be dragged or scrolled; grids, sheets and the cart scroll inside their own panels */
+html.pd-crios{overflow:hidden;height:100%;overscroll-behavior:none}
+html.pd-crios body{position:fixed;inset:0;overflow:hidden;height:auto;overscroll-behavior:none}
 @media (orientation:portrait){html.pd-crios #deck.deck{height:calc(100svh - var(--hdr,56px) - 24px - var(--pd-crbar,40px) - var(--pd-dock) - var(--pd-cut,0px))}}
 `;
 if(/iPhone|iPod/.test(navigator.userAgent)&&/CriOS/.test(navigator.userAgent))document.documentElement.classList.add("pd-crios");
