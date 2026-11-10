@@ -948,7 +948,14 @@ const ADS=[
   {id:"pd-ad2",pos:9,tap:"shop",src:B2+"precision-internet-commercial.mp4",poster:B2+"precision-internet-commercial-poster.webp",chip:"Ad · Tap to shop",
    title:"Hot Off the Press",discipline:"Shop ad",year:"2000",bg:"#C4121B",imageBg:"#5e0409",fill:"radial-gradient(120% 90% at 50% 45%,#e2343a,#8f0c14 70%,#3d0306)",
    blurb:"Pick a premade, press it, wear it, all in a 30-second internet ad straight out of 2000. Tap the card to shop the graphics.",
-   spec:[["What","Shop ad"],["Length","30 seconds"],["Style","2000 internet ad"]]}
+   spec:[["What","Shop ad"],["Length","30 seconds"],["Style","2000 internet ad"]]},
+  /* 30% off promo (2026-11-10): first card until the end of Nov 15, then it drops out by itself. Light or dark art follows the site theme. */
+  ...(Date.now()<new Date(2026,10,16).getTime()?[{id:"pd-promo-30",pos:0,tap:"services",chip:"Sale \u00b7 Ends 11/15",
+   img:{light:"https://cdn.prod.website-files.com/6abb3f88363fa4f6e1709b0e/6af38e9a20c44dfc9e9ba9d4_pd-promo-30off-light.jpg",dark:"https://cdn.prod.website-files.com/6abb3f88363fa4f6e1709b0e/6af38e9bd8e94275156283ba_pd-promo-30off-dark.jpg"},
+   poster:"https://cdn.prod.website-files.com/6abb3f88363fa4f6e1709b0e/6af38e9a20c44dfc9e9ba9d4_pd-promo-30off-light.jpg",
+   title:"30% Off New Projects",discipline:"Until Nov 15",year:"2026",bg:"#EAE8DD",imageBg:"#EAE8DD",fill:"#EAE8DD",fg:"#151412",formats:["30% off","New projects"],
+   blurb:"30% off every new project booked through November 15. Tap the card to see our services.",
+   spec:[["Offer","30% off new projects"],["Ends","November 15"],["Book","Services tab"]]}]:[])
 ].map(a=>Object.assign({ad:true,cat:"Studio",client:"Precision Design",fg:"#F4F2EC",inks:[a.bg,"#F4F2EC","#F2C649"],formats:["30 sec","VHS finish"],gallery:[],image:a.poster},a));
 const isAd=p=>!!(p&&p.ad);
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -972,6 +979,10 @@ const st=document.createElement("style");st.textContent=`
 @media (prefers-reduced-motion:reduce){.ad-snd::after{animation:none}}
 ${ADS.map(a=>`.pg-tile[aria-label^="Precision Design, ${a.title}."]`).join(",")}{display:none!important}
 .ad-art.tap{cursor:pointer}
+.pr-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;padding:0!important}
+.pr-art::after{display:none}.pr-art .pr-d{display:none}
+html[data-theme="dark"] .pr-art{background:#27251B!important}html[data-theme="dark"] .pr-art .pr-l{display:none}html[data-theme="dark"] .pr-art .pr-d{display:block}
+@media (prefers-color-scheme:dark){html:not([data-theme="light"]) .pr-art{background:#27251B!important}html:not([data-theme="light"]) .pr-art .pr-l{display:none}html:not([data-theme="light"]) .pr-art .pr-d{display:block}}
 `;document.head.appendChild(st);
 
 const spk='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z" fill="currentColor"/>';
@@ -979,6 +990,8 @@ const sndIcons=spk+'<g class="on"><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M1
 let soundOn=false;
 
 function art(a){
+  if(a.img)return `<div class="ad-art pr-art${a.tap?" tap":""}" style="background:${a.fill}"><img class="pr-l" src="${a.img.light}" alt="${esc(a.title)}" decoding="async"><img class="pr-d" src="${a.img.dark}" alt="${esc(a.title)}" decoding="async" loading="lazy">
+    <span class="ad-chip"><i></i>${esc(a.chip)}</span></div>`;
   return `<div class="ad-art${a.tap?" tap":""}" style="background:${a.fill}"><canvas class="ad-fill" width="40" height="30"></canvas>
     <video class="ad-vid" muted playsinline loop preload="metadata" poster="${a.poster}" src="${a.src}" aria-label="Precision Design commercial: ${esc(a.title)}"></video>
     <span class="ad-chip"><i></i>${esc(a.chip)}</span>
@@ -1020,18 +1033,18 @@ if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
   return r}}
 
 /* tap / swipe up / Enter: the shop ad goes to the shop, the others do nothing; detail-sheet arrows step over them */
-function goShop(){
+function goShop(cat){
   if(typeof closeSheetNow==="function")closeSheetNow();
   if(typeof setMode==="function"&&mode!=="wallet")setMode("wallet");
-  if(typeof setCat==="function"&&typeof scat!=="undefined"&&scat!=="Graphics")setCat("Graphics");
+  cat=cat||"Graphics";if(typeof setCat==="function"&&typeof scat!=="undefined"&&scat!==cat)setCat(cat);
   idx=0;try{history.length=0}catch(e){}try{renderDeck();renderMeta()}catch(e){}
 }
 if(typeof openDetail==="function"){let lastI=-1;const _od=openDetail;openDetail=function(p){
   if(isAd(p)){const sh=document.querySelector(".scrim .sheet"),L0=PL(),i=L0.indexOf(p);
     if(sh&&lastI>=0&&i>=0&&L0.length>1)return openDetail(L0[(i+(lastI>i?-1:1)+L0.length)%L0.length]);
-    if(p.tap==="shop")goShop();return}
+    if(p.tap==="shop")goShop();else if(p.tap==="services")goShop("Services");return}
   lastI=PL().indexOf(p);return _od.apply(this,arguments)}}
-if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){if(isAd(p)){if(p.tap==="shop")goShop();return}return _op.apply(this,arguments)}}
+if(typeof openProduct==="function"){const _op=openProduct;openProduct=function(p){if(isAd(p)){if(p.tap==="shop")goShop();else if(p.tap==="services")goShop("Services");return}return _op.apply(this,arguments)}}
 
 /* desktop info panel */
 if(typeof renderMeta==="function"){const _rm=renderMeta;renderMeta=function(){const r=_rm.apply(this,arguments);
