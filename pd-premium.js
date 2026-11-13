@@ -117,7 +117,7 @@ openDetail=function(p){
     if(x.quote&&x.quote.text)h+=`<blockquote class="pd-quote"><p>“${esc(x.quote.text)}”</p>${x.quote.by?`<cite>${esc(x.quote.by)}</cite>`:""}</blockquote>`;
     const m=(x.mockups||[]).filter(Boolean);
     if(m.length||x.video)h+=`<div class="pd-inuse"><div class="mono">In use</div><div class="pd-mocks">${
-      x.video?`<div class="pd-mock vid"><video src="${esc(x.video)}" muted loop playsinline autoplay preload="metadata"></video></div>`:""}${
+      x.video?`<div class="pd-mock vid"><video src="${esc(x.video)}" muted loop playsinline disablepictureinpicture autoplay preload="metadata"></video></div>`:""}${
       m.map(u=>`<div class="pd-mock"><img src="${esc(u)}" alt="${esc(p.title)} in use" loading="lazy" decoding="async"></div>`).join("")}</div></div>`;
     if(h)(desc||body.firstElementChild).insertAdjacentHTML("afterend",h);
     if(reduce())body.querySelectorAll("video[autoplay]").forEach(v=>{v.removeAttribute("autoplay");v.controls=true});

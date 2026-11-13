@@ -123,6 +123,12 @@ function placeViews(){
 }
 /* the desktop help text said the buttons were in the card's corner */
 document.querySelectorAll(".hints div").forEach(d=>{if(/buttons in its corner/.test(d.textContent))d.textContent=d.textContent.replace("buttons in its corner","buttons below it")});
+/* no picture-in-picture (2026-11-13): iPhone/iPad browsers were popping the deck's muted video ads (and other muted loops)
+   into a floating PiP window. Mark every video on the page, now and whenever one is added. */
+const noPip=v=>{try{v.disablePictureInPicture=true;v.setAttribute("disablepictureinpicture","");v.setAttribute("x-webkit-airplay","deny");if("autoPictureInPicture" in v)v.autoPictureInPicture=false}catch(e){}};
+document.querySelectorAll("video").forEach(noPip);
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType!==1)continue;if(n.tagName==="VIDEO")noPip(n);else if(n.querySelectorAll)n.querySelectorAll("video").forEach(noPip)}}).observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("enterpictureinpicture",e=>{try{document.exitPictureInPicture&&document.exitPictureInPicture()}catch(x){}},true);
 /* some tablets report a screen-height unit (100svh) taller than what is actually visible; take the difference off */
 const de=document.documentElement;
 function cut(){try{

@@ -993,7 +993,7 @@ function art(a){
   if(a.img)return `<div class="ad-art pr-art${a.tap?" tap":""}" style="background:${a.fill}"><img class="pr-l" src="${a.img.light}" alt="${esc(a.title)}" decoding="async"><img class="pr-d" src="${a.img.dark}" alt="${esc(a.title)}" decoding="async" loading="lazy">
     <span class="ad-chip"><i></i>${esc(a.chip)}</span></div>`;
   return `<div class="ad-art${a.tap?" tap":""}" style="background:${a.fill}"><canvas class="ad-fill" width="40" height="30"></canvas>
-    <video class="ad-vid" muted playsinline loop preload="metadata" poster="${a.poster}" src="${a.src}" aria-label="Precision Design commercial: ${esc(a.title)}"></video>
+    <video class="ad-vid" muted playsinline disablepictureinpicture loop preload="metadata" poster="${a.poster}" src="${a.src}" aria-label="Precision Design commercial: ${esc(a.title)}"></video>
     <span class="ad-chip"><i></i>${esc(a.chip)}</span>
     <button type="button" class="ad-snd" aria-pressed="${soundOn}" aria-label="Sound">${sndIcons}</button>
     <i class="ad-bar"><b></b></i></div>`;
@@ -1215,7 +1215,7 @@ function open(view){
   if(cam)close();
   const gs=graphicsOf(view);if(!gs.length)return;let g=gs.find(x=>x.id===activeId(view))||gs[0];
   const box=document.createElement("div");box.className="cam-view";
-  box.innerHTML=`<div class="cam-vf"><video playsinline muted autoplay></video><canvas class="cam-gl"></canvas><img class="cam-g" alt="" draggable="false" crossorigin="anonymous">
+  box.innerHTML=`<div class="cam-vf"><video playsinline muted autoplay disablepictureinpicture></video><canvas class="cam-gl"></canvas><img class="cam-g" alt="" draggable="false" crossorigin="anonymous">
     <div class="cam-top"><button type="button" data-close aria-label="Close camera">${xIco}</button><span data-hint>${coarse?"Drag to move · pinch to size":"Drag to move"}</span><button type="button" data-flip aria-label="Switch camera">${flipIco}</button></div>
     <div class="cam-msg"></div><i class="cam-flash"></i></div>
     <div class="cam-tray">
@@ -2146,7 +2146,7 @@ openDetail=function(p){
     if(x.quote&&x.quote.text)h+=`<blockquote class="pd-quote"><p>“${esc(x.quote.text)}”</p>${x.quote.by?`<cite>${esc(x.quote.by)}</cite>`:""}</blockquote>`;
     const m=(x.mockups||[]).filter(Boolean);
     if(m.length||x.video)h+=`<div class="pd-inuse"><div class="mono">In use</div><div class="pd-mocks">${
-      x.video?`<div class="pd-mock vid"><video src="${esc(x.video)}" muted loop playsinline autoplay preload="metadata"></video></div>`:""}${
+      x.video?`<div class="pd-mock vid"><video src="${esc(x.video)}" muted loop playsinline disablepictureinpicture autoplay preload="metadata"></video></div>`:""}${
       m.map(u=>`<div class="pd-mock"><img src="${esc(u)}" alt="${esc(p.title)} in use" loading="lazy" decoding="async"></div>`).join("")}</div></div>`;
     if(h)(desc||body.firstElementChild).insertAdjacentHTML("afterend",h);
     if(reduce())body.querySelectorAll("video[autoplay]").forEach(v=>{v.removeAttribute("autoplay");v.controls=true});
@@ -2648,6 +2648,12 @@ function placeViews(){
 }
 /* the desktop help text said the buttons were in the card's corner */
 document.querySelectorAll(".hints div").forEach(d=>{if(/buttons in its corner/.test(d.textContent))d.textContent=d.textContent.replace("buttons in its corner","buttons below it")});
+/* no picture-in-picture (2026-11-13): iPhone/iPad browsers were popping the deck's muted video ads (and other muted loops)
+   into a floating PiP window. Mark every video on the page, now and whenever one is added. */
+const noPip=v=>{try{v.disablePictureInPicture=true;v.setAttribute("disablepictureinpicture","");v.setAttribute("x-webkit-airplay","deny");if("autoPictureInPicture" in v)v.autoPictureInPicture=false}catch(e){}};
+document.querySelectorAll("video").forEach(noPip);
+new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType!==1)continue;if(n.tagName==="VIDEO")noPip(n);else if(n.querySelectorAll)n.querySelectorAll("video").forEach(noPip)}}).observe(document.documentElement,{childList:true,subtree:true});
+document.addEventListener("enterpictureinpicture",e=>{try{document.exitPictureInPicture&&document.exitPictureInPicture()}catch(x){}},true);
 /* some tablets report a screen-height unit (100svh) taller than what is actually visible; take the difference off */
 const de=document.documentElement;
 function cut(){try{

@@ -60,7 +60,7 @@ function art(a){
   if(a.img)return `<div class="ad-art pr-art${a.tap?" tap":""}" style="background:${a.fill}"><img class="pr-l" src="${a.img.light}" alt="${esc(a.title)}" decoding="async"><img class="pr-d" src="${a.img.dark}" alt="${esc(a.title)}" decoding="async" loading="lazy">
     <span class="ad-chip"><i></i>${esc(a.chip)}</span></div>`;
   return `<div class="ad-art${a.tap?" tap":""}" style="background:${a.fill}"><canvas class="ad-fill" width="40" height="30"></canvas>
-    <video class="ad-vid" muted playsinline loop preload="metadata" poster="${a.poster}" src="${a.src}" aria-label="Precision Design commercial: ${esc(a.title)}"></video>
+    <video class="ad-vid" muted playsinline disablepictureinpicture loop preload="metadata" poster="${a.poster}" src="${a.src}" aria-label="Precision Design commercial: ${esc(a.title)}"></video>
     <span class="ad-chip"><i></i>${esc(a.chip)}</span>
     <button type="button" class="ad-snd" aria-pressed="${soundOn}" aria-label="Sound">${sndIcons}</button>
     <i class="ad-bar"><b></b></i></div>`;

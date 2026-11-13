@@ -150,7 +150,7 @@ function open(view){
   if(cam)close();
   const gs=graphicsOf(view);if(!gs.length)return;let g=gs.find(x=>x.id===activeId(view))||gs[0];
   const box=document.createElement("div");box.className="cam-view";
-  box.innerHTML=`<div class="cam-vf"><video playsinline muted autoplay></video><canvas class="cam-gl"></canvas><img class="cam-g" alt="" draggable="false" crossorigin="anonymous">
+  box.innerHTML=`<div class="cam-vf"><video playsinline muted autoplay disablepictureinpicture></video><canvas class="cam-gl"></canvas><img class="cam-g" alt="" draggable="false" crossorigin="anonymous">
     <div class="cam-top"><button type="button" data-close aria-label="Close camera">${xIco}</button><span data-hint>${coarse?"Drag to move · pinch to size":"Drag to move"}</span><button type="button" data-flip aria-label="Switch camera">${flipIco}</button></div>
     <div class="cam-msg"></div><i class="cam-flash"></i></div>
     <div class="cam-tray">
