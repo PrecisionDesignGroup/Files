@@ -160,8 +160,24 @@ html.sk-right .sk-float{right:20px!important;left:auto!important}
 
 html.pd-dev #swipeView{padding-top:max(8px,env(safe-area-inset-top,0px))!important}
 html.pd-iosbar #deck.deck{height:calc(100svh - 32px - var(--pd-bar,78px))!important}
-html.pd-vopen .sk-cut,html.pd-vopen .sk-float,html.pd-vopen .sk-logo2{display:none!important}
-html.pd-vopen #swipeView .pd-bar{display:flex!important}
+html.pd-vopen .sk-float,html.pd-vopen .sk-logo2{display:none!important}
+/* the side nav is fixed to the screen edge so it stays in Grid and Scroll too */
+html.pd-dev .sk-cut{position:fixed!important;z-index:120!important}
+html.pd-dev .pg-view{top:max(8px,env(safe-area-inset-top,0px))!important;transition:opacity .35s ease,padding .32s cubic-bezier(.2,.8,.2,1)}
+html.pd-dev.sk-open .pg-view{padding-left:calc(var(--sk-gl,8px) + 54px)}
+html.pd-dev.sk-open.sk-right .pg-view{padding-left:0;padding-right:calc(var(--sk-gr,8px) + 54px)}
+/* a card being swiped away passes over the nav instead of being cut by it */
+html.pd-dev #deck:has(.sk-lift,.fx-gone,.dragging){perspective:none!important}
+html.pd-dev #deck .dcard.sk-lift,html.pd-dev #deck .dcard.dragging,html.pd-dev #deck .dcard.fx-gone{z-index:130!important}
+html.pd-dev .nlcard .nlform,html.pd-dev .nlcard .nl-top{transition:margin .32s cubic-bezier(.2,.8,.2,1)}
+html.pd-dev.sk-open .nlcard .nlform,html.pd-dev.sk-open .nlcard .nl-top{margin-left:calc(var(--sk-gl,8px) + 46px)}
+html.pd-dev.sk-open.sk-right .nlcard .nlform,html.pd-dev.sk-open.sk-right .nlcard .nl-top{margin-left:0;margin-right:calc(var(--sk-gr,8px) + 46px)}
+html.pd-dev #deck{z-index:auto!important}
+/* pills sit after the logo and shrink to fit narrow phones */
+html.pd-dev .sk-float{left:calc(var(--sk-gl,8px) + 62px)!important;right:16px!important;justify-content:flex-end;flex-wrap:nowrap}
+html.pd-dev.sk-right .sk-float{left:72px!important;right:16px!important}
+html.pd-dev .sk-float>*{flex-shrink:1;min-width:0}
+html.pd-dev .sk-pill2,html.pd-dev .sk-hire{padding:0 11px!important;font-size:12.5px!important;white-space:nowrap}
 .sk-side{display:none}
 /* closed by default: the notch tucks into the screen edge leaving a pull tab */
 .sk-cut{transition:transform .32s cubic-bezier(.2,.8,.2,1);touch-action:none}
@@ -182,7 +198,6 @@ html.pd-dev:not(.sk-open) .sk-cut::before,html.pd-dev:not(.sk-open) .sk-cut::aft
 #deck .dcard .art{transition:padding .32s cubic-bezier(.2,.8,.2,1)}
 html.pd-dev:not(.sk-open) #deck .dcard .art{padding-left:0!important;padding-right:0!important}
 .sk-cut .sk-swap{width:36px;height:30px;border:0;background:none;color:#8d8a84;font:600 15px/1 var(--f-body,Inter,sans-serif);display:grid;place-items:center}
-html.pd-vopen #swipeView .pd-bar .pg-toggle{display:flex!important}
 html.pd-dev body #swipeView .deckwrap{background:var(--sk-bez)!important}
 html.pd-dev .nyp-chip{margin-top:52px}
 `;
@@ -215,6 +230,12 @@ function boot(){
   const up=()=>{if(sx!=null&&!moved&&!de.classList.contains("sk-open"))setOpen(true);sx=null};
   n.addEventListener("pointerup",up);n.addEventListener("pointercancel",()=>{sx=null});
 
+  /* a card being swiped rides above the notch until it has flown off */
+  let lx=null,ly=null,lc=null;
+  deck.addEventListener("pointerdown",e=>{lx=e.clientX;ly=e.clientY;lc=deck.querySelector(".dcard.top:not(.fx-gone)")},true);
+  addEventListener("pointermove",e=>{if(lx==null||!lc)return;if(Math.hypot(e.clientX-lx,e.clientY-ly)>8){lc.classList.add("sk-lift");lx=null}},true);
+  const drop=()=>{const c=lc;lx=null;lc=null;if(c)setTimeout(()=>{if(c.classList.contains("top")&&!c.classList.contains("fx-gone"))c.classList.remove("sk-lift");else setTimeout(()=>c.classList.remove("sk-lift"),900)},350)};
+  addEventListener("pointerup",drop,true);addEventListener("pointercancel",drop,true);
   /* pills on the card */
   const f=document.createElement("div");f.className="sk-float";f.style.top="20px";
   f.innerHTML='<button class="sk-pill2" data-m="p">Portfolio</button><button class="sk-pill2" data-m="s">Shop</button><button class="sk-circ sk-bmk" aria-label="Shortlist">'+I.bm+'<b>0</b></button><button class="sk-hire">Hire us</button>';
