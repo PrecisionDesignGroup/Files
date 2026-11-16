@@ -187,8 +187,11 @@ html.shopsw #deck .dcard .foot>span.mono::after{display:inline;margin:0 0 0 8px}
      (svh) is clearly shorter than the large one (lvh) and no extra room is needed; the card then runs to the bottom of that space (12px gap, same as the top). */
   const de=document.documentElement,probe=u=>{const d=document.createElement("div");d.style.cssText="position:fixed;left:-9px;top:0;width:1px;visibility:hidden;pointer-events:none;height:100"+u;document.body.appendChild(d);const h=d.getBoundingClientRect().height;d.remove();return h};
   const s=document.createElement("style");
-  s.textContent="html.pd-iosbar #deck.deck{height:calc(100svh - var(--hdr,56px) - 24px - var(--pd-bar,78px))}html.pd-iosfit #deck.deck{height:calc(100svh - var(--hdr,56px) - 12px)}";
+  s.textContent="html.pd-iosbar #deck.deck{height:calc(100svh - var(--hdr,56px) - 24px - var(--pd-bar,78px))}html.pd-iosfit #deck.deck{height:calc(100svh - var(--hdr,56px) - 12px)}html.pd-ios26.pd-iosbar{--pd-bar:3px}";
   document.head.appendChild(s);
+  /* iOS 26+ compact tab bar: the small floating pill already sits below the page's usable area, so the old 78px reserve
+     left a big empty gap under the buttons (2026-11-16). Keep only a 12px breathing gap there. */
+  {const m=u.match(/Version\/(\d+)/);if(m&&+m[1]>=26)de.classList.add("pd-ios26")}
   const chk=()=>{let floats=true;try{const sv=probe("svh"),lv=probe("lvh");if(sv&&lv&&lv-sv>=40)floats=false}catch(e){}de.classList.toggle("pd-iosbar",floats);de.classList.toggle("pd-iosfit",!floats)};
   chk();addEventListener("resize",chk);addEventListener("orientationchange",()=>setTimeout(chk,300))}}
 
