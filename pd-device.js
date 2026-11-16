@@ -163,6 +163,25 @@ html.pd-iosbar #deck.deck{height:calc(100svh - 32px - var(--pd-bar,78px))!import
 html.pd-vopen .sk-cut,html.pd-vopen .sk-float,html.pd-vopen .sk-logo2{display:none!important}
 html.pd-vopen #swipeView .pd-bar{display:flex!important}
 .sk-side{display:none}
+/* closed by default: the notch tucks into the screen edge leaving a pull tab */
+.sk-cut{transition:transform .32s cubic-bezier(.2,.8,.2,1);touch-action:none}
+html.pd-dev:not(.sk-open) .sk-cut{transform:translate(calc(-100% + 22px),-50%)!important;background:#2c2b29!important}
+html.pd-dev.sk-right:not(.sk-open) .sk-cut{transform:translate(calc(100% - 22px),-50%)!important}
+html.pd-dev:not(.sk-open) .sk-cut>*{opacity:0;pointer-events:none}
+.sk-cut>*{transition:opacity .2s}
+.sk-grip{position:absolute;top:50%;right:8px;width:5px;height:56px;margin-top:-28px;border-radius:3px;background:#bdb8ae;opacity:0;transition:opacity .2s;pointer-events:none}
+html.sk-right .sk-grip{right:auto;left:8px}
+.sk-cut .sk-close{width:36px;height:28px;border:0;background:none;color:#8d8a84;display:grid;place-items:center}
+.sk-cut .sk-close svg{width:18px;height:18px}
+html.sk-right .sk-cut .sk-close svg{transform:scaleX(-1)}
+.sk-cut{transition:transform .32s cubic-bezier(.2,.8,.2,1),background .2s}
+html.pd-dev:not(.sk-open) .sk-cut>.sk-grip{opacity:1}
+html.pd-dev:not(.sk-open) .sk-cut{cursor:pointer}
+html.pd-dev:not(.sk-open) .sk-cut::before,html.pd-dev:not(.sk-open) .sk-cut::after{opacity:0}
+.sk-cut::before,.sk-cut::after{transition:opacity .2s}
+#deck .dcard .art{transition:padding .32s cubic-bezier(.2,.8,.2,1)}
+html.pd-dev:not(.sk-open) #deck .dcard .art{padding-left:0!important;padding-right:0!important}
+.sk-cut .sk-swap{width:36px;height:30px;border:0;background:none;color:#8d8a84;font:600 15px/1 var(--f-body,Inter,sans-serif);display:grid;place-items:center}
 html.pd-vopen #swipeView .pd-bar .pg-toggle{display:flex!important}
 html.pd-dev body #swipeView .deckwrap{background:var(--sk-bez)!important}
 html.pd-dev .nyp-chip{margin-top:52px}
@@ -173,18 +192,29 @@ function boot(){
   const st=document.createElement("style");st.id="pd-dev-css";
   const measure=()=>{st.disabled=true;const r=w.getBoundingClientRect();de.style.setProperty("--sk-gl",r.left+"px");de.style.setProperty("--sk-gr",(innerWidth-r.right)+"px");st.disabled=false};
   st.textContent=CSS;document.head.appendChild(st);de.classList.add("pd-dev");measure();
-  try{if(sessionStorage.getItem("pd-ui-side")==="r")de.classList.add("sk-right")}catch(e){}
+  try{if(localStorage.getItem("pd-ui-side")==="r")de.classList.add("sk-right")}catch(e){}
   addEventListener("resize",()=>setTimeout(measure,60));
   const click=s=>{const b=document.querySelector(s);if(b)b.click()};
   /* side notch */
   const n=document.createElement("div");n.className="sk-notch sk-cut";
-  n.innerHTML='<div class="sk-grp"><button data-v="cards" aria-label="Cards">'+I.cards+'</button><button data-v="grid" aria-label="Grid">'+I.grid+'</button><button data-v="scroll" aria-label="Scroll">'+I.scroll+'</button></div><button class="sk-det sk-info" aria-label="Open project"></button><div class="sk-grp"><button class="sk-arr" data-a="snd" aria-label="Sound">'+I.snd+'</button><button class="sk-arr" data-a="theme" aria-label="Light or dark">'+I.bulb+'</button></div>';
+  n.innerHTML='<button class="sk-close" data-a="close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg></button><div class="sk-grp"><button data-v="cards" aria-label="Cards">'+I.cards+'</button><button data-v="grid" aria-label="Grid">'+I.grid+'</button><button data-v="scroll" aria-label="Scroll">'+I.scroll+'</button></div><button class="sk-det sk-info" aria-label="Open project"></button><div class="sk-grp"><button class="sk-arr" data-a="snd" aria-label="Sound">'+I.snd+'</button><button class="sk-arr" data-a="theme" aria-label="Light or dark">'+I.bulb+'</button><button class="sk-swap" data-a="swap" aria-label="Move menu to the other side">&#8644;</button></div><i class="sk-grip" aria-hidden="true"></i>';
   w.appendChild(n);
-  n.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+  let sx=null,moved=false;
+  n.addEventListener("click",e=>{if(moved){moved=false;return}const b=e.target.closest("button");if(!b)return;
     if(b.dataset.v){const m=document.querySelector('.pg-mi[data-v="'+b.dataset.v+'"]');if(m)m.click();setTimeout(sync,50)}
     else if(b.classList.contains("sk-info"))click("#btnOpen");
     else if(b.dataset.a==="snd")click("#btnSound");
-    else if(b.dataset.a==="theme")click("#btnTheme")});
+    else if(b.dataset.a==="theme")click("#btnTheme");
+    else if(b.dataset.a==="close")setOpen(false);
+    else if(b.dataset.a==="swap"){de.classList.toggle("sk-right");try{localStorage.setItem("pd-ui-side",de.classList.contains("sk-right")?"r":"l")}catch(e){}}});
+  /* open / close: tap the tab or pull it out; push it back toward the edge to close */
+  const isR=()=>de.classList.contains("sk-right"),setOpen=v=>de.classList.toggle("sk-open",v);
+  n.addEventListener("pointerdown",e=>{sx=e.clientX;moved=false;if(!de.classList.contains("sk-open"))try{n.setPointerCapture(e.pointerId)}catch(_){}});
+  n.addEventListener("pointermove",e=>{if(sx==null)return;let dx=e.clientX-sx;if(isR())dx=-dx;if(Math.abs(dx)>8)moved=true;
+    const open=de.classList.contains("sk-open");if(!open&&dx>24){setOpen(true);sx=null}else if(open&&dx<-24){setOpen(false);sx=null}});
+  const up=()=>{if(sx!=null&&!moved&&!de.classList.contains("sk-open"))setOpen(true);sx=null};
+  n.addEventListener("pointerup",up);n.addEventListener("pointercancel",()=>{sx=null});
+
   /* pills on the card */
   const f=document.createElement("div");f.className="sk-float";f.style.top="20px";
   f.innerHTML='<button class="sk-pill2" data-m="p">Portfolio</button><button class="sk-pill2" data-m="s">Shop</button><button class="sk-circ sk-bmk" aria-label="Shortlist">'+I.bm+'<b>0</b></button><button class="sk-hire">Hire us</button>';
@@ -193,9 +223,6 @@ function boot(){
     if(b.dataset.m==="p")click("#modeSwipe");else if(b.dataset.m==="s")click("#modeWallet");
     else if(b.classList.contains("sk-bmk"))click("#openShort");else if(b.classList.contains("sk-hire"))click("#openStudio");setTimeout(sync,80)});
   const lg=document.createElement("div");lg.className="sk-logo2";lg.innerHTML=I.logo;lg.style.cursor="pointer";lg.onclick=()=>{location.href="/?ui=off"};w.appendChild(lg);
-  /* swap side: long-press the logo */
-  let t;lg.addEventListener("pointerdown",()=>{t=setTimeout(()=>{t=0;de.classList.toggle("sk-right");try{sessionStorage.setItem("pd-ui-side",de.classList.contains("sk-right")?"r":"l")}catch(e){}},600)});
-  lg.addEventListener("pointerup",()=>clearTimeout(t));lg.onclick=e=>{if(t===0)e.preventDefault()};
   let q=0;
   function sync(){q=0;
     const c=deck.querySelector(".dcard.top:not(.fx-gone)")||deck.querySelector(".dcard.top");
