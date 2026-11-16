@@ -88,7 +88,7 @@ html.nyp-ready .gm-toggle,html.nyp-ready .pg-toggle{display:none!important}
 .nyp-toggle button{display:inline-flex;align-items:center;gap:5px;height:40px;padding:0 12px 0 10px;border-radius:999px;background:#F2C649;border:1px solid #F2C649;font:inherit;font-weight:700;font-size:11px;letter-spacing:-.01em;line-height:1.05;color:#141414;cursor:pointer;white-space:nowrap;transition:transform .15s;animation:nypNudge 2.8s ease-in-out 1.2s infinite}
 .nyp-toggle button:active{transform:scale(.94)}
 .nyp-toggle svg{width:13px;height:13px;flex:none}
-.nyp-toggle.nyp-tight button{font-size:10px;padding:0 9px;white-space:normal;text-align:left;width:66px;line-height:1.05}
+.nyp-toggle.nyp-tight button{font-size:10px;padding:0 9px;white-space:normal;text-align:center;justify-content:center;width:66px;line-height:1.05}
 .nyp-toggle.nyp-tight button>svg{display:none}
 .nyp-toggle.nyp-stack{bottom:138px}
 @keyframes nypNudge{0%,86%,100%{transform:none}90%{transform:rotate(-3deg) scale(1.04)}95%{transform:rotate(2deg) scale(1.04)}}

@@ -27,7 +27,7 @@ html.pd-iosfit #deck.deck{height:calc(100svh - var(--hdr,56px) - 12px - var(--pd
 .pd-bar>.controls>*{flex:none}
 @media (max-width:380px){
   .pd-bar{gap:4px;padding:4px}
-  .pd-bar>.nyp-toggle button{font-size:10px!important;padding:0 8px!important;white-space:normal!important;text-align:left;width:62px;line-height:1.05}
+  .pd-bar>.nyp-toggle button{font-size:10px!important;padding:0 8px!important;white-space:normal!important;text-align:center;justify-content:center;width:62px;line-height:1.05}
   .pd-bar>.nyp-toggle button>svg{display:none}
 }
 /* the views button sits beside "See on garment" in Graphics: the garment pill goes icon-only on phones */
