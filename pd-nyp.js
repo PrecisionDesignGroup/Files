@@ -7,8 +7,8 @@
    To run it again: change END (and COVER for a new photo). After END the card stops showing. */
 (function(){
 if(typeof SHOP==="undefined"||typeof artFor!=="function")return;
-const END=new Date("2026-10-14T18:00:00-04:00").getTime();   /* Wed Oct 14, 6:00 PM Eastern */
-const COVER="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@d7be65274fc0680bbd835c25a55c5f74666ce1fa/name-your-price-cover.webp";                                              /* cover photo URL; empty = the designed cover */
+const END=new Date("2026-11-23T18:00:00-05:00").getTime();   /* Mon Nov 23, 6:00 PM Eastern (rerun 2026-11-16) */
+const COVER="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@d559b40065ff5e3d701f7a44e099e6eced4a05ba/name-your-price-cover.webp";                                              /* cover photo URL; empty = the designed cover */
 const IG="https://www.instagram.com/precisiondesigngroup",X="https://x.com/prcsndesigns";
 const SHARE_URL="https://precisiondesign.club/shop?nyp=1";
 const TYPES=["Graphics","Logos","Branding","Website","Collection Design"];
@@ -143,10 +143,10 @@ if(typeof fly==="function"){const _fly=fly;fly=function(el,dir){
 /* desktop info panel: show when it ends instead of "Coming soon" */
 if(typeof renderMeta==="function"){const _rm=renderMeta;renderMeta=function(){const r=_rm.apply(this,arguments);
   const p=typeof mode!=="undefined"&&mode==="wallet"&&idx<L().length?L()[idx]:null,s=document.querySelector("#swipeMeta .sprice span");
-  if(p&&p.nyp&&s)s.textContent="Ends Wed, Oct 14 · 6 PM ET";
+  if(p&&p.nyp&&s)s.textContent="Ends Mon, Nov 23 · 6 PM ET";
   const m=document.getElementById("swipeMeta"),q=typeof mode!=="undefined"&&mode==="swipe"&&idx<L().length?L()[idx]:null;
   if(m&&q&&q.nyp)m.innerHTML=`<div class="idx">${pad(idx+1)}<small> / ${pad(L().length)}</small></div><h2>Name Your Price</h2><p>${esc(q.blurb)}</p>
-    <dl class="spec mono"><dt>What</dt><dd>Limited-time offer</dd><dt>Ends</dt><dd>Wed, Oct 14 · 6 PM ET</dd><dt>Projects</dt><dd>${TYPES.join(" · ")}</dd></dl>`;
+    <dl class="spec mono"><dt>What</dt><dd>Limited-time offer</dd><dt>Ends</dt><dd>Mon, Nov 23 · 6 PM ET</dd><dt>Projects</dt><dd>${TYPES.join(" · ")}</dd></dl>`;
   return r}}
 /* live countdowns */
 setInterval(()=>{const t=chipText(),p=parts();

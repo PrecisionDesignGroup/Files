@@ -98,7 +98,7 @@ if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)&&window.PD_BG)PROJECTS
 /* ---- the deck order is shuffled on every visit (2026-11-06: replaces "projects with press come first").
    Special cards (newsletter, ads) stay in their slots. ---- */
 if(typeof PROJECTS!=="undefined"&&Array.isArray(PROJECTS)){
-  const special=p=>!p||p.kind||p.nl||p.ad||/^pd-/.test(String(p.id));
+  const special=p=>!p||p.kind||p.nl||p.ad||p.nyp||/^pd-/.test(String(p.id));
   const slots=[],items=[];PROJECTS.forEach((p,i)=>{if(!special(p)){slots.push(i);items.push(p)}});
   for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]]}
   slots.forEach((i,k)=>PROJECTS[i]=items[k]);
