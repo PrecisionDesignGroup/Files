@@ -2657,6 +2657,15 @@ const noPip=v=>{try{v.disablePictureInPicture=true;v.setAttribute("disablepictur
 document.querySelectorAll("video").forEach(noPip);
 new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType!==1)continue;if(n.tagName==="VIDEO")noPip(n);else if(n.querySelectorAll)n.querySelectorAll("video").forEach(noPip)}}).observe(document.documentElement,{childList:true,subtree:true});
 document.addEventListener("enterpictureinpicture",e=>{try{document.exitPictureInPicture&&document.exitPictureInPicture()}catch(x){}},true);
+/* 2026-11-16: Safari on iPhone still floated a black video box. Safari uses its own "presentation mode" for this, so
+   (1) snap any video it moves into picture-in-picture straight back into the page, and
+   (2) pause every playing video the moment the page loses focus or is hidden (that is when Safari starts it on its own). */
+document.addEventListener("webkitpresentationmodechanged",e=>{const v=e.target;try{if(v&&v.webkitPresentationMode&&v.webkitPresentationMode!=="inline"){v.webkitSetPresentationMode("inline");v.pause()}}catch(x){}},true);
+const pdHold=[];
+const pdPauseAll=()=>{document.querySelectorAll("video").forEach(v=>{try{if(!v.paused&&!v.closest(".cam-vf")){v.pause();pdHold.push(v)}}catch(x){}})};
+const pdResume=()=>{while(pdHold.length){const v=pdHold.pop();try{if(v.isConnected)v.play().catch(()=>{})}catch(x){}}};
+document.addEventListener("visibilitychange",()=>{document.hidden?pdPauseAll():pdResume()});
+addEventListener("pagehide",pdPauseAll);addEventListener("blur",pdPauseAll);addEventListener("focus",pdResume);
 /* some tablets report a screen-height unit (100svh) taller than what is actually visible; take the difference off */
 const de=document.documentElement;
 function cut(){try{
