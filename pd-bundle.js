@@ -410,7 +410,7 @@ const NYP={id:"nyp",nyp:true,kind:"Graphics",title:"Name Your Price",type:"Limit
 {const at=SHOP.findIndex(p=>p.kind==="Graphics");SHOP.splice(at<0?SHOP.length:at,0,NYP)}
 /* the same offer as the 2nd card in the portfolio, like an ad between projects (only under "All") */
 const PNYP=Object.assign({},NYP,{kind:undefined,cat:"Limited time",formats:[],gallery:[],image:COVER,imageBg:"#101010"});
-const ppos=1;
+const ppos=0;   /* first card in the portfolio (2026-11-16) */
 
 const css=`
 .nyp-art{position:absolute;inset:0;overflow:hidden;container-type:size;background:#F2C649;color:#141414}
@@ -698,7 +698,7 @@ let Z=5;
 
 /* the shop may already be on screen: redraw it with the card in front */
 if(typeof mode!=="undefined"&&mode==="wallet"&&typeof scat!=="undefined"&&scat==="Graphics"){idx=0;try{history.length=0}catch(e){}try{renderDeck();renderMeta()}catch(e){}}
-if(typeof PROJECTS!=="undefined"&&PROJECTS.length>ppos){PROJECTS.splice(ppos,0,PNYP);
+if(typeof PROJECTS!=="undefined"&&PROJECTS.length>=ppos){PROJECTS.splice(ppos,0,PNYP);
   if(typeof mode!=="undefined"&&mode==="swipe"&&pcat==="All"&&idx<=ppos+2){try{renderDeck();renderMeta()}catch(e){}}}
 try{if(typeof renderPockets==="function")renderPockets()}catch(e){}
 syncT();
