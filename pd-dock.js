@@ -150,4 +150,41 @@ function cut(){try{
 cut();addEventListener("resize",()=>setTimeout(cut,60));addEventListener("orientationchange",()=>setTimeout(cut,350));
 if(window.visualViewport)visualViewport.addEventListener("resize",()=>setTimeout(cut,60));
 try{dispatchEvent(new Event("resize"))}catch(e){}
+/* bubble slider (2026-11-16): press anywhere on the bottom bar and slide; a glass bubble follows the finger,
+   the button under it grows, and letting go presses that button. A plain tap still works as before. */
+(function(){
+  const bar=document.querySelector("#swipeView .pd-bar");if(!bar)return;
+  const sty=document.createElement("style");sty.textContent=`
+.pd-bar{touch-action:none}
+.pd-bub{position:absolute;top:50%;left:0;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;pointer-events:none;z-index:3;opacity:0;
+  transform:translateX(var(--bx,0px)) scale(.6);transition:opacity .18s ease,transform .22s cubic-bezier(.2,.9,.3,1.25);
+  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),rgba(255,255,255,.12) 42%,rgba(255,255,255,.06) 70%);
+  -webkit-backdrop-filter:blur(3px) saturate(1.6) brightness(1.08);backdrop-filter:blur(3px) saturate(1.6) brightness(1.08);
+  border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 -6px 12px -6px rgba(0,0,0,.25),inset 0 2px 6px rgba(255,255,255,.45),0 8px 22px -8px rgba(0,0,0,.45)}
+.pd-bar.pd-bubon .pd-bub{opacity:1;transform:translateX(var(--bx,0px)) scale(1)}
+.pd-bar.pd-bubdrag .pd-bub{transition:opacity .18s ease,transform .06s linear;transform:translateX(var(--bx,0px)) scale(1.12)}
+.pd-bar button{transition:transform .18s cubic-bezier(.2,.9,.3,1.3)}
+.pd-bar button.pd-hot{transform:scale(1.22)}
+@media (prefers-reduced-motion:reduce){.pd-bub,.pd-bar button{transition:none!important}}`;
+  document.head.appendChild(sty);
+  const bub=document.createElement("i");bub.className="pd-bub";bub.setAttribute("aria-hidden","true");bar.appendChild(bub);
+  let st=null,hot=null,eat=false;
+  const btns=()=>[...bar.querySelectorAll("button")].filter(b=>b.offsetParent&&!b.disabled&&b.getBoundingClientRect().width>0);
+  const cx=b=>{const r=b.getBoundingClientRect(),br=bar.getBoundingClientRect();return r.left+r.width/2-br.left};
+  const near=x=>{let best=null,d=1e9;for(const b of btns()){const k=Math.abs(cx(b)-x);if(k<d){d=k;best=b}}return best};
+  const setHot=b=>{if(b===hot)return;if(hot)hot.classList.remove("pd-hot");hot=b;if(b){b.classList.add("pd-hot");try{navigator.vibrate&&navigator.vibrate(4)}catch(e){}}};
+  const at=x=>bar.style.setProperty("--bx",x+"px");
+  bar.addEventListener("pointerdown",e=>{if(e.button)return;const br=bar.getBoundingClientRect(),x=e.clientX-br.left;
+    st={x0:e.clientX,id:e.pointerId,drag:false};const b=near(x);if(b){at(cx(b));setHot(b)}bar.classList.add("pd-bubon")});
+  bar.addEventListener("pointermove",e=>{if(!st||e.pointerId!==st.id)return;
+    if(!st.drag&&Math.abs(e.clientX-st.x0)>8){st.drag=true;bar.classList.add("pd-bubdrag");try{bar.setPointerCapture(e.pointerId)}catch(_){}}
+    if(!st.drag)return;const br=bar.getBoundingClientRect();const x=Math.max(20,Math.min(br.width-20,e.clientX-br.left));at(x);setHot(near(x))});
+  const end=e=>{if(!st)return;const d=st.drag;st=null;bar.classList.remove("pd-bubdrag");
+    const b=hot;if(b)at(cx(b));
+    if(d&&b&&e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>b.click(),0)}
+    setTimeout(()=>{bar.classList.remove("pd-bubon");setHot(null)},d?260:160)};
+  bar.addEventListener("pointerup",end);bar.addEventListener("pointercancel",end);
+  /* after a slide, swallow the browser's own click on whatever was under the finger at the start */
+  bar.addEventListener("click",e=>{if(eat&&e.isTrusted){e.stopImmediatePropagation();e.preventDefault()}},true);
+})();
 })();
