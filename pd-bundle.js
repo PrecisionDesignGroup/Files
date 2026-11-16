@@ -2791,15 +2791,15 @@ html.sk-right .sk-cut::after{left:auto;right:calc(var(--sk-gr,8px) + 2px);backgr
 
 /* v8: title strip removed, project info lives in the notch */
 #deck .dcard .foot{display:none!important}
-#deck .dcard .art{bottom:0!important;height:100%!important}
+:is(#deck,.sk-loop) .dcard .art{bottom:0!important;height:100%!important}
 .sk-cut .sk-info{height:auto!important;max-height:300px;width:46px!important;display:flex!important;flex-direction:row-reverse;align-items:center;justify-content:center;gap:3px;padding:10px 0!important;overflow:hidden}
 .sk-cut .sk-info span{writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:280px}
 .sk-cut .sk-info .t{font:800 12px/1 var(--f-display,var(--f-body,Inter,sans-serif));letter-spacing:.02em;text-transform:uppercase;color:#f2efe8}
 .sk-cut .sk-info .s{font:500 9px/1 var(--f-mono,monospace);letter-spacing:.06em;text-transform:uppercase;color:#9b978e}
 .sk-cut .sk-info .s{font-size:8.5px}
 /* v9: keep the artwork clear of the notch */
-#deck .dcard .art{box-sizing:border-box!important;padding-left:52px!important;padding-right:0!important}
-html.sk-right #deck .dcard .art{padding-left:0!important;padding-right:52px!important}
+:is(#deck,.sk-loop) .dcard .art{box-sizing:border-box!important;padding-left:52px!important;padding-right:0!important}
+html.sk-right :is(#deck,.sk-loop) .dcard .art{padding-left:0!important;padding-right:52px!important}
 /* v12: header back on top (no Play); side nav = views + project info */
 #modePlay,header .bar-div{display:none!important}
 
@@ -2842,6 +2842,16 @@ html.pd-dev .pg-view{top:max(8px,env(safe-area-inset-top,0px))!important;transit
 html.pd-dev.sk-open .pg-view{padding-left:calc(var(--sk-gl,8px) + 54px)}
 html.pd-dev.sk-open.sk-right .pg-view{padding-left:0;padding-right:calc(var(--sk-gr,8px) + 54px)}
 /* a card being swiped away passes over the nav instead of being cut by it */
+/* infinite side-scroll rail (replaces the swipe deck) */
+html.pd-dev.sk-railon #deck{visibility:hidden!important}
+.sk-loop{position:absolute;z-index:5;display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;border-radius:38px}
+.sk-loop::-webkit-scrollbar{display:none}
+html:not(.sk-railon) .sk-loop{display:none}
+.sk-slide{position:relative;flex:0 0 100%;height:100%;scroll-snap-align:center;scroll-snap-stop:always}
+.sk-loop .dcard{border-radius:38px!important;overflow:hidden}
+.sk-loop .dcard .foot{display:none!important}
+.sk-loop .dcard{position:absolute!important;inset:0!important;transform:none!important;opacity:1!important;touch-action:pan-x pan-y!important;transition:none!important;cursor:pointer}
+.sk-loop.sk-grab .dcard{cursor:grabbing}
 html.pd-dev #deck .dcard.sk-lift{opacity:var(--sk-f,1)}
 html.pd-dev #deck .dcard.fx-gone{animation:sk-fade .28s ease-out forwards}
 @keyframes sk-fade{to{opacity:0}}
@@ -2871,8 +2881,8 @@ html.pd-dev:not(.sk-open) .sk-cut>.sk-grip{opacity:1}
 html.pd-dev:not(.sk-open) .sk-cut{cursor:pointer}
 html.pd-dev:not(.sk-open) .sk-cut::before,html.pd-dev:not(.sk-open) .sk-cut::after{opacity:0}
 .sk-cut::before,.sk-cut::after{transition:opacity .2s}
-#deck .dcard .art{transition:padding .32s cubic-bezier(.2,.8,.2,1)}
-html.pd-dev:not(.sk-open) #deck .dcard .art{padding-left:0!important;padding-right:0!important}
+:is(#deck,.sk-loop) .dcard .art{transition:padding .32s cubic-bezier(.2,.8,.2,1)}
+html.pd-dev:not(.sk-open) :is(#deck,.sk-loop) .dcard .art{padding-left:0!important;padding-right:0!important}
 .sk-cut .sk-swap{width:36px;height:30px;border:0;background:none;color:#8d8a84;font:600 15px/1 var(--f-body,Inter,sans-serif);display:grid;place-items:center}
 html.pd-dev body #swipeView .deckwrap{background:var(--sk-bez)!important}
 html.pd-dev .nyp-chip{margin-top:52px}
@@ -2912,6 +2922,40 @@ function boot(){
   addEventListener("pointermove",e=>{if(lx==null||!lc)return;const d=Math.hypot(e.clientX-lx,e.clientY-ly);if(d>8)lc.classList.add("sk-lift");deck.style.setProperty("--sk-f",Math.max(.15,1-d/260).toFixed(3))},true);
   const drop=()=>{const c=lc;lx=null;lc=null;if(c)setTimeout(()=>{const v=deck.style.getPropertyValue("--sk-f")||"1";if(c.classList.contains("fx-gone"))c.style.setProperty("--sk-f",v);else c.classList.remove("sk-lift");deck.style.setProperty("--sk-f","1")},40)};
   addEventListener("pointerup",drop,true);addEventListener("pointercancel",drop,true);
+  /* infinite side-scroll rail: a window of cards around the current one, re-centred after every scroll so it never ends */
+  const rail=document.createElement("div");rail.className="sk-loop";w.appendChild(rail);
+  const RW=3,mod=(a,b)=>((a%b)+b)%b;let rsig="",ridx=-1,rbusy=false,rtm=0,rdrag=null;
+  const step=()=>rail.clientWidth+12;
+  function railCard(p,k){const el=document.createElement("div");el.className="dcard";el.dataset.pid=p.id;el.style.background=p.image?(p.imageBg||"#000"):p.bg;
+    el.innerHTML='<div class="art">'+artFor(p,"r"+k)+'</div><div class="foot"><div><b>'+esc(p.title)+'</b><span class="mono">'+esc(p.client)+'</span></div><span class="mono">'+esc(p.discipline)+'</span></div>';
+    const sv=el.querySelector(".art svg");if(sv)sv.setAttribute("preserveAspectRatio","xMidYMid meet");return el}
+  function railPlace(){rail.style.top=deck.offsetTop+"px";rail.style.left=deck.offsetLeft+"px";rail.style.width=deck.offsetWidth+"px";rail.style.height=deck.offsetHeight+"px"}
+  function railBuild(){let list;try{list=L()}catch(e){return}const N=list.length;if(!N){de.classList.remove("sk-railon");return}
+    if(idx>=N||idx<0){idx=mod(idx,N);rbusy=true;try{renderDeck()}catch(e){}rbusy=false}
+    railPlace();rail.innerHTML="";const at=idx;rbusy=true;
+    for(let o=-RW;o<=RW;o++){const k=mod(at+o,N),sl=document.createElement("div");sl.className="sk-slide";sl.dataset.k=k;
+      let c=null;try{idx=k;renderDeck();const t=deck.querySelector(".dcard.top");if(t){c=t.cloneNode(true);c.classList.remove("top","sk-lift");c.removeAttribute("tabindex");c.style.cssText="background:"+t.style.background;c.querySelectorAll(".stamp").forEach(x=>x.remove())}}catch(e){}
+      if(!c)try{c=railCard(list[k],k)}catch(e){continue}sl.appendChild(c);rail.appendChild(sl)}
+    idx=at;try{renderDeck()}catch(e){}rbusy=false;
+    try{if(typeof fixText==="function")fixText(rail)}catch(e){}
+    de.classList.add("sk-railon");rail.style.scrollSnapType="none";rail.scrollLeft=RW*step();rail.style.scrollSnapType="";ridx=idx;rsig=mode+"|"+N+"|"+list[0].id}
+  function railCheck(){if(rbusy)return;let list;try{list=L()}catch(e){return}
+    const sig=mode+"|"+list.length+"|"+(list[0]&&list[0].id);if(sig!==rsig||idx!==ridx)railBuild()}
+  function railSettle(){const o=Math.round(rail.scrollLeft/step())-RW;if(!o)return;const N=L().length;
+    idx=mod(idx+o,N);rbusy=true;try{renderDeck()}catch(e){}rbusy=false;railBuild();sync()}
+  rail.addEventListener("scroll",()=>{clearTimeout(rtm);if(!rdrag)rtm=setTimeout(railSettle,"onscrollend" in window?600:160)},{passive:true});
+  rail.addEventListener("scrollend",()=>{if(rdrag)return;clearTimeout(rtm);railSettle()});
+  /* mouse: drag to scroll, click to open */
+  rail.addEventListener("pointerdown",e=>{rdrag={x:e.clientX,s:rail.scrollLeft,m:false,mouse:e.pointerType==="mouse"};if(rdrag.mouse){rail.style.scrollSnapType="none";rail.classList.add("sk-grab")}});
+  addEventListener("pointermove",e=>{if(!rdrag)return;const dx=e.clientX-rdrag.x;if(Math.abs(dx)>6)rdrag.m=true;if(rdrag.mouse)rail.scrollLeft=rdrag.s-dx});
+  addEventListener("pointerup",e=>{if(!rdrag)return;const d=rdrag;rdrag=null;rail.classList.remove("sk-grab");
+    if(d.mouse){const dx=e.clientX-d.x,cur=Math.round(d.s/step());const t=Math.abs(dx)>40?cur-Math.sign(dx):cur;rail.style.scrollSnapType="";rail.scrollTo({left:t*step(),behavior:"smooth"})}
+    rail.dataset.moved=d.m?"1":"";clearTimeout(rtm);rtm=setTimeout(railSettle,450)});
+  rail.addEventListener("click",e=>{if(rail.dataset.moved){rail.dataset.moved="";return}const sl=e.target.closest(".sk-slide");if(!sl)return;
+    const k=+sl.dataset.k;if(k!==idx){idx=k;rbusy=true;try{renderDeck()}catch(e){}rbusy=false;railBuild()}click("#btnOpen")});
+  addEventListener("keydown",e=>{if(!de.classList.contains("sk-railon")||de.classList.contains("pd-vopen")||/INPUT|TEXTAREA/.test((e.target||{}).tagName||""))return;
+    if(e.key==="ArrowRight"||e.key==="ArrowLeft"){e.stopImmediatePropagation();e.preventDefault();rail.scrollBy({left:(e.key==="ArrowRight"?1:-1)*step(),behavior:"smooth"})}},true);
+  addEventListener("resize",()=>setTimeout(railBuild,80));
   /* pills on the card */
   const f=document.createElement("div");f.className="sk-float";f.style.top="20px";
   f.innerHTML='<button class="sk-pill2" data-m="p">Portfolio</button><button class="sk-pill2" data-m="s">Shop</button><button class="sk-circ sk-bmk" aria-label="Shortlist">'+I.bm+'<b>0</b></button><button class="sk-hire">Hire us</button>';
@@ -2921,7 +2965,7 @@ function boot(){
     else if(b.classList.contains("sk-bmk"))click("#openShort");else if(b.classList.contains("sk-hire"))click("#openStudio");setTimeout(sync,80)});
   const lg=document.createElement("div");lg.className="sk-logo2";lg.innerHTML=I.logo;lg.style.cursor="pointer";lg.onclick=()=>{location.href="/?ui=off"};w.appendChild(lg);
   let q=0;
-  function sync(){q=0;
+  function sync(){q=0;railCheck();
     const c=deck.querySelector(".dcard.top:not(.fx-gone)")||deck.querySelector(".dcard.top");
     const info=n.querySelector(".sk-info");
     if(c){const t=(c.querySelector(".foot b")||{}).textContent||"";const s=[...c.querySelectorAll(".foot .mono")].map(e=>e.textContent.trim()).filter(Boolean);
