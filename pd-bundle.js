@@ -2678,39 +2678,55 @@ function cut(){try{
 cut();addEventListener("resize",()=>setTimeout(cut,60));addEventListener("orientationchange",()=>setTimeout(cut,350));
 if(window.visualViewport)visualViewport.addEventListener("resize",()=>setTimeout(cut,60));
 try{dispatchEvent(new Event("resize"))}catch(e){}
-/* bubble slider (2026-11-16): press anywhere on the bottom bar and slide; a glass bubble follows the finger,
-   the button under it grows, and letting go presses that button. A plain tap still works as before. */
+/* bubble slider (2026-11-16, v2): press the bottom bar and slide. A glass lens follows the finger on a spring, stretches with
+   speed like a drop of water, magnifies the buttons it passes over, and springs onto the nearest button when you let go,
+   which presses it. A plain tap still works as before. */
 (function(){
   const bar=document.querySelector("#swipeView .pd-bar");if(!bar)return;
   const sty=document.createElement("style");sty.textContent=`
-.pd-bar{touch-action:none}
-.pd-bub{position:absolute;top:50%;left:0;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;pointer-events:none;z-index:3;opacity:0;
-  transform:translateX(var(--bx,0px)) scale(.6);transition:opacity .18s ease,transform .22s cubic-bezier(.2,.9,.3,1.25);
-  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),rgba(255,255,255,.12) 42%,rgba(255,255,255,.06) 70%);
-  -webkit-backdrop-filter:blur(3px) saturate(1.6) brightness(1.08);backdrop-filter:blur(3px) saturate(1.6) brightness(1.08);
-  border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 -6px 12px -6px rgba(0,0,0,.25),inset 0 2px 6px rgba(255,255,255,.45),0 8px 22px -8px rgba(0,0,0,.45)}
-.pd-bar.pd-bubon .pd-bub{opacity:1;transform:translateX(var(--bx,0px)) scale(1)}
-.pd-bar.pd-bubdrag .pd-bub{transition:opacity .18s ease,transform .06s linear;transform:translateX(var(--bx,0px)) scale(1.12)}
-.pd-bar button{transition:transform .18s cubic-bezier(.2,.9,.3,1.3)}
-.pd-bar button.pd-hot{transform:scale(1.22)}
-@media (prefers-reduced-motion:reduce){.pd-bub,.pd-bar button{transition:none!important}}`;
+.pd-bar{touch-action:none;-webkit-user-select:none;user-select:none}
+.pd-bub{position:absolute;top:50%;left:0;width:60px;height:46px;margin:-23px 0 0 -30px;border-radius:999px;pointer-events:none;z-index:40;opacity:0;will-change:transform,opacity;
+  background:radial-gradient(120% 140% at 50% 50%,rgba(255,255,255,0) 58%,rgba(255,255,255,.28) 100%),linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 40%);
+  -webkit-backdrop-filter:saturate(1.8) brightness(1.05) contrast(1.04);backdrop-filter:saturate(1.8) brightness(1.05) contrast(1.04);
+  border:1px solid rgba(255,255,255,.75);
+  box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08),inset 0 1.5px 1px rgba(255,255,255,.95),inset 0 -1px 1px rgba(255,255,255,.35),inset 0 -8px 14px -10px rgba(0,0,0,.35),inset 6px 0 10px -8px rgba(120,190,255,.35),inset -6px 0 10px -8px rgba(255,170,120,.35),0 10px 24px -10px rgba(0,0,0,.45),0 2px 6px -2px rgba(0,0,0,.2)}
+.pd-bar.pd-bubon button{transition:none!important;transform:scale(var(--pd-m,1))}
+@media (prefers-reduced-motion:reduce){.pd-bub{display:none}}`;
   document.head.appendChild(sty);
-  const bub=document.createElement("i");bub.className="pd-bub";bub.setAttribute("aria-hidden","true");bar.appendChild(bub);
-  let st=null,hot=null,eat=false;
+  const bub=document.createElement("i");bub.className="pd-bub";bub.setAttribute("aria-hidden","true");bar.insertBefore(bub,bar.firstChild);
+  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+  let st=null,eat=false,raf=0,list=[];
+  /* spring state: position, velocity, size (s) and opacity (o) */
+  let x=0,v=0,tx=0,s=.6,ts=.6,sv=0,o=0,to=0,last=null;
   const btns=()=>[...bar.querySelectorAll("button")].filter(b=>b.offsetParent&&!b.disabled&&b.getBoundingClientRect().width>0);
   const cx=b=>{const r=b.getBoundingClientRect(),br=bar.getBoundingClientRect();return r.left+r.width/2-br.left};
-  const near=x=>{let best=null,d=1e9;for(const b of btns()){const k=Math.abs(cx(b)-x);if(k<d){d=k;best=b}}return best};
-  const setHot=b=>{if(b===hot)return;if(hot)hot.classList.remove("pd-hot");hot=b;if(b){b.classList.add("pd-hot");try{navigator.vibrate&&navigator.vibrate(4)}catch(e){}}};
-  const at=x=>bar.style.setProperty("--bx",x+"px");
-  bar.addEventListener("pointerdown",e=>{if(e.button)return;const br=bar.getBoundingClientRect(),x=e.clientX-br.left;
-    st={x0:e.clientX,id:e.pointerId,drag:false};const b=near(x);if(b){at(cx(b));setHot(b)}bar.classList.add("pd-bubon")});
+  const near=px=>{let best=null,d=1e9;for(const it of list){const k=Math.abs(it.c-px);if(k<d){d=k;best=it}}return best};
+  function frame(){
+    /* critically-damped-ish springs: the lens trails the finger a touch, overshoots slightly, then settles */
+    const a=(tx-x)*.26-v*.42;v+=a;x+=v;
+    const sa=(ts-s)*.22-sv*.38;sv+=sa;s+=sa*0+sv;
+    o+=(to-o)*.25;
+    const sp=Math.min(Math.abs(v)/26,.45);                 // speed stretch
+    bub.style.transform=`translateX(${x}px) scale(${(s*(1+sp)).toFixed(3)},${(s*(1-sp*.45)).toFixed(3)})`;
+    bub.style.opacity=o.toFixed(3);
+    for(const it of list){const d=Math.abs(it.c-x);const m=1+.26*Math.max(0,1-d/38)*Math.min(1,o*1.4);it.b.style.setProperty("--pd-m",m.toFixed(3))}
+    const h=near(x);if(h&&h!==last){last=h;if(st&&st.drag)try{navigator.vibrate&&navigator.vibrate(3)}catch(e){}}
+    if(Math.abs(tx-x)<.2&&Math.abs(v)<.05&&Math.abs(ts-s)<.002&&Math.abs(sv)<.002&&Math.abs(to-o)<.01){
+      raf=0;if(to===0){bar.classList.remove("pd-bubon");list.forEach(it=>it.b.style.removeProperty("--pd-m"))}return}
+    raf=requestAnimationFrame(frame)}
+  const run=()=>{if(!raf)raf=requestAnimationFrame(frame)};
+  bar.addEventListener("pointerdown",e=>{if(e.button||reduce)return;list=btns().map(b=>({b,c:cx(b)}));if(!list.length)return;
+    const br=bar.getBoundingClientRect(),px=e.clientX-br.left,h=near(px);
+    st={x0:e.clientX,id:e.pointerId,drag:false};last=h;
+    if(!bar.classList.contains("pd-bubon")||o<.05){x=h.c;v=0;s=.7;sv=0}
+    tx=h.c;ts=1;to=1;bar.classList.add("pd-bubon");run()});
   bar.addEventListener("pointermove",e=>{if(!st||e.pointerId!==st.id)return;
-    if(!st.drag&&Math.abs(e.clientX-st.x0)>8){st.drag=true;bar.classList.add("pd-bubdrag");try{bar.setPointerCapture(e.pointerId)}catch(_){}}
-    if(!st.drag)return;const br=bar.getBoundingClientRect();const x=Math.max(20,Math.min(br.width-20,e.clientX-br.left));at(x);setHot(near(x))});
-  const end=e=>{if(!st)return;const d=st.drag;st=null;bar.classList.remove("pd-bubdrag");
-    const b=hot;if(b)at(cx(b));
-    if(d&&b&&e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>b.click(),0)}
-    setTimeout(()=>{bar.classList.remove("pd-bubon");setHot(null)},d?260:160)};
+    if(!st.drag&&Math.abs(e.clientX-st.x0)>6){st.drag=true;ts=1.14;try{bar.setPointerCapture(e.pointerId)}catch(_){}}
+    if(!st.drag)return;const br=bar.getBoundingClientRect();tx=Math.max(24,Math.min(br.width-24,e.clientX-br.left));run()});
+  const end=e=>{if(!st)return;const d=st.drag;st=null;
+    const h=near(d?tx:x);if(h)tx=h.c;ts=1;run();
+    if(d&&h&&e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>h.b.click(),120)}
+    setTimeout(()=>{if(!st){to=0;ts=.7;run()}},d?420:180)};
   bar.addEventListener("pointerup",end);bar.addEventListener("pointercancel",end);
   /* after a slide, swallow the browser's own click on whatever was under the finger at the start */
   bar.addEventListener("click",e=>{if(eat&&e.isTrusted){e.stopImmediatePropagation();e.preventDefault()}},true);
