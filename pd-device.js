@@ -191,7 +191,7 @@ function boot(){
   if(!w||!deck||!deck.querySelector(".dcard"))return setTimeout(boot,120);
   const st=document.createElement("style");st.id="pd-dev-css";
   const measure=()=>{st.disabled=true;const r=w.getBoundingClientRect();de.style.setProperty("--sk-gl",r.left+"px");de.style.setProperty("--sk-gr",(innerWidth-r.right)+"px");st.disabled=false};
-  st.textContent=CSS;document.head.appendChild(st);de.classList.add("pd-dev");measure();
+  st.textContent=CSS;document.head.appendChild(st);de.classList.add("pd-dev","sk-open");measure();
   try{if(localStorage.getItem("pd-ui-side")==="r")de.classList.add("sk-right")}catch(e){}
   addEventListener("resize",()=>setTimeout(measure,60));
   const click=s=>{const b=document.querySelector(s);if(b)b.click()};
