@@ -150,55 +150,63 @@ function cut(){try{
 cut();addEventListener("resize",()=>setTimeout(cut,60));addEventListener("orientationchange",()=>setTimeout(cut,350));
 if(window.visualViewport)visualViewport.addEventListener("resize",()=>setTimeout(cut,60));
 try{dispatchEvent(new Event("resize"))}catch(e){}
-/* bubble slider (2026-11-16, v2): press the bottom bar and slide. A glass lens follows the finger on a spring, stretches with
-   speed like a drop of water, magnifies the buttons it passes over, and springs onto the nearest button when you let go,
-   which presses it. A plain tap still works as before. */
+/* bottom-bar slider (2026-11-16, v3): plain bar, every button the same colour, and a see-through pill that always sits on
+   one option. Press and slide: the pill follows the finger on a spring and lands on the nearest option when you let go,
+   which presses it. A plain tap still works and moves the pill there too. */
 (function(){
   const bar=document.querySelector("#swipeView .pd-bar");if(!bar)return;
   const sty=document.createElement("style");sty.textContent=`
-.pd-bar{touch-action:none;-webkit-user-select:none;user-select:none}
-.pd-bub{position:absolute;top:50%;left:0;width:60px;height:46px;margin:-23px 0 0 -30px;border-radius:999px;pointer-events:none;z-index:40;opacity:0;will-change:transform,opacity;
-  background:radial-gradient(120% 140% at 50% 50%,rgba(255,255,255,0) 58%,rgba(255,255,255,.28) 100%),linear-gradient(180deg,rgba(255,255,255,.14),rgba(255,255,255,0) 40%);
-  -webkit-backdrop-filter:saturate(1.8) brightness(1.05) contrast(1.04);backdrop-filter:saturate(1.8) brightness(1.05) contrast(1.04);
-  border:1px solid rgba(255,255,255,.75);
-  box-shadow:inset 0 0 0 .5px rgba(0,0,0,.08),inset 0 1.5px 1px rgba(255,255,255,.95),inset 0 -1px 1px rgba(255,255,255,.35),inset 0 -8px 14px -10px rgba(0,0,0,.35),inset 6px 0 10px -8px rgba(120,190,255,.35),inset -6px 0 10px -8px rgba(255,170,120,.35),0 10px 24px -10px rgba(0,0,0,.45),0 2px 6px -2px rgba(0,0,0,.2)}
+#swipeView .pd-bar{touch-action:none;-webkit-user-select:none;user-select:none;background:var(--surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+#swipeView .pd-bar button,#swipeView .pd-bar .cbtn{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:var(--ink)!important;animation:none!important}
+#swipeView .pd-bar button svg,#swipeView .pd-bar button svg *{color:var(--ink)!important}
+#swipeView .pd-bar button svg [fill]:not([fill="none"]){fill:currentColor!important}
+#swipeView .pd-bar button svg [stroke]:not([stroke="none"]){stroke:currentColor!important}
+#swipeView .pd-bar .nyp-toggle button{font-weight:700}
+#swipeView .pd-bar #btnTheme svg *{fill:none!important}
+.pd-bub{position:absolute;top:50%;left:0;width:58px;height:42px;margin:-21px 0 0 -29px;border-radius:999px;pointer-events:none;z-index:40;opacity:0;will-change:transform;
+  background:color-mix(in srgb,var(--ink) 7%,transparent);
+  -webkit-backdrop-filter:saturate(1.6) brightness(1.04);backdrop-filter:saturate(1.6) brightness(1.04);
+  border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 -1px 1px rgba(255,255,255,.25),0 4px 14px -8px rgba(0,0,0,.35)}
 .pd-bar.pd-bubon button{transition:none!important;transform:scale(var(--pd-m,1))}
-@media (prefers-reduced-motion:reduce){.pd-bub{display:none}}`;
+@media (prefers-reduced-motion:reduce){.pd-bub{transition:none}}`;
   document.head.appendChild(sty);
   const bub=document.createElement("i");bub.className="pd-bub";bub.setAttribute("aria-hidden","true");bar.insertBefore(bub,bar.firstChild);
-  const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
-  let st=null,eat=false,raf=0,list=[];
-  /* spring state: position, velocity, size (s) and opacity (o) */
-  let x=0,v=0,tx=0,s=.6,ts=.6,sv=0,o=0,to=0,last=null;
-  const btns=()=>[...bar.querySelectorAll("button")].filter(b=>b.offsetParent&&!b.disabled&&b.getBoundingClientRect().width>0);
+  let st=null,eat=false,raf=0,list=[],rest=document.getElementById("btnSave");
+  /* springs: position x, press amount p (0 resting, 1 held), opacity o */
+  let x=0,v=0,tx=0,p=0,tp=0,pv=0,o=0,to=1,placed=false;
+  const btns=()=>[...bar.querySelectorAll("button")].filter(b=>b.offsetParent&&b.getBoundingClientRect().width>0);
   const cx=b=>{const r=b.getBoundingClientRect(),br=bar.getBoundingClientRect();return r.left+r.width/2-br.left};
-  const near=px=>{let best=null,d=1e9;for(const it of list){const k=Math.abs(it.c-px);if(k<d){d=k;best=it}}return best};
+  const refresh=()=>{list=btns().map(b=>({b,c:cx(b)}))};
+  const near=px=>{let best=null,d=1e9;for(const it of list){if(it.b.disabled)continue;const k=Math.abs(it.c-px);if(k<d){d=k;best=it}}return best};
   function frame(){
-    /* critically-damped-ish springs: the lens trails the finger a touch, overshoots slightly, then settles */
-    const a=(tx-x)*.26-v*.42;v+=a;x+=v;
-    const sa=(ts-s)*.22-sv*.38;sv+=sa;s+=sa*0+sv;
-    o+=(to-o)*.25;
-    const sp=Math.min(Math.abs(v)/26,.45);                 // speed stretch
-    bub.style.transform=`translateX(${x}px) scale(${(s*(1+sp)).toFixed(3)},${(s*(1-sp*.45)).toFixed(3)})`;
+    const a=(tx-x)*.24-v*.44;v+=a;x+=v;
+    const pa=(tp-p)*.2-pv*.4;pv+=pa;p+=pv;
+    o+=(to-o)*.3;
+    const sp=Math.min(Math.abs(v)/30,.35);
+    const sc=1+.12*p;
+    bub.style.transform=`translateX(${x.toFixed(2)}px) scale(${(sc*(1+sp)).toFixed(3)},${(sc*(1-sp*.4)).toFixed(3)})`;
     bub.style.opacity=o.toFixed(3);
-    for(const it of list){const d=Math.abs(it.c-x);const m=1+.26*Math.max(0,1-d/38)*Math.min(1,o*1.4);it.b.style.setProperty("--pd-m",m.toFixed(3))}
-    const h=near(x);if(h&&h!==last){last=h;if(st&&st.drag)try{navigator.vibrate&&navigator.vibrate(3)}catch(e){}}
-    if(Math.abs(tx-x)<.2&&Math.abs(v)<.05&&Math.abs(ts-s)<.002&&Math.abs(sv)<.002&&Math.abs(to-o)<.01){
-      raf=0;if(to===0){bar.classList.remove("pd-bubon");list.forEach(it=>it.b.style.removeProperty("--pd-m"))}return}
+    for(const it of list){const d=Math.abs(it.c-x);const m=1+.22*p*Math.max(0,1-d/36);it.b.style.setProperty("--pd-m",m.toFixed(3))}
+    if(Math.abs(tx-x)<.15&&Math.abs(v)<.04&&Math.abs(tp-p)<.003&&Math.abs(pv)<.003&&Math.abs(to-o)<.01){raf=0;if(p<.01)bar.classList.remove("pd-bubon");return}
     raf=requestAnimationFrame(frame)}
-  const run=()=>{if(!raf)raf=requestAnimationFrame(frame)};
-  bar.addEventListener("pointerdown",e=>{if(e.button||reduce)return;list=btns().map(b=>({b,c:cx(b)}));if(!list.length)return;
-    const br=bar.getBoundingClientRect(),px=e.clientX-br.left,h=near(px);
-    st={x0:e.clientX,id:e.pointerId,drag:false};last=h;
-    if(!bar.classList.contains("pd-bubon")||o<.05){x=h.c;v=0;s=.7;sv=0}
-    tx=h.c;ts=1;to=1;bar.classList.add("pd-bubon");run()});
+  const run=()=>{bar.classList.add("pd-bubon");if(!raf)raf=requestAnimationFrame(frame)};
+  /* keep the resting pill on its option when the bar changes (resize, buttons shown or hidden) */
+  function park(jump){refresh();if(!list.length){to=0;run();return}
+    let it=list.find(i=>i.b===rest&&!i.b.disabled)||near(placed?x:(list.find(i=>i.b===rest)||list[0]).c);if(!it){to=0;run();return}
+    rest=it.b;tx=it.c;to=1;if(jump||!placed){x=tx;v=0;placed=true}run()}
+  setTimeout(()=>park(true),60);
+  try{new ResizeObserver(()=>park(true)).observe(bar)}catch(e){addEventListener("resize",()=>setTimeout(()=>park(true),80))}
+  new MutationObserver(()=>{clearTimeout(park.t);park.t=setTimeout(()=>{if(!st)park(false)},80)}).observe(bar,{subtree:true,attributes:true,attributeFilter:["disabled","hidden"],childList:true});
+  bar.addEventListener("pointerdown",e=>{if(e.button)return;refresh();if(!list.length)return;
+    const br=bar.getBoundingClientRect(),px=e.clientX-br.left,h=near(px);if(!h)return;
+    st={x0:e.clientX,id:e.pointerId,drag:false};tx=h.c;tp=1;run()});
   bar.addEventListener("pointermove",e=>{if(!st||e.pointerId!==st.id)return;
-    if(!st.drag&&Math.abs(e.clientX-st.x0)>6){st.drag=true;ts=1.14;try{bar.setPointerCapture(e.pointerId)}catch(_){}}
-    if(!st.drag)return;const br=bar.getBoundingClientRect();tx=Math.max(24,Math.min(br.width-24,e.clientX-br.left));run()});
-  const end=e=>{if(!st)return;const d=st.drag;st=null;
-    const h=near(d?tx:x);if(h)tx=h.c;ts=1;run();
-    if(d&&h&&e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>h.b.click(),120)}
-    setTimeout(()=>{if(!st){to=0;ts=.7;run()}},d?420:180)};
+    if(!st.drag&&Math.abs(e.clientX-st.x0)>6){st.drag=true;try{bar.setPointerCapture(e.pointerId)}catch(_){}}
+    if(!st.drag)return;const br=bar.getBoundingClientRect();tx=Math.max(22,Math.min(br.width-22,e.clientX-br.left));run()});
+  const end=e=>{if(!st)return;const d=st.drag;st=null;tp=0;
+    const h=near(d?tx:x);if(h){tx=h.c;rest=h.b}run();
+    if(d&&h&&e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>h.b.click(),110)}};
   bar.addEventListener("pointerup",end);bar.addEventListener("pointercancel",end);
   /* after a slide, swallow the browser's own click on whatever was under the finger at the start */
   bar.addEventListener("click",e=>{if(eat&&e.isTrusted){e.stopImmediatePropagation();e.preventDefault()}},true);
