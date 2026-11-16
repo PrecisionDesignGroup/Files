@@ -661,7 +661,7 @@ window.openNYP=openNYP;
 const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const wrap=document.querySelector("#swipeView .deckwrap");
 const tg=document.createElement("div");tg.className="nyp-toggle";
-tg.innerHTML=`<button type="button" aria-label="Name your price: open the offer">${tagIco}<span>Name your price</span>${arrow}</button>`;
+tg.innerHTML=`<button type="button" aria-label="Name your price: open the offer">${tagIco}<span>NYP</span>${arrow}</button>`;
 if(wrap){wrap.appendChild(tg);tg.querySelector("button").onclick=e=>{e.stopPropagation();openNYP()}}
 function fitT(){const c=wrap&&wrap.querySelector(".controls");tg.classList.remove("nyp-tight","nyp-stack");if(!c)return;
   const ok=()=>{const a=tg.getBoundingClientRect(),b=c.getBoundingClientRect();return !(a.width&&b.width&&a.right>b.left-4)};
