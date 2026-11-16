@@ -2842,8 +2842,9 @@ html.pd-dev .pg-view{top:max(8px,env(safe-area-inset-top,0px))!important;transit
 html.pd-dev.sk-open .pg-view{padding-left:calc(var(--sk-gl,8px) + 54px)}
 html.pd-dev.sk-open.sk-right .pg-view{padding-left:0;padding-right:calc(var(--sk-gr,8px) + 54px)}
 /* a card being swiped away passes over the nav instead of being cut by it */
-html.pd-dev #deck:has(.sk-lift,.fx-gone,.dragging){perspective:none!important}
-html.pd-dev #deck .dcard.sk-lift,html.pd-dev #deck .dcard.dragging,html.pd-dev #deck .dcard.fx-gone{z-index:130!important}
+html.pd-dev #deck .dcard.sk-lift{opacity:var(--sk-f,1)}
+html.pd-dev #deck .dcard.fx-gone{animation:sk-fade .28s ease-out forwards}
+@keyframes sk-fade{to{opacity:0}}
 html.pd-dev .nlcard .nlform,html.pd-dev .nlcard .nl-top{transition:margin .32s cubic-bezier(.2,.8,.2,1)}
 html.pd-dev.sk-open .nlcard .nlform,html.pd-dev.sk-open .nlcard .nl-top{margin-left:calc(var(--sk-gl,8px) + 46px)}
 html.pd-dev.sk-open.sk-right .nlcard .nlform,html.pd-dev.sk-open.sk-right .nlcard .nl-top{margin-left:0;margin-right:calc(var(--sk-gr,8px) + 46px)}
@@ -2908,8 +2909,8 @@ function boot(){
   /* a card being swiped rides above the notch until it has flown off */
   let lx=null,ly=null,lc=null;
   deck.addEventListener("pointerdown",e=>{lx=e.clientX;ly=e.clientY;lc=deck.querySelector(".dcard.top:not(.fx-gone)")},true);
-  addEventListener("pointermove",e=>{if(lx==null||!lc)return;if(Math.hypot(e.clientX-lx,e.clientY-ly)>8){lc.classList.add("sk-lift");lx=null}},true);
-  const drop=()=>{const c=lc;lx=null;lc=null;if(c)setTimeout(()=>{if(c.classList.contains("top")&&!c.classList.contains("fx-gone"))c.classList.remove("sk-lift");else setTimeout(()=>c.classList.remove("sk-lift"),900)},350)};
+  addEventListener("pointermove",e=>{if(lx==null||!lc)return;const d=Math.hypot(e.clientX-lx,e.clientY-ly);if(d>8)lc.classList.add("sk-lift");deck.style.setProperty("--sk-f",Math.max(.15,1-d/260).toFixed(3))},true);
+  const drop=()=>{const c=lc;lx=null;lc=null;if(c)setTimeout(()=>{const v=deck.style.getPropertyValue("--sk-f")||"1";if(c.classList.contains("fx-gone"))c.style.setProperty("--sk-f",v);else c.classList.remove("sk-lift");deck.style.setProperty("--sk-f","1")},40)};
   addEventListener("pointerup",drop,true);addEventListener("pointercancel",drop,true);
   /* pills on the card */
   const f=document.createElement("div");f.className="sk-float";f.style.top="20px";
