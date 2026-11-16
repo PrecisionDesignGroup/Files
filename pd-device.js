@@ -213,7 +213,7 @@ function boot(){
   const click=s=>{const b=document.querySelector(s);if(b)b.click()};
   /* side notch */
   const n=document.createElement("div");n.className="sk-notch sk-cut";
-  n.innerHTML='<button class="sk-close" data-a="close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg></button><div class="sk-grp"><button data-v="cards" aria-label="Cards">'+I.logo+'</button><button data-v="grid" aria-label="Grid">'+I.grid+'</button><button data-v="scroll" aria-label="Scroll">'+I.scroll+'</button></div><button class="sk-det sk-info" aria-label="Open project"></button><div class="sk-grp"><button class="sk-arr" data-a="snd" aria-label="Sound">'+I.snd+'</button><button class="sk-arr" data-a="theme" aria-label="Light or dark">'+I.bulb+'</button><button class="sk-swap" data-a="swap" aria-label="Move menu to the other side">&#8644;</button></div><i class="sk-grip" aria-hidden="true"></i>';
+  n.innerHTML='<button class="sk-close" data-a="close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m14 6-6 6 6 6"/></svg></button><div class="sk-grp"><button data-v="cards" aria-label="Cards">'+I.cards+'</button><button data-v="grid" aria-label="Grid">'+I.grid+'</button><button data-v="scroll" aria-label="Scroll">'+I.scroll+'</button></div><button class="sk-det sk-info" aria-label="Open project"></button><div class="sk-grp"><button class="sk-arr" data-a="snd" aria-label="Sound">'+I.snd+'</button><button class="sk-arr" data-a="theme" aria-label="Light or dark">'+I.bulb+'</button><button class="sk-swap" data-a="swap" aria-label="Move menu to the other side">&#8644;</button></div><i class="sk-grip" aria-hidden="true"></i>';
   w.appendChild(n);
   let sx=null,moved=false;
   n.addEventListener("click",e=>{if(moved){moved=false;return}const b=e.target.closest("button");if(!b)return;
@@ -262,8 +262,6 @@ function boot(){
   new MutationObserver(kick).observe(document.body,{subtree:true,attributes:true,attributeFilter:["aria-pressed","aria-current"]});
   const sc=document.getElementById("shortCount");if(sc)new MutationObserver(kick).observe(sc,{childList:true,characterData:true,subtree:true});
   sync();
-  /* the test layout opens on the Scroll view (unless a project or view link was opened) */
-  if(!location.hash){let t=0;(function go(){const m=document.querySelector('.pg-mi[data-v="scroll"]');if(m){m.click();setTimeout(sync,80)}else if(t++<40)setTimeout(go,100)})()}
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>setTimeout(boot,200));else setTimeout(boot,200);
 })();
