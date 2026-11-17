@@ -2678,66 +2678,61 @@ function cut(){try{
 cut();addEventListener("resize",()=>setTimeout(cut,60));addEventListener("orientationchange",()=>setTimeout(cut,350));
 if(window.visualViewport)visualViewport.addEventListener("resize",()=>setTimeout(cut,60));
 try{dispatchEvent(new Event("resize"))}catch(e){}
-/* bottom-bar slider (2026-11-16, v3): plain bar, every button the same colour, and a see-through pill that always sits on
-   one option. Press and slide: the pill follows the finger on a spring and lands on the nearest option when you let go,
-   which presses it. A plain tap still works and moves the pill there too. */
+/* bottom-bar slider (2026-11-17, v4): styled and timed like the top Portfolio/Services switch. A solid pill (the switch's
+   .sw-thumb colour) sits on the last option used and its icon turns light; tapping another option glides the pill there
+   with the switch's springy ease. Press and slide to drag the pill across; letting go lands it on the nearest option and
+   presses it. */
 (function(){
   const bar=document.querySelector("#swipeView .pd-bar");if(!bar)return;
   const sty=document.createElement("style");sty.textContent=`
-#swipeView .pd-bar{touch-action:none;-webkit-user-select:none;user-select:none;background:var(--surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
-#swipeView .pd-bar button,#swipeView .pd-bar .cbtn{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:var(--ink)!important;animation:none!important}
-#swipeView .pd-bar button svg,#swipeView .pd-bar button svg *{color:var(--ink)!important}
+#swipeView .pd-bar{touch-action:none;-webkit-user-select:none;user-select:none;background:var(--pd-sw-bg,var(--surface))!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+#swipeView .pd-bar button,#swipeView .pd-bar .cbtn{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:var(--pd-sw-off,var(--ink))!important;animation:none!important;transition:color .22s .06s!important;transform:none!important}
+#swipeView .pd-bar button.pd-on{color:var(--pd-sw-on,#fff)!important}
+#swipeView .pd-bar button:disabled{opacity:.35}
 #swipeView .pd-bar button svg [fill]:not([fill="none"]){fill:currentColor!important}
 #swipeView .pd-bar button svg [stroke]:not([stroke="none"]){stroke:currentColor!important}
-#swipeView .pd-bar .nyp-toggle button{font-weight:700}
 #swipeView .pd-bar #btnTheme svg *{fill:none!important}
-.pd-bub{position:absolute;top:50%;left:0;width:58px;height:42px;margin:-21px 0 0 -29px;border-radius:999px;pointer-events:none;z-index:40;opacity:0;will-change:transform;
-  background:color-mix(in srgb,var(--ink) 7%,transparent);
-  -webkit-backdrop-filter:saturate(1.6) brightness(1.04);backdrop-filter:saturate(1.6) brightness(1.04);
-  border:1px solid color-mix(in srgb,var(--ink) 12%,transparent);
-  box-shadow:inset 0 1px 1px rgba(255,255,255,.7),inset 0 -1px 1px rgba(255,255,255,.25),0 4px 14px -8px rgba(0,0,0,.35)}
-.pd-bar.pd-bubon button{transition:none!important;transform:scale(var(--pd-m,1))}
-@media (prefers-reduced-motion:reduce){.pd-bub{transition:none}}`;
+#swipeView .pd-bar .nyp-toggle button{font-weight:600}
+#swipeView .pd-bar button svg{color:inherit!important;stroke:currentColor}
+.pd-bub{position:absolute;top:50%;left:0;height:40px;margin-top:-20px;border-radius:999px;pointer-events:none;z-index:0;opacity:0;
+  background:var(--pd-sw-thumb,var(--ink));transition:transform .45s cubic-bezier(.3,1.3,.5,1),width .45s cubic-bezier(.3,1.3,.5,1),opacity .2s}
+.pd-bub.pd-drag{transition:width .2s ease,opacity .2s}
+#swipeView .pd-bar>*:not(.pd-bub){isolation:isolate}
+#swipeView .pd-bar button{position:relative;z-index:1}`;
   document.head.appendChild(sty);
   const bub=document.createElement("i");bub.className="pd-bub";bub.setAttribute("aria-hidden","true");bar.insertBefore(bub,bar.firstChild);
-  let st=null,eat=false,raf=0,list=[],rest=document.getElementById("btnSave");
-  /* springs: position x, press amount p (0 resting, 1 held), opacity o */
-  let x=0,v=0,tx=0,p=0,tp=0,pv=0,o=0,to=1,placed=false;
+  /* borrow the exact colours of the top switch (they follow light/dark) */
+  function colours(){try{const t=document.querySelector(".switch .sw-thumb"),sw=document.querySelector(".switch");
+    const on=document.querySelector('.switch button[aria-pressed="true"]'),off=document.querySelector('.switch button[aria-pressed="false"]');
+    const ds=bar.style;if(t)ds.setProperty("--pd-sw-thumb",getComputedStyle(t).backgroundColor);
+    if(on)ds.setProperty("--pd-sw-on",getComputedStyle(on).color);if(off)ds.setProperty("--pd-sw-off",getComputedStyle(off).color);
+    if(sw)ds.setProperty("--pd-sw-bg",getComputedStyle(sw).backgroundColor)}catch(e){}}
+  let st=null,eat=false,rest=document.getElementById("btnSave");
   const btns=()=>[...bar.querySelectorAll("button")].filter(b=>b.offsetParent&&b.getBoundingClientRect().width>0);
-  const cx=b=>{const r=b.getBoundingClientRect(),br=bar.getBoundingClientRect();return r.left+r.width/2-br.left};
-  const refresh=()=>{list=btns().map(b=>({b,c:cx(b)}))};
-  const near=px=>{let best=null,d=1e9;for(const it of list){if(it.b.disabled)continue;const k=Math.abs(it.c-px);if(k<d){d=k;best=it}}return best};
-  function frame(){
-    const a=(tx-x)*.24-v*.44;v+=a;x+=v;
-    const pa=(tp-p)*.2-pv*.4;pv+=pa;p+=pv;
-    o+=(to-o)*.3;
-    const sp=Math.min(Math.abs(v)/30,.35);
-    const sc=1+.12*p;
-    bub.style.transform=`translateX(${x.toFixed(2)}px) scale(${(sc*(1+sp)).toFixed(3)},${(sc*(1-sp*.4)).toFixed(3)})`;
-    bub.style.opacity=o.toFixed(3);
-    for(const it of list){const d=Math.abs(it.c-x);const m=1+.22*p*Math.max(0,1-d/36);it.b.style.setProperty("--pd-m",m.toFixed(3))}
-    if(Math.abs(tx-x)<.15&&Math.abs(v)<.04&&Math.abs(tp-p)<.003&&Math.abs(pv)<.003&&Math.abs(to-o)<.01){raf=0;if(p<.01)bar.classList.remove("pd-bubon");return}
-    raf=requestAnimationFrame(frame)}
-  const run=()=>{bar.classList.add("pd-bubon");if(!raf)raf=requestAnimationFrame(frame)};
-  /* keep the resting pill on its option when the bar changes (resize, buttons shown or hidden) */
-  function park(jump){refresh();if(!list.length){to=0;run();return}
-    let it=list.find(i=>i.b===rest&&!i.b.disabled)||near(placed?x:(list.find(i=>i.b===rest)||list[0]).c);if(!it){to=0;run();return}
-    rest=it.b;tx=it.c;to=1;if(jump||!placed){x=tx;v=0;placed=true}run()}
+  const box=b=>{const r=b.getBoundingClientRect(),br=bar.getBoundingClientRect();return{c:r.left+r.width/2-br.left,w:Math.max(r.width+12,44)}};
+  const near=px=>{let best=null,d=1e9;for(const b of btns()){if(b.disabled)continue;const k=Math.abs(box(b).c-px);if(k<d){d=k;best=b}}return best};
+  const mark=b=>{bar.querySelectorAll("button.pd-on").forEach(x=>{if(x!==b)x.classList.remove("pd-on")});if(b)b.classList.add("pd-on")};
+  function put(cx,w){bub.style.width=w+"px";bub.style.transform=`translateX(${(cx-w/2).toFixed(1)}px)`}
+  function park(jump){colours();let b=rest&&rest.offsetParent&&!rest.disabled?rest:null;
+    if(!b){const list=btns().filter(x=>!x.disabled);if(!list.length){bub.style.opacity=0;mark(null);return}b=list.reduce((a,x)=>!a?x:a)}
+    rest=b;const k=box(b);if(jump){bub.style.transition="none";put(k.c,k.w);void bub.offsetWidth;bub.style.transition=""}else put(k.c,k.w);
+    bub.style.opacity=1;mark(b)}
   setTimeout(()=>park(true),60);
-  try{new ResizeObserver(()=>park(true)).observe(bar)}catch(e){addEventListener("resize",()=>setTimeout(()=>park(true),80))}
+  try{new ResizeObserver(()=>{if(!st)park(true)}).observe(bar)}catch(e){addEventListener("resize",()=>setTimeout(()=>park(true),80))}
   new MutationObserver(()=>{clearTimeout(park.t);park.t=setTimeout(()=>{if(!st)park(false)},80)}).observe(bar,{subtree:true,attributes:true,attributeFilter:["disabled","hidden"],childList:true});
-  bar.addEventListener("pointerdown",e=>{if(e.button)return;refresh();if(!list.length)return;
-    const br=bar.getBoundingClientRect(),px=e.clientX-br.left,h=near(px);if(!h)return;
-    st={x0:e.clientX,id:e.pointerId,drag:false};tx=h.c;tp=1;run()});
+  new MutationObserver(()=>setTimeout(colours,30)).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme","class"]});
+  try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>setTimeout(colours,30))}catch(e){}
+  bar.addEventListener("pointerdown",e=>{if(e.button)return;const br=bar.getBoundingClientRect();st={x0:e.clientX,id:e.pointerId,drag:false,left:br.left}});
   bar.addEventListener("pointermove",e=>{if(!st||e.pointerId!==st.id)return;
-    if(!st.drag&&Math.abs(e.clientX-st.x0)>6){st.drag=true;try{bar.setPointerCapture(e.pointerId)}catch(_){}}
-    if(!st.drag)return;const br=bar.getBoundingClientRect();tx=Math.max(22,Math.min(br.width-22,e.clientX-br.left));run()});
-  const end=e=>{if(!st)return;const d=st.drag;st=null;tp=0;
-    const h=near(d?tx:x);if(h){tx=h.c;rest=h.b}run();
-    if(d&&h&&e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>h.b.click(),110)}};
+    if(!st.drag&&Math.abs(e.clientX-st.x0)>6){st.drag=true;bub.classList.add("pd-drag");try{bar.setPointerCapture(e.pointerId)}catch(_){}}
+    if(!st.drag)return;const br=bar.getBoundingClientRect(),px=Math.max(22,Math.min(br.width-22,e.clientX-br.left));
+    const b=near(px);const w=b?box(b).w:48;put(px,w);mark(b)});
+  const end=e=>{if(!st)return;const d=st.drag;const br=bar.getBoundingClientRect();st=null;bub.classList.remove("pd-drag");
+    if(d){const b=near(e.clientX-br.left);if(b){rest=b;park(false);if(e.type==="pointerup"){eat=true;setTimeout(()=>{eat=false},400);setTimeout(()=>b.click(),120)}}else park(false)}};
   bar.addEventListener("pointerup",end);bar.addEventListener("pointercancel",end);
-  /* after a slide, swallow the browser's own click on whatever was under the finger at the start */
-  bar.addEventListener("click",e=>{if(eat&&e.isTrusted){e.stopImmediatePropagation();e.preventDefault()}},true);
+  /* a plain tap: the pill glides to the tapped option */
+  bar.addEventListener("click",e=>{if(eat&&e.isTrusted){e.stopImmediatePropagation();e.preventDefault();return}
+    const b=e.target.closest&&e.target.closest("button");if(b&&bar.contains(b)&&!b.disabled){rest=b;setTimeout(()=>park(false),0);setTimeout(colours,60)}},true);
 })();
 })();
 }catch(e){console.error("pd-dock.js",e)}
