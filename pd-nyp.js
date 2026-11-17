@@ -15,6 +15,8 @@ const TYPES=["Graphics","Logos","Branding","Website","Collection Design"];
 const left=()=>Math.max(0,END-Date.now());
 if(left()<=0)return;
 
+/* how many Name Your Price spots are left: change this number to update the card */
+const NYP_SPOTS=6;
 const NYP={id:"nyp",nyp:true,kind:"Graphics",title:"Name Your Price",type:"Limited-time offer",price:"You decide",stripe:"",
   delivery:"Offers answered in 1–3 hours",discipline:"Limited time",includes:[],
   blurb:"For one week only, you set the price. Tell us what you want made and what you want to pay. We'll accept or counter your offer within 1–3 hours, and if we accept, work starts the next day.",
@@ -39,6 +41,8 @@ const css=`
 .nyp-chip i{width:8px;height:8px;border-radius:50%;background:#E5484D;box-shadow:0 0 0 0 rgba(229,72,77,.6);animation:nypPulse 1.6s infinite}
 @keyframes nypPulse{0%{box-shadow:0 0 0 0 rgba(229,72,77,.6)}70%{box-shadow:0 0 0 9px rgba(229,72,77,0)}100%{box-shadow:0 0 0 0 rgba(229,72,77,0)}}
 .nyp-chip b{font-weight:600;font-variant-numeric:tabular-nums}
+.nyp-chip:has(.nyp-spots){display:inline-grid;grid-template-columns:8px auto;align-items:center;column-gap:8px;row-gap:3px;padding:7px 14px 7px 10px;border-radius:16px}
+.nyp-chip .nyp-spots{grid-column:2;opacity:.85;white-space:nowrap}
 .nyp-cta{position:absolute;left:50%;bottom:78px;transform:translateX(-50%);z-index:3;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;border:0;border-radius:999px;padding:13px 20px;background:#141414;color:#F2C649;font:inherit;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 10px 24px -10px rgba(0,0,0,.5);transition:transform .15s}
 .nyp-cta:active{transform:translateX(-50%) scale(.95)}
 .nyp-cta svg{width:15px!important;height:15px!important;transition:transform .25s}
@@ -114,7 +118,7 @@ function art(uid){
   const ph=!!COVER;
   return `<div class="nyp-art${ph?" ph":""}">${ph?`<img class="nyp-ph" src="${esc(COVER)}" alt="Name Your Price" draggable="false">`:`${tag}<div class="nyp-type">Name<br><em>your</em><br>price</div>`}
     <i class="nyp-fr"></i>
-    <span class="nyp-chip" aria-label="Time left"><i></i>Ends in <b data-nyp-cd>${chipText()}</b></span>
+    <span class="nyp-chip" aria-label="Time left and spots remaining"><i></i><span>Ends in <b data-nyp-cd>${chipText()}</b></span><span class="nyp-spots">${NYP_SPOTS} spots remaining</span></span>
     </div>`;
 }
 const _artFor=artFor;
