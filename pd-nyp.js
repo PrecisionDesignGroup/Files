@@ -16,7 +16,7 @@ const left=()=>Math.max(0,END-Date.now());
 if(left()<=0)return;
 
 /* how many Name Your Price spots are left: change this number to update the card */
-const NYP_SPOTS=4;
+const NYP_SPOTS=3;
 const NYP={id:"nyp",nyp:true,kind:"Graphics",title:"Name Your Price",type:"Limited-time offer",price:"You decide",stripe:"",
   delivery:"Offers answered in 1–3 hours",discipline:"Limited time",includes:[],
   blurb:"For one week only, you set the price. Tell us what you want made and what you want to pay. We'll accept or counter your offer within 1–3 hours, and if we accept, work starts the next day.",
