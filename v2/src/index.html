@@ -63,6 +63,10 @@ button, input, textarea { font: inherit; color: inherit; }
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
+/* phones: fit the visible area, not the area behind Safari's floating address bar (iOS 26) or Chrome's toolbar */
+@supports (height: 100svh) {
+  .frame { height: 100svh; min-height: min(660px, 100svh); }
+}
 .screen {
   position: relative; isolation: isolate; overflow: hidden; border-radius: var(--r-screen); color: var(--ink);
   background:
