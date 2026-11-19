@@ -1373,6 +1373,16 @@ const css=document.createElement("style");css.textContent=`
 .pdfp .ghost{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:12px;cursor:pointer}
 .pdfp .cd{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft)}
 .pdfp .cd b{color:var(--ink)}
+.pdfp ol.ht{list-style:none;margin:4px 0 18px;padding:0;display:grid;gap:14px}
+.pdfp ol.ht li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start}
+.pdfp .ht-ic{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);font-size:16px}
+.pdfp .ht-ic svg{width:18px;height:18px;display:block}
+.pdfp .ht-jog{width:10px;height:20px;border-radius:6px;border:1.6px solid currentColor;background:repeating-linear-gradient(currentColor 0 1.4px,transparent 1.4px 4px);background-clip:content-box;padding:3px 1px;box-sizing:border-box}
+.pdfp .ht-grid{width:14px;height:14px;background:radial-gradient(circle,currentColor 2.6px,transparent 3px) 0 0/7px 7px}
+.pdfp ol.ht b{display:block;font-size:13.5px;margin:1px 0 2px}
+.pdfp ol.ht p{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-soft)}
+.pdfp .ht-ok{align-self:flex-start;background:none;border:1.5px solid var(--ink);color:var(--ink);height:36px;padding:0 20px}
+.howto-btn{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
 @media (max-width:720px){.pdfp{top:clamp(118px,16vh,140px);bottom:14px;left:16px;right:86px;width:auto;transform:none}}
 `;document.head.appendChild(css);
 
@@ -1521,6 +1531,32 @@ document.addEventListener("click",x=>{const a=x.target.closest&&x.target.closest
 
 /* the Start Your Project button: the contact form in the frame, instead of an email draft */
 if(ctaEl)ctaEl.addEventListener("click",x=>{x.preventDefault();ev("start_project_click",{from:"cta"});openContact("Start your project","")},true);
+
+/* ---- How to use the site: shown once on a first visit (remembered), reopened from Studio or #help ---- */
+const HKEY="pd-v2-howto";
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(_){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(_){}};
+const icon=sel=>{const n=document.querySelector(sel);return n?n.outerHTML.replace(/\swidth="\d+"/,' width="18"').replace(/\sheight="\d+"/,' height="18"').replace(/\s(id|class)="[^"]*"/g,""):""};
+function openHowTo(from){
+  fpSec=(screenEl&&[...screenEl.classList].find(c=>c.startsWith("sec-")))||"sec-work";
+  const touch=matchMedia("(pointer:coarse)").matches;
+  const row=(ic,t,d)=>`<li><span class="ht-ic" aria-hidden="true">${ic}</span><div><b>${t}</b><p>${d}</p></div></li>`;
+  const p=openPanel(`<b>Guide</b> · New here?`,`<h3 class="pdfp-h">How to use the site</h3>
+  <ol class="ht">
+  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Work, Featured, Services, Process, Studio and Shop.`)}
+  ${row('<span class="ht-jog"></span>',"Small dial: flip through",`${touch?"Drag":"Scroll or drag"} the small dial at the bottom to go to the next project, service or shop item.`)}
+  ${row(icon("#gridBtn svg")||'<span class="ht-grid"></span>',"See everything","The grid button shows every project at once. Tap one to open it. The SZ slider makes the art bigger or smaller.")}
+  ${row(icon("#sideBtn svg"),"Switch sides","Moves the dials to the left or right, whichever is easier for your hand.")}
+  ${row(icon("#themeBtn .ic-sun"),"Light or dark","Switches the site between light and dark mode.")}
+  ${row('<span class="ht-share">↗</span>',"Share or start a project","Share project copies a link to the piece you're looking at. On Services, Start a project opens the form right here.")}
+  </ol>
+  <button type="button" class="go ht-ok">Got it</button>`);
+  if(!p)return;lsSet(HKEY,"1");ev("howto_open",{from:from||"auto"});
+  p.querySelector(".ht-ok").addEventListener("click",x=>{x.stopPropagation();closePanel()});
+}
+window.pdOpenHowTo=openHowTo;
+document.addEventListener("click",x=>{const b=x.target.closest&&x.target.closest("#howtoBtn");if(b){x.preventDefault();openHowTo("studio")}},true);
+if(/^#help$/.test(location.hash)||/[?&]howto=1/.test(location.search))setTimeout(()=>openHowTo("link"),1200);
+else if(!lsGet(HKEY)&&!/[?&]nyp=1/.test(location.search))setTimeout(()=>{if(!fp)openHowTo("auto")},1600);
 
 /* /shop?nyp=1 (the old share link) opens the offer */
 if(/[?&]nyp=1/.test(location.search))setTimeout(()=>{try{if(screenEl&&!screenEl.classList.contains("sec-shop"))document.querySelector('.rail-btn[data-sec="shop"]').click()}catch(_){}setTimeout(openNYP,900)},1200);
