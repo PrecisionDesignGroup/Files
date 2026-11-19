@@ -86,6 +86,7 @@ button, input, textarea { font: inherit; color: inherit; }
 .top { display: flex; align-items: flex-start; gap: 28px; flex-wrap: wrap; }
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.02em; }
 .logo-word { height: 15px; width: auto; max-width: 100%; display: block; }
+.logo-mark { height: 30px; }
 .meta { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; line-height: 1.55; color: var(--ink-soft); }
 .meta-desc { flex: 1 1 180px; min-width: 0; max-width: 34ch; margin: 0; font-size: 12px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
 .screen.sec-process .stage { grid-template-rows: auto 0 minmax(0, 1fr); }
@@ -341,6 +342,7 @@ form .send small { font-size: 12px; color: var(--ink-soft); }
   .principles div { flex-direction: column; gap: 4px; }
   .mail { font-size: 1.15rem; }
   .logo-word { height: 12px; }
+  .logo-mark { height: 26px; }
   .lede { font-size: 1rem; }
   form.glass { grid-template-columns: 1fr; }
   form .opt { display: none; }
