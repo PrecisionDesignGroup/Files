@@ -38,7 +38,7 @@ const GUIDE={
 const TABS=[["for","What it is","About"],["how","How it works","Steps"],["get","You get","You get"],["faq","Questions","FAQ"]];
 let tab="for";
 const DARKV=new Set(["logo-sheet","logo-high-above-society","logo-rally-golf","logo-wild-east-radio"]);
-const themed=u=>{const m=/^art\/cut2\/(.+)\.webp$/.exec(u||"");return m&&DARKV.has(m[1])&&isDarkUI()?"art/cut2/"+m[1]+"-d.webp":u};
+const themed=u=>{const m=/(?:^|\/)art\/cut2\/([^/]+)\.webp$/.exec(u||"");return m&&DARKV.has(m[1])&&isDarkUI()?u.replace(/\.webp$/,"-d.webp"):u};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 const css=document.createElement("style");css.textContent=`
