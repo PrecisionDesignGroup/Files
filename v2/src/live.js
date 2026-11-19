@@ -225,3 +225,7 @@ if(ctaEl)ctaEl.addEventListener("click",x=>{x.preventDefault();ev("start_project
 /* /shop?nyp=1 (the old share link) opens the offer */
 if(/[?&]nyp=1/.test(location.search))setTimeout(()=>{try{if(screenEl&&!screenEl.classList.contains("sec-shop"))document.querySelector('.rail-btn[data-sec="shop"]').click()}catch(_){}setTimeout(openNYP,900)},1200);
 })();
+/* the first project is drawn before this file runs: give it the same treatment */
+(function(){try{const sc=document.getElementById("screen"),sec=sc&&[...sc.classList].find(c=>c.startsWith("sec-"));const k=sec&&sec.slice(4);
+  const t=(document.getElementById("pjTitle")||{}).textContent,list=k==="shop"?window.SHOPV:k==="services"?window.SVCV:window.PDPROJ;
+  const p=list&&list.find(x=>x.t===t);if(p&&window.pdOnProject)pdOnProject(p,k)}catch(_){}})();
