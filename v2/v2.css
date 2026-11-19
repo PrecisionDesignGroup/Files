@@ -479,10 +479,10 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 #pjYear { text-align: right; }
 /* message above the item dial (replaces the pop-up hint) */
 .hint { display: none !important; }
-.side .jog-msg { flex-shrink: 0; width: calc(var(--btn) + 24px); margin: auto 4px -22px 0; font-family: var(--font-mono); font-size: 8px; line-height: 1.35; letter-spacing: .08em; text-transform: uppercase; text-align: center; color: var(--ink-soft); text-wrap: balance; pointer-events: none; transition: opacity .3s var(--ease-out); }
+.side .jog-msg { flex-shrink: 0; width: calc(var(--btn) + 24px); margin: auto 4px -22px 0; font-family: var(--font-mono); font-size: 6.5px; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase; text-align: center; color: var(--ink-soft); text-wrap: balance; pointer-events: none; transition: opacity .3s var(--ease-out); }
 .screen:not(.work) .jog-msg, .screen.sec-process .jog-msg { opacity: 0; visibility: hidden; }
 .screen.left .jog-msg { transform: scaleX(-1); }
-@media (max-width: 720px) { .side .jog-msg { width: calc(var(--btn) + 18px); font-size: 7px; margin-bottom: -12px; } }
+@media (max-width: 720px) { .side .jog-msg { width: calc(var(--btn) + 18px); font-size: 5.5px; margin-bottom: -8px; } }
 /* ---------- studio: client logo marquee ---------- */
 .logos { grid-column: 1 / -1; display: grid; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line); min-width: 0; }
 .logos-label { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
