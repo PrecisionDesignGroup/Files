@@ -118,15 +118,70 @@
 
   /* ---------- sound ---------- */
   let ac;
-  function tone(f, d = .08, type = "square", g = .05, slide = 0) {
+  /* ---------- sound: retro chip sounds made on the fly with Web Audio (no files) ---------- */
+  let muted = false; try { muted = localStorage.getItem("pd-ascent-mute") === "1"; } catch {}
+  let master = null, noiseBuf = null;
+  function audio() {
+    if (muted) return null;
     try {
       ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume();
-      const o = ac.createOscillator(), v = ac.createGain(), n = ac.currentTime;
+      if (!master) { master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination); }
+      if (!noiseBuf) { noiseBuf = ac.createBuffer(1, ac.sampleRate * .6, ac.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+      return ac;
+    } catch { return null; }
+  }
+  function tone(f, d = .08, type = "square", g = .05, slide = 0, at = 0) {
+    const a = audio(); if (!a) return;
+    try {
+      const o = a.createOscillator(), v = a.createGain(), n = a.currentTime + at;
       o.type = type; o.frequency.setValueAtTime(f, n); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + slide), n + d);
       v.gain.setValueAtTime(g, n); v.gain.exponentialRampToValueAtTime(.0001, n + d);
-      o.connect(v).connect(ac.destination); o.start(n); o.stop(n + d + .02);
+      o.connect(v).connect(master); o.start(n); o.stop(n + d + .02);
     } catch {}
   }
+  /* filtered noise burst: hiss, swoosh, rumble */
+  function noise(d = .12, g = .06, ftype = "highpass", f0 = 2000, f1 = 0, at = 0) {
+    const a = audio(); if (!a) return;
+    try {
+      const src = a.createBufferSource(), fl = a.createBiquadFilter(), v = a.createGain(), n = a.currentTime + at;
+      src.buffer = noiseBuf; fl.type = ftype; fl.frequency.setValueAtTime(f0, n); if (f1) fl.frequency.exponentialRampToValueAtTime(f1, n + d); fl.Q.value = ftype === "bandpass" ? 2.5 : .7;
+      v.gain.setValueAtTime(g, n); v.gain.exponentialRampToValueAtTime(.0001, n + d);
+      src.connect(fl).connect(v).connect(master); src.start(n); src.stop(n + d + .02);
+    } catch {}
+  }
+  const SFX = {
+    spikeWarn: (k) => tone(1400, .03, "square", .018 * k),
+    spikeUp: (k) => { noise(.09, .07 * k, "highpass", 3500); tone(1800, .07, "square", .03 * k, 900); },
+    bladeSwish: (k) => noise(.22, .09 * k, "bandpass", 600, 3200),
+    ghost: (k) => { tone(330, .32, "triangle", .05 * k, -120); tone(495, .32, "sine", .025 * k, -180, .04); },
+    boulder: (k) => { noise(.3, .12 * k, "lowpass", 420, 120); tone(70, .3, "triangle", .08 * k, -25); },
+    roll: (k) => noise(.12, .05 * k, "lowpass", 260),
+    hit: { spike: () => { noise(.18, .12, "highpass", 2400); tone(240, .25, "sawtooth", .06, -170); },
+           blade: () => { noise(.16, .12, "bandpass", 3000, 900); tone(520, .2, "square", .05, -380); },
+           ghost: () => { tone(620, .5, "triangle", .07, -480); tone(930, .5, "sine", .03, -700, .05); },
+           boulder: () => { noise(.35, .18, "lowpass", 300, 80); tone(90, .35, "square", .07, -50); } }
+  };
+  /* hazards near the climber make their sounds when they change (spikes pop up, blades swing through, ghosts drift, boulders roll) */
+  const hzPrev = new WeakMap();
+  function hazardSounds(now) {
+    if (muted) return;
+    const fNow = Math.floor(sp / F);
+    for (let m = Math.max(0, fNow - 1); m <= fNow + 1; m++) for (const h of floorData(m).hz) {
+      const st = state(h, t), pos = h.t === "ghost" || h.t === "boulder" ? st.s : h.k + .5, dist = Math.abs(sp - pos);
+      if (dist > 9) { hzPrev.delete(h); continue; }
+      const k = Math.max(.15, 1 - dist / 9), p = hzPrev.get(h) || {};
+      if (h.t === "spike") { if (st.warn && !p.warn) SFX.spikeWarn(k); if (st.up && !p.up) SFX.spikeUp(k); hzPrev.set(h, { up: st.up, warn: st.warn }); }
+      else if (h.t === "blade") { if (st.hot && !p.hot) SFX.bladeSwish(k); hzPrev.set(h, { hot: st.hot }); }
+      else if (h.t === "ghost") { const due = (p.next || 0) <= now; if (due) { if (p.next) SFX.ghost(k); hzPrev.set(h, { next: now + 1.1 + Math.random() * .6 }); } }
+      else if (h.t === "boulder") { if (st.live && !p.live) SFX.boulder(k); else if (st.live && (p.next || 0) <= now) { SFX.roll(k); } hzPrev.set(h, { live: st.live, next: st.live && (p.next || 0) <= now ? now + .28 : p.next }); }
+    }
+  }
+  function setMuted(v) {
+    muted = v; try { localStorage.setItem("pd-ascent-mute", v ? "1" : "0"); } catch {}
+    const b = document.getElementById("gMute"); if (b) { b.setAttribute("aria-pressed", String(v)); b.setAttribute("aria-label", v ? "Turn sound on" : "Mute sound"); }
+    if (master) master.gain.value = v ? 0 : .9;
+  }
+
 
 
   /* ---------- the climber: boy or girl, long-sleeve tee or hoodie with a premade graphic, shorts or pants ---------- */
@@ -256,15 +311,16 @@
     screenEl.classList.remove("gaming"); document.documentElement.classList.remove("pd-gaming"); if (pick) pick.hidden = true; ui.title.hidden = false; hud();
     try { rail.focus({ preventScroll: true }); } catch {}
   }
-  function die() {
+  function die(kind) {
     if (dead || invul > 0) return;
     dead = .95; falls++; shake = 1; pending = 0; hud();
-    tone(220, .25, "sawtooth", .06, -160);
+    (SFX.hit[kind] || (() => tone(220, .25, "sawtooth", .06, -160)))();
     try { navigator.vibrate && navigator.vibrate(40); } catch {}
   }
   ui.start.addEventListener("click", openPick);
   ui.exit.addEventListener("click", exit);
-  { const qt = document.getElementById("gQuitTop"); if (qt) qt.addEventListener("click", exit); }
+  { const qt = document.getElementById("gQuitTop"); if (qt) qt.addEventListener("click", exit);
+    const mb = document.getElementById("gMute"); if (mb) { setMuted(muted); mb.addEventListener("click", () => { setMuted(!muted); if (!muted) tone(660, .06); }); } }
   const jb = $("#gJump");
   if (jb) { jb.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); jump(); jb.classList.add("down"); }); const up = () => jb.classList.remove("down"); jb.addEventListener("pointerup", up); jb.addEventListener("pointercancel", up); jb.addEventListener("pointerleave", up); jb.addEventListener("click", e => e.preventDefault()); jb.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); jump(); } }); }
 
@@ -448,9 +504,53 @@
     if (dead) { ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.globalAlpha = dead; ctx.beginPath(); ctx.arc(x, y - u * 6, (1 - dead) * SW, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
   }
 
+
+  /* ---------- sky: the higher you climb, the ground gives way to night clouds, then stars and the moon ---------- */
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const SKY = (() => { const r = rng(4242), clouds = [], stars = [];
+    for (let i = 0; i < 26; i++) clouds.push({ h: 18 + i * 13 + r() * 8, x: r(), w: .5 + r() * .7, puffs: Array.from({ length: 4 + Math.floor(r() * 3) }, () => [r() * 2 - 1, r() * .6, .35 + r() * .45]) });
+    for (let i = 0; i < 170; i++) stars.push({ x: r(), y: r(), big: r() < .12, tw: r() * 6 });
+    return { clouds, stars }; })();
+  function drawSky(now) {
+    const alt = camH / F, px = 1 / dpr;
+    // stars (fade in from about floor 4, all out by floor 7)
+    const starA = clamp01((alt - 3.5) / 3);
+    if (starA > 0) {
+      const n = Math.floor(SKY.stars.length * starA);
+      ctx.fillStyle = "#fff";
+      for (let i = 0; i < n; i++) {
+        const st = SKY.stars[i]; if (!st.big && Math.sin(now * 2 + st.tw) > .92) continue;
+        const y = ((st.y * H * 1.6 + camH * RISE * .06) % (H * 1.6)) - H * .3, x = st.x * W;
+        const sz = st.big ? px * 2 : px; ctx.fillRect(x, y, sz, sz);
+        if (st.big && Math.sin(now * 1.3 + st.tw) > .6) { ctx.fillRect(x - px * 2, y + px * .5, px * 6, px); ctx.fillRect(x + px * .5, y - px * 2, px, px * 6); }
+      }
+    }
+    // moon (from about floor 8)
+    const moonA = clamp01((alt - 7) / 2);
+    if (moonA > 0) {
+      const mr = Math.min(W, H) * .07, mx = cx + Math.min(W * .3, TR * 2.6), my = H * .2 + (1 - moonA) * H * .3;
+      ctx.fillStyle = "#e6e6e6"; ctx.beginPath(); ctx.arc(mx, my, mr, 0, 7); ctx.fill();
+      ctx.fillStyle = "#9a9a9a"; [[-.35, -.2, .22], [.3, .25, .16], [.05, .45, .1], [.4, -.35, .09]].forEach(([a, b, c]) => { ctx.beginPath(); ctx.arc(mx + a * mr, my + b * mr, c * mr, 0, 7); ctx.fill(); });
+    }
+    // night clouds (from about floor 1, thinning out by floor 9)
+    const cloudA = clamp01((alt - .4) / 1.2) * clamp01((10 - alt) / 2.5);
+    if (cloudA > 0) {
+      ctx.save(); ctx.globalAlpha = cloudA;
+      for (const c of SKY.clouds) {
+        const y = py0 - (c.h - camH) * RISE * .45; if (y < -H * .3 || y > H * 1.3) continue;
+        const x = c.x * W, w = c.w * Math.max(W * .22, 120);
+        for (const [dx, dy, r] of c.puffs) { ctx.fillStyle = "#6e6e6e"; ctx.beginPath(); ctx.ellipse(x + dx * w * .6, y + dy * w * .2, w * r * .55, w * r * .32, 0, 0, 7); ctx.fill(); }
+        for (const [dx, dy, r] of c.puffs) { ctx.fillStyle = "#9c9c9c"; ctx.beginPath(); ctx.ellipse(x + dx * w * .6, y + dy * w * .2 - w * r * .1, w * r * .4, w * r * .2, 0, 0, 7); ctx.fill(); }
+      }
+      ctx.restore();
+    }
+  }
+
+  window.PD_ASCENT_JUMPTO = (v) => { sp = v; camA = v; camH = footH(v); cp = Math.floor(v / F); invul = 3; };
   function draw(now) {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    drawSky(now);
     if (shake > 0 && !reduced) ctx.translate((Math.random() - .5) * 8 * shake, (Math.random() - .5) * 8 * shake);
     const lo = Math.floor(camH - (H - py0) / RISE - 4), hi = Math.ceil(camH + py0 / RISE + 4);
     const i0 = Math.max(0, lo), i1 = hi;
@@ -520,6 +620,7 @@
         }
       }
       hud();
+      hazardSounds(now);
     }
     shake = Math.max(0, shake - dt * 3);
     camA += (sp - camA) * Math.min(1, dt * 14);

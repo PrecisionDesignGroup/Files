@@ -409,12 +409,16 @@ body { -webkit-font-smoothing: antialiased; }
 /* ---------- dials on the left (side switch) ---------- */
 .round#sideBtn:hover { transform: none; }
 /* while a game is running, Quit sits under the side nav, in the slot the item slider uses on other sections */
-.g-quit-side { display: none; flex-shrink: 0; width: var(--btn); height: clamp(80px, 24svh, 150px); margin-right: 16px; border-radius: 999px; background: var(--frame); border: 1px solid var(--frame-line); color: var(--frame-fg, #ECECE8);
-  flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-family: "Silkscreen", var(--font-mono); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
-.g-quit-side:hover { background: #1c1d20; }
+.g-side-ctrls { display: none; flex-shrink: 0; flex-direction: column; gap: 8px; width: var(--btn); height: clamp(96px, 24svh, 150px); margin-right: 16px; }
+.g-quit-side, .g-mute { border-radius: 999px; background: var(--frame); border: 1px solid var(--frame-line); color: var(--frame-fg, #ECECE8); cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; }
+.g-quit-side { flex: 1; min-height: 44px; flex-direction: column; gap: 6px; font-family: "Silkscreen", var(--font-mono); font-size: 8.5px; letter-spacing: .04em; text-transform: uppercase; }
+.g-mute { flex: none; height: var(--btn); }
+.g-quit-side:hover, .g-mute:hover { background: #1c1d20; }
+.g-mute .off, .g-mute[aria-pressed="true"] .on { display: none; }
+.g-mute[aria-pressed="true"] .off { display: block; }
 html.pd-gaming .jog { display: none; }
-html.pd-gaming .g-quit-side { display: flex; animation: crankIn .35s var(--ease-out); }
-.screen.left .g-quit-side { transform: scaleX(-1); }
+html.pd-gaming .g-side-ctrls { display: flex; animation: crankIn .35s var(--ease-out); }
+.screen.left .g-side-ctrls { transform: scaleX(-1); }
 .g-exit { display: none !important; }
 .round#sideBtn svg { transition: transform .45s var(--ease-spring); }
 .round#sideBtn[aria-pressed="true"] svg { transform: scaleX(-1); }
@@ -1022,7 +1026,10 @@ header .cw-wrap .cw-label { max-width: 72vw; }
         <button class="jog-hit up" id="upBtn" tabindex="-1" aria-label="Previous item"></button>
         <button class="jog-hit down" id="downBtn" tabindex="-1" aria-label="Next item"></button>
       </div>
-      <button class="g-quit-side" id="gQuitTop" type="button" aria-label="Quit the game"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Quit</button>
+      <div class="g-side-ctrls">
+        <button class="g-quit-side" id="gQuitTop" type="button" aria-label="Quit the game"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Quit</button>
+        <button class="g-mute" id="gMute" type="button" aria-pressed="false" aria-label="Mute sound"><svg class="on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg></button>
+      </div>
       <a class="cta" id="ctaBtn" href="#services" aria-label="Start Your Project"><i aria-hidden="true"></i>Start Your Project</a>
     </aside>
     <div class="hint" id="hint" role="status">Drag the small dial to cycle projects</div>
