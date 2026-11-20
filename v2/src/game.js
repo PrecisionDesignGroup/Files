@@ -7,25 +7,38 @@
   const panel = document.querySelector('[data-panel="play"]');
   if (!screenEl || !rail || !panel) return;
   const $ = (s) => panel.querySelector(s);
-  const cv = $("#gCanvas"), ctx = cv.getContext("2d"), wrap = $(".g-stage");
+  const cv = $("#gCanvas"), ctx = cv.getContext("2d", { willReadFrequently: true }), wrap = $(".g-stage");
   const ui = { floor: $("#gFloor"), h: $("#gH"), falls: $("#gFalls"), best: $("#gBest"), best2: $("#gBest2"), banner: $("#gBanner"), title: $("#gTitle"), start: $("#gStart"), exit: $("#gExit") };
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const SPR = 20, F = 26, TILT = .3, K = 2 * Math.PI / SPR, MAXV = 7.5;
   let W = 0, H = 0, dpr = 1, TR = 100, SW = 55, RISE = 13, cx = 0, py0 = 0;
   let C = {};
+  /* 1-bit bitmap look: the scene is drawn in greys, then every pixel is dithered to two tones (charcoal + bone) */
   function readColors() {
-    const cs = getComputedStyle(screenEl), g = (n, d) => (cs.getPropertyValue(n).trim() || d);
-    C = { bg: g("--bg", "#E7E8E4"), surface: g("--surface", "#F5F5F2"), line: g("--line", "#CBCCC7"), ink: g("--ink", "#121316"), soft: g("--muted", "#62666C"), accent: g("--accent", "#F2C649"), accentInk: g("--accent-ink", "#1A1608") };
+    C = { bg: "#121212", surface: "#3a3a3a", line: "#5c5c5c", ink: "#ECECE8", soft: "#9a9a9a", accent: "#F4F4F0", accentInk: "#121212", ground: "#2e2e2e" };
     C.inkRGB = hexRGB(C.ink);
   }
+  const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + .5) / 16);
+  const DK = [43, 41, 37], LT = [218, 214, 202];
+  function bitmap(c, w, h) {
+    let im; try { im = c.getImageData(0, 0, w, h); } catch { return; }
+    const d = im.data;
+    for (let y = 0, i = 0; y < h; y++) for (let x = 0; x < w; x++, i += 4) {
+      const a = d[i + 3] / 255, L = ((d[i] * .3 + d[i + 1] * .59 + d[i + 2] * .11) / 255 * a - .15) / .7;
+      const o = L > BAYER[(y & 3) * 4 + (x & 3)] ? LT : DK;
+      d[i] = o[0]; d[i + 1] = o[1]; d[i + 2] = o[2]; d[i + 3] = 255;
+    }
+    c.putImageData(im, 0, 0);
+  }
+  window.PD_BITMAP = bitmap;
   function hexRGB(h) { h = h.replace("#", ""); if (h.length === 3) h = [...h].map(c => c + c).join(""); const n = parseInt(h, 16) || 0; return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(","); }
   const ink = (a) => `rgba(${C.inkRGB},${a})`;
 
   function resize() {
     const r = wrap.getBoundingClientRect(); W = Math.max(200, r.width); H = Math.max(200, r.height);
     /* 32-bit look: draw the scene at about 360 px wide and blow it up with hard pixel edges */
-    const PX = Math.max(2, Math.round(W / 360)); dpr = 1 / PX;
+    const PX = W < 480 ? 1 : Math.max(2, Math.round(W / 520)); dpr = 1 / PX;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.imageSmoothingEnabled = false; cv.style.width = W + "px"; cv.style.height = H + "px";
     TR = Math.max(46, Math.min(W * .2, H * .19, 150)); SW = TR * .62; RISE = TR * .135;
     cx = W / 2; py0 = H * .56;
@@ -108,7 +121,8 @@
 
 
   /* ---------- the climber: boy or girl, long-sleeve tee or hoodie with a premade graphic, shorts or pants ---------- */
-  const GRAPHICS = (window.SHOPV || []).filter(p => /^g\d+$/.test(p.id)).map(p => ({ id: p.id, t: p.t, c: (p.cw && p.cw[0] && p.cw[0][0]) || "#d9d9d6" }));
+  const PICKS = ["g1", "g2", "g3", "g6", "g10"];
+  const GRAPHICS = (window.SHOPV || []).filter(p => PICKS.includes(p.id)).map(p => ({ id: p.id, t: p.t, c: (p.cw && p.cw[0] && p.cw[0][0]) || "#d9d9d6" }));
   const LOOK_KEY = "pd-ascent-look", artImg = {};
   let look = { g: "boy", top: "tee", art: (GRAPHICS[1] || GRAPHICS[0] || {}).id || "", bot: "pants" };
   try { const v = JSON.parse(localStorage.getItem(LOOK_KEY) || "null"); if (v) look = Object.assign(look, v); } catch {}
@@ -121,8 +135,24 @@
   function rr(c, x, y, w, h, r) { c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); }
   /* sprite colours stay fixed in light and dark mode (dark outline, light skin), like a pixel sprite */
   const INK = "#141519";
-  function drawClimber(c, x, y, u, face, leg, lk) {
-    const g = GRAPHICS.find(q => q.id === lk.art) || { c: C.surface }, cloth = g.c, skin = "#F3F1EC", hood = lk.top === "hood", girl = lk.g === "girl";
+  /* in 1-bit the garment's colour becomes a tone: dark garments get a patterned (dithered) fill, light ones a near-solid fill */
+  function clothTone(hex) { const v = hexRGB(hex).split(",").map(Number), l = (v[0] * .3 + v[1] * .59 + v[2] * .11) / 255, k = Math.round((.6 + .38 * l) * 255); return `rgb(${k},${k},${k})`; }
+  /* the sprite is drawn off-screen, then stamped with a 1-pixel bone outline so it reads against the dark scene */
+  const sprC = document.createElement("canvas"), silC = document.createElement("canvas");
+  function drawClimber(c, x, y, u, face, leg, lk, scale) {
+    const bw = u * 12, bh = u * 17, pw = Math.ceil(bw * scale) + 4, ph = Math.ceil(bh * scale) + 4;
+    if (sprC.width < pw || sprC.height < ph) { sprC.width = silC.width = Math.max(sprC.width, pw); sprC.height = silC.height = Math.max(sprC.height, ph); }
+    const sc = sprC.getContext("2d"), lc = silC.getContext("2d");
+    sc.setTransform(1, 0, 0, 1, 0, 0); sc.clearRect(0, 0, sprC.width, sprC.height);
+    sc.setTransform(scale, 0, 0, scale, 2, 2); drawClimberRaw(sc, bw / 2, bh - u * .2, u, face, leg, lk);
+    lc.setTransform(1, 0, 0, 1, 0, 0); lc.globalCompositeOperation = "source-over"; lc.clearRect(0, 0, silC.width, silC.height); lc.drawImage(sprC, 0, 0);
+    lc.globalCompositeOperation = "source-in"; lc.fillStyle = "#fff"; lc.fillRect(0, 0, silC.width, silC.height); lc.globalCompositeOperation = "source-over";
+    const ox = x - bw / 2 - 2 / scale, oy = y - bh + u * .2 - 2 / scale, sw = sprC.width / scale, sh = sprC.height / scale, p = 1 / scale;
+    for (const [dx, dy] of [[-p, 0], [p, 0], [0, -p], [0, p]]) c.drawImage(silC, ox + dx, oy + dy, sw, sh);
+    c.drawImage(sprC, ox, oy, sw, sh);
+  }
+  function drawClimberRaw(c, x, y, u, face, leg, lk) {
+    const g = GRAPHICS.find(q => q.id === lk.art) || { c: "#ccc" }, cloth = clothTone(g.c), skin = "#F3F1EC", hood = lk.top === "hood", girl = lk.g === "girl";
     c.lineWidth = Math.max(1, u * .28); c.strokeStyle = INK; c.lineJoin = "round";
     // legs
     for (const [lx, d] of [[x - u * 1.45, leg * .5], [x + u * .35, -leg * .5]]) {
@@ -170,11 +200,12 @@
   const prev = $("#gPrev"), pick = $("#gPick");
   function drawPreview() {
     if (!prev || !prev.offsetWidth) return;
-    const d = .5, w = prev.offsetWidth, h = prev.offsetHeight;
+    const d = 1 / 2, w = prev.offsetWidth, h = prev.offsetHeight;
     if (prev.width !== Math.round(w * d)) { prev.width = Math.round(w * d); prev.height = Math.round(h * d); }
-    const c = prev.getContext("2d"); c.imageSmoothingEnabled = false; c.setTransform(d, 0, 0, d, 0, 0); c.clearRect(0, 0, w, h);
-    c.fillStyle = C.line; c.beginPath(); c.ellipse(w / 2, h - 12, w * .3, 5, 0, 0, 7); c.fill();
-    drawClimber(c, w / 2, h - 12, h / 17, 1, 0, look);
+    const c = prev.getContext("2d", { willReadFrequently: true }); c.imageSmoothingEnabled = false; c.setTransform(d, 0, 0, d, 0, 0); c.clearRect(0, 0, w, h);
+    c.fillStyle = C.bg; c.fillRect(0, 0, w, h); c.fillStyle = C.line; c.beginPath(); c.ellipse(w / 2, h - 12, w * .3, 5, 0, 0, 7); c.fill();
+    drawClimber(c, w / 2, h - 10, h / 15.5, 1, 0, look, d);
+    bitmap(c, prev.width, prev.height);
   }
   function paintPick() {
     if (!pick) return;
@@ -186,7 +217,12 @@
   }
   if (pick) {
     const arts = $("#gArts");
-    arts.innerHTML = GRAPHICS.map(g => { const u = window.PD_GM_ART && window.PD_GM_ART(g.id); return `<button type="button" role="radio" data-id="${g.id}" style="background:${g.c}" aria-label="${g.t.replace(/"/g, "&quot;")}">${u ? `<img src="${u}" alt="" loading="lazy">` : ""}</button>`; }).join("");
+    arts.innerHTML = GRAPHICS.map(g => `<button type="button" role="radio" data-id="${g.id}" aria-label="${g.t.replace(/"/g, "&quot;")}"><canvas width="30" height="30"></canvas></button>`).join("");
+    arts.querySelectorAll("button").forEach(b => {
+      const g = GRAPHICS.find(q => q.id === b.dataset.id), cvs = b.querySelector("canvas"), c = cvs.getContext("2d", { willReadFrequently: true });
+      const paint = () => { c.fillStyle = clothTone(g.c); c.fillRect(0, 0, 30, 30); const im = art(g.id); if (im && im.ok) { const k = Math.min(24 / im.naturalWidth, 24 / im.naturalHeight); c.drawImage(im, 15 - im.naturalWidth * k / 2, 15 - im.naturalHeight * k / 2, im.naturalWidth * k, im.naturalHeight * k); } bitmap(c, 30, 30); };
+      paint(); const im = art(g.id); if (im && !im.ok) im.addEventListener("load", paint);
+    });
     arts.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; look.art = b.dataset.id; tone(660, .05); paintPick(); });
     pick.querySelectorAll(".gp-seg").forEach(sg => sg.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; look[sg.dataset.k] = b.dataset.v; tone(587, .05); paintPick(); }));
     $("#gPickBack").addEventListener("click", () => { pick.hidden = true; ui.title.hidden = false; });
@@ -391,13 +427,13 @@
     let [x, y] = P(sp, footH(sp), r);
     const lift = air() * RISE * 3.4;
     if (lift > 0) { ctx.fillStyle = ink(.18 * (1 - air() * .6)); ctx.beginPath(); ctx.ellipse(x, y, SW * .16 * (1 - air() * .4), SW * .05, 0, 0, 7); ctx.fill(); y -= lift; }
-    const u = SW * .075, fr = sp - Math.floor(sp), walk = Math.abs(pending) > .02 || holdDir || keyDir;
+    const u = SW * .09, fr = sp - Math.floor(sp), walk = Math.abs(pending) > .02 || holdDir || keyDir;
     ctx.save();
     if (dead) { ctx.globalAlpha = Math.max(0, dead); ctx.translate(x, y - u * 4); ctx.rotate((1 - dead) * 3 * -face); ctx.translate(-x, -(y - u * 4)); y -= (1 - dead) * u * 10; }
     if (invul > 0 && !dead && Math.floor(now * 14) % 2) ctx.globalAlpha = .45;
     if (hide) ctx.globalAlpha *= .7;
     const leg = walk ? Math.sin(fr * Math.PI * 2) * u * 1.2 : 0;
-    drawClimber(ctx, x, y, u, face, leg, look);
+    drawClimber(ctx, x, y, u, face, leg, look, dpr);
     ctx.restore();
     if (dead) { ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.globalAlpha = dead; ctx.beginPath(); ctx.arc(x, y - u * 6, (1 - dead) * SW, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
   }
@@ -410,7 +446,7 @@
     const i0 = Math.max(0, lo), i1 = hi;
     // ground
     const gy = py0 - (0 - camH) * RISE;
-    if (gy < H + TR) { ctx.fillStyle = C.line; ctx.beginPath(); ctx.ellipse(cx, gy + RISE, W, TR * TILT * 2.2, 0, Math.PI, 0); ctx.lineTo(W * 2, H * 2); ctx.lineTo(-W, H * 2); ctx.closePath(); ctx.fill(); ctx.fillRect(-W, gy + RISE, W * 3, H); }
+    if (gy < H + TR) { ctx.fillStyle = C.ground; ctx.beginPath(); ctx.ellipse(cx, gy + RISE, W, TR * TILT * 2.2, 0, Math.PI, 0); ctx.lineTo(W * 2, H * 2); ctx.lineTo(-W, H * 2); ctx.closePath(); ctx.fill(); ctx.fillRect(-W, gy + RISE, W * 3, H); }
     const front = [], backs = [];
     for (let i = i0; i <= i1; i++) { const c = Math.cos((i + .5 - camA) * K); (c < 0 ? backs : front).push([i, c]); }
     backs.forEach(([i]) => drawStep(i, true));
@@ -431,6 +467,7 @@
       }
     }
     drawPlayer(now);
+    bitmap(ctx, cv.width, cv.height);
   }
 
   /* ---------- update ---------- */
