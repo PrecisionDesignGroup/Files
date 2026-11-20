@@ -245,13 +245,13 @@
   /* ---------- run control ---------- */
   function start() {
     playing = true; jumpT = 0; sp = .5; camH = 0; camA = .5; cp = 0; falls = 0; dead = 0; invul = 1; pending = 0; t = 0; lastStep = 0;
-    screenEl.classList.add("gaming"); ui.title.hidden = true; hud(); banner("Floor 01", "Turn the dial up to climb");
+    screenEl.classList.add("gaming"); document.documentElement.classList.add("pd-gaming"); ui.title.hidden = true; hud(); banner("Floor 01", "Turn the dial up to climb");
     tone(523, .09); setTimeout(() => tone(784, .12), 90);
     crank.focus({ preventScroll: true });
   }
   function exit() {
     playing = false; holdDir = keyDir = 0; pending = 0;
-    screenEl.classList.remove("gaming"); if (pick) pick.hidden = true; ui.title.hidden = false; hud();
+    screenEl.classList.remove("gaming"); document.documentElement.classList.remove("pd-gaming"); if (pick) pick.hidden = true; ui.title.hidden = false; hud();
     try { rail.focus({ preventScroll: true }); } catch {}
   }
   function die() {
@@ -262,6 +262,7 @@
   }
   ui.start.addEventListener("click", openPick);
   ui.exit.addEventListener("click", exit);
+  { const qt = document.getElementById("gQuitTop"); if (qt) qt.addEventListener("click", exit); }
   const jb = $("#gJump");
   if (jb) { jb.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); jump(); jb.classList.add("down"); }); const up = () => jb.classList.remove("down"); jb.addEventListener("pointerup", up); jb.addEventListener("pointercancel", up); jb.addEventListener("pointerleave", up); jb.addEventListener("click", e => e.preventDefault()); jb.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); jump(); } }); }
 

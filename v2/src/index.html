@@ -408,6 +408,11 @@ body { -webkit-font-smoothing: antialiased; }
 @media (max-width: 720px) { .jog { height: 128px; } }
 /* ---------- dials on the left (side switch) ---------- */
 .round#sideBtn:hover { transform: none; }
+/* while a game is running, Quit takes the place of the switch-sides (arrows) button */
+.g-quit-top { display: none; place-items: center; padding: 0; font-family: "Silkscreen", var(--font-mono); font-size: 8.5px; letter-spacing: .02em; text-transform: uppercase; cursor: pointer; }
+html.pd-gaming .g-quit-top { display: grid; }
+html.pd-gaming #sideBtn { display: none; }
+.g-exit { display: none !important; }
 .round#sideBtn svg { transition: transform .45s var(--ease-spring); }
 .round#sideBtn[aria-pressed="true"] svg { transform: scaleX(-1); }
 .side, .stage, .art-layer img, .hint { transition: opacity .16s var(--ease-out); }
@@ -948,6 +953,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 
     <aside class="side" aria-label="Site navigation">
       <div class="side-top">
+      <button class="round sm g-quit-top" id="gQuitTop" type="button" aria-label="Quit the game">Quit</button>
       <button class="round sm" id="sideBtn" aria-label="Move the dials to the other side" aria-pressed="false">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7H20M16 3l4 4-4 4"/><path d="M16 17H4M8 13l-4 4 4 4"/></svg>
       </button>
