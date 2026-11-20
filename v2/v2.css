@@ -525,7 +525,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .grid-btn { display: none; flex: none; align-items: center; gap: 7px; height: 46px; padding: 0 16px 0 14px; border-radius: 999px; border: 1px solid #44464C; background: #1B1C1F; color: #F3EFE6; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: transform .35s var(--ease-spring); }
 .grid-btn:active { transform: scale(.95); }
 .grid-btn svg { width: 15px; height: 15px; }
-.screen.sec-work .grid-btn { display: inline-flex; }
+.screen.sec-work .grid-btn, .screen.sec-branding .grid-btn, .screen.sec-apparel .grid-btn, .screen.sec-collections .grid-btn { display: inline-flex; }
 .grid-btn .g-close { display: none; }
 .screen.gridon .grid-btn .g-open { display: none; }
 .screen.gridon .grid-btn .g-close { display: inline; }
