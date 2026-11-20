@@ -395,7 +395,8 @@ body { -webkit-font-smoothing: antialiased; }
   touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; transition: opacity .3s var(--ease-out), transform .4s var(--ease-spring), visibility .3s; }
 .jog.dragging { cursor: grabbing; }
 .jog:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.screen:not(.work) .jog { opacity: 0; visibility: hidden; transform: scale(.85); pointer-events: none; }
+.screen:not(.work):not(.sec-process):not(.sec-studio) .jog { opacity: 0; visibility: hidden; transform: scale(.85); pointer-events: none; }
+.screen.sec-process .jog-num, .screen.sec-studio .jog-num { opacity: 0; }
 .jog-ticks { position: absolute; inset: 0; -webkit-mask: linear-gradient(transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(transparent, #000 30%, #000 70%, transparent); }
 .jog-ticks i { position: absolute; left: 50%; top: 50%; width: 22px; height: 2px; margin: -1px 0 0 -11px; border-radius: 2px; background: var(--frame-line); will-change: transform; }
 .jog-ticks i.major { width: 30px; margin-left: -15px; background: #6a6c72; }
@@ -454,7 +455,7 @@ html.pd-gaming .g-side-ctrls { display: flex; animation: crankIn .35s var(--ease
 @keyframes tlIn { from { opacity: 0; transform: translateY(8px); } }
 .tl-dot { position: absolute; left: var(--tl-x); top: 14px; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--bg); border: 2px solid var(--line); display: grid; place-items: center; }
 .tl-step.design .tl-dot { border-color: var(--ink); background: var(--ink); }
-.tl-step.design:last-child .tl-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(242, 198, 73, .25); }
+.tl-step.design.final .tl-dot { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 4px rgba(242, 198, 73, .25); }
 .tl-body { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 11px 14px 12px; }
 .tl-step.start .tl-body { background: none; border-color: transparent; padding: 4px 0 0; }
 .tl-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
@@ -467,7 +468,14 @@ html.pd-gaming .g-side-ctrls { display: flex; animation: crankIn .35s var(--ease
 .tl-meter i { width: 16px; height: 5px; border-radius: 3px; background: var(--line); }
 .tl-meter i.on { background: var(--ink); }
 .tl-tag { display: inline-block; margin-top: 8px; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-soft); }
-.tl-step:last-child .tl-tag { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tl-step.final .tl-tag { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.tl li.final::before { bottom: auto; height: 14px; }
+.tl li.tl-cta { padding-top: 2px; padding-bottom: 8px; }
+.tl li.tl-cta::before { display: none; }
+.tl-go { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 16px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-family: var(--font-mono); font-size: 10.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(242, 198, 73, .28); transition: transform .3s var(--ease-spring), box-shadow .3s; }
+.tl-go:hover { box-shadow: 0 6px 18px rgba(242, 198, 73, .42); }
+.tl-go:active { transform: scale(.95); }
+.tl-go:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .tl-lock { display: flex; align-items: center; min-height: 28px; padding-bottom: 12px; }
 .tl-lock .tl-dot { top: calc(50% - 6px); width: 22px; height: 22px; margin: -11px 0 0 -11px; background: var(--ink); border: 0; color: var(--ink-inv); }
 .tl-lock > span:last-child { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); padding: 4px 10px; border-radius: 999px; border: 1px dashed var(--ink-soft); }
@@ -486,8 +494,6 @@ html.pd-gaming .g-side-ctrls { display: flex; animation: crankIn .35s var(--ease
 .cta:active { transform: rotate(180deg) scale(.95); }
 .cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @keyframes ctaIn { from { opacity: 0; transform: rotate(180deg) scale(.85); } }
-.screen.sec-process .jog { display: none; }
-.screen.sec-process .cta { display: flex; }
 .screen.left .cta { transform: rotate(180deg) scaleX(-1); }
 @media (max-width: 720px) { .cta { height: 160px; font-size: 10px; } }
 /* colorway pill sits in the header, on the right, level with the section number */
@@ -499,7 +505,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 /* message above the item dial (replaces the pop-up hint) */
 .hint { display: none !important; }
 .side .jog-msg { flex-shrink: 0; width: calc(var(--btn) + 24px); margin: auto 4px -22px 0; font-family: var(--font-mono); font-size: 6.5px; line-height: 1.3; letter-spacing: .06em; text-transform: uppercase; text-align: center; color: var(--ink-soft); text-wrap: balance; pointer-events: none; transition: opacity .3s var(--ease-out); }
-.screen:not(.work) .jog-msg, .screen.sec-process .jog-msg { opacity: 0; visibility: hidden; }
+.screen:not(.work):not(.sec-process):not(.sec-studio) .jog-msg { opacity: 0; visibility: hidden; }
 .screen.left .jog-msg { transform: scaleX(-1); }
 @media (max-width: 720px) { .side .jog-msg { width: calc(var(--btn) + 18px); font-size: 5.5px; margin-bottom: -8px; } }
 /* ---------- studio: client logo marquee ---------- */
@@ -898,7 +904,8 @@ header .cw-wrap .cw-label { max-width: 72vw; }
             <li class="tl-lock" aria-label="Concept locked"><span class="tl-dot"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span>Concept locked</span></li>
             <li class="tl-step design"><span class="tl-dot"></span><div class="tl-body"><div class="tl-head"><span class="tl-n">06</span><h3>Concept Development</h3><span class="tl-meter" aria-label="Draft round 2 of 3"><i class="on"></i><i class="on"></i><i></i></span></div><p>The concept becomes more defined. At this point we cannot switch to a new concept, but you will have essentially unlimited revisions within the current one.</p><span class="tl-tag">Unlimited revisions</span></div></li>
             <li class="tl-step design"><span class="tl-dot"></span><div class="tl-body"><div class="tl-head"><span class="tl-n">07</span><h3>Refinement</h3><span class="tl-meter" aria-label="Draft round 3 of 3"><i class="on"></i><i class="on"></i><i class="on"></i></span></div><p>We dial in the layout, colors, and composition.</p></div></li>
-            <li class="tl-step design"><span class="tl-dot"></span><div class="tl-body"><div class="tl-head"><span class="tl-n">08</span><h3>Finalization</h3></div><p>Everything is prepared and exported so it is print-ready and ready to send.</p><span class="tl-tag">Print-ready files</span></div></li>
+            <li class="tl-step design final"><span class="tl-dot"></span><div class="tl-body"><div class="tl-head"><span class="tl-n">08</span><h3>Finalization</h3></div><p>Everything is prepared and exported so it is print-ready and ready to send.</p><span class="tl-tag">Print-ready files</span></div></li>
+            <li class="tl-cta"><a class="tl-go" id="ctaBtn" href="#services">Start your project<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
           </ol>
         </div>
 
@@ -1062,7 +1069,6 @@ header .cw-wrap .cw-label { max-width: 72vw; }
         <button class="g-quit-side" id="gQuitTop" type="button" aria-label="Quit the game"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Quit</button>
         <button class="g-mute" id="gMute" type="button" aria-pressed="false" aria-label="Mute sound"><svg class="on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9.5l5 5M22 9.5l-5 5"/></svg></button>
       </div>
-      <a class="cta" id="ctaBtn" href="#services" aria-label="Start Your Project"><i aria-hidden="true"></i>Start Your Project</a>
     </aside>
     <div class="hint" id="hint" role="status">Drag the small dial to cycle projects</div>
     <div class="toast" id="toast" role="status"></div>
@@ -1140,6 +1146,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
     $("metaDesc").hidden = !DESC[key];
     if (typeof hideHint === "function" && key !== "work") hideHint();
     screen.classList.toggle("work", isView(key));
+    if (key === "process" || key === "studio") $("jogMsg").textContent = "Scroll the page";
     try { setGrid(false, true); } catch {}
     if (isView(key)) { if (prevView && VIEW[prevView]) VIEW[prevView].i = pi; WORK = VIEW[key].list; prevView = key; showProject(VIEW[key].i, 0, 0, true); }
     applyPalette(); fit();
@@ -1443,7 +1450,14 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   }
   /* in Grid view the dial scrolls the grid instead of changing project */
   function gridRowH() { const b = pgridIn.firstElementChild; return b ? b.offsetHeight + parseFloat(getComputedStyle(pgridIn).rowGap || 10) : 120; }
-  function jogStep(d) { if (!isView(current)) return; jogKick(d); if (gridOn) { pgrid.scrollBy({ top: d * gridRowH(), behavior: "smooth" }); return; } stepProject(d); }
+  /* on Process and Studio the dial scrolls the page */
+  const PAGE_SCROLL = { process: () => document.querySelector('[data-panel="process"] .tl'), studio: () => { const p = document.querySelector('[data-panel="studio"]'), g = p && p.querySelector(".st-grid"); return p && p.scrollHeight > p.clientHeight + 2 ? p : g; } };
+  function pageEl() { const f = PAGE_SCROLL[current]; return f ? f() : null; }
+  function scrollEl() { return gridOn ? pgrid : pageEl(); }
+  function jogStep(d) {
+    const pe = pageEl();
+    if (pe) { jogKick(d); pe.scrollBy({ top: d * Math.max(90, pe.clientHeight * .4), behavior: "smooth" }); return; }
+    if (!isView(current)) return; jogKick(d); if (gridOn) { pgrid.scrollBy({ top: d * gridRowH(), behavior: "smooth" }); return; } stepProject(d); }
   window.pdJogStep = jogStep; window.pdRefresh = () => showColor(ci);
   window.pdGo = (i) => { if (!isView(current) || i === pi) return; const d = i > pi ? 1 : -1; jogKick(d); showProject(i, d); };
   function jogNum() {
@@ -1452,34 +1466,34 @@ header .cw-wrap .cw-label { max-width: 72vw; }
     $("jogNum").textContent = String(pi + 1).padStart(Math.max(2, w), "0");
     jog.setAttribute("aria-valuemax", n); jog.setAttribute("aria-valuenow", pi + 1);
   }
-  jog.addEventListener("pointerdown", e => { jSuppress = false; jDrag = { y: e.clientY, last: 0, id: e.pointerId, moved: false, start: jPos, st: gridOn ? pgrid.scrollTop : 0 }; });
+  jog.addEventListener("pointerdown", e => { jSuppress = false; const se = scrollEl(); jDrag = { y: e.clientY, last: 0, id: e.pointerId, moved: false, start: jPos, se, st: se ? se.scrollTop : 0 }; });
   jog.addEventListener("pointermove", e => {
     if (!jDrag) return;
     const dy = jDrag.y - e.clientY;
     if (!jDrag.moved) { if (Math.abs(dy) < 5) return; jDrag.moved = true; jog.setPointerCapture(jDrag.id); jog.classList.add("dragging"); cancelAnimationFrame(jRaf); jRaf = 0; jVel = 0; }
     jPos = jTarget = jDrag.start + dy; jogRender();
-    if (gridOn) { pgrid.scrollTop = jDrag.st + dy * 2.4; const st = Math.trunc(dy / JSTEP) - jDrag.last; if (st) { clickSound(); jDrag.last += st; } return; }
+    if (jDrag.se) { jDrag.se.scrollTop = jDrag.st + dy * 2.4; const st = Math.trunc(dy / JSTEP) - jDrag.last; if (st) { clickSound(); jDrag.last += st; } return; }
     const steps = Math.trunc(dy / JSTEP) - jDrag.last;
     if (steps) { const d = Math.sign(steps); for (let k = 0; k < Math.abs(steps); k++) jogStep(d); jDrag.last += steps; }
   });
   const jogEnd = () => {
     if (!jDrag) return; const d = jDrag; jDrag = null; jog.classList.remove("dragging");
     if (!d.moved) return; jSuppress = true;
-    jTarget = gridOn ? jPos : d.start + d.last * JSTEP; if (!jRaf) jRaf = requestAnimationFrame(jogLoop);
+    jTarget = d.se ? jPos : d.start + d.last * JSTEP; if (!jRaf) jRaf = requestAnimationFrame(jogLoop);
   };
   jog.addEventListener("pointerup", jogEnd); jog.addEventListener("pointercancel", jogEnd);
   let jAcc = 0, jLast = 0;
   jog.addEventListener("wheel", e => {
     e.preventDefault(); e.stopPropagation();
-    if (gridOn) { pgrid.scrollTop += e.deltaY; jTarget += e.deltaY * .3; if (!jRaf) jRaf = requestAnimationFrame(jogLoop); return; }
+    const se = scrollEl(); if (se) { se.scrollTop += e.deltaY; jTarget += e.deltaY * .3; if (!jRaf) jRaf = requestAnimationFrame(jogLoop); return; }
     const now = performance.now(); if (now - jLast > 250) jAcc = 0;
     jAcc += e.deltaY;
     if (Math.abs(jAcc) >= 30 && now - jLast > 110) { jLast = now; const d = Math.sign(jAcc); jAcc = 0; jogStep(d); }
   }, { passive: false });
   jog.addEventListener("keydown", e => { const d = { ArrowDown: 1, ArrowUp: -1 }[e.key]; if (!d) return; e.preventDefault(); e.stopPropagation(); jogStep(d); });
   jogRender();
-  $("upBtn").addEventListener("click", e => { if (jSuppress) { jSuppress = false; return; } isView(current) ? jogStep(-1) : spinTo(Math.round(target) - 1); });
-  $("downBtn").addEventListener("click", e => { if (jSuppress) { jSuppress = false; return; } isView(current) ? jogStep(1) : spinTo(Math.round(target) + 1); });
+  $("upBtn").addEventListener("click", e => { if (jSuppress) { jSuppress = false; return; } (isView(current) || pageEl()) ? jogStep(-1) : spinTo(Math.round(target) - 1); });
+  $("downBtn").addEventListener("click", e => { if (jSuppress) { jSuppress = false; return; } (isView(current) || pageEl()) ? jogStep(1) : spinTo(Math.round(target) + 1); });
   /* side switch: mirror the dials to the left edge (light/dark now follows the device setting) */
   const sideBtn = $("sideBtn");
   function setSide(left, save = true) {
