@@ -327,10 +327,13 @@
     (SFX.hit[kind] || (() => tone(220, .25, "sawtooth", .06, -160)))();
     try { navigator.vibrate && navigator.vibrate(40); } catch {}
   }
-  function collect(n) {
-    taken.add(n); got++; SFX.poster();
-    if (got === 9) { sword = true; power = 20; SFX.sword(); banner("Sword unlocked", "Walk into the monster to cut it down · 20s invincible"); }
-    else if (got % 3 === 0) { power = got >= 6 ? 20 : 15; SFX.power(); banner("Invincible", `${power} seconds · ${got} posters`); }
+  /* power-ups shrink the higher you are: full time up to floor 10, then 0.6s less per floor, never under 5s */
+  const powerFor = (base, fl) => Math.max(5, Math.round(base - Math.max(0, fl - 9) * .6));
+  function collect(id) {
+    const fl = Math.floor(id / 10);
+    taken.add(id); got++; SFX.poster();
+    if (got === 9) { sword = true; power = powerFor(20, fl); SFX.sword(); banner("Sword unlocked", `Walk into the monster to cut it down · ${power}s invincible`); }
+    else if (got % 3 === 0) { power = powerFor(got >= 6 ? 20 : 15, fl); SFX.power(); banner("Invincible", `${power} seconds · ${got} posters`); }
     else banner(`Poster ${got}`, got < 3 ? `${3 - got} more for 15s invincible` : got < 6 ? `${6 - got} more for 20s invincible` : `${9 - got} more for the sword`);
     hud();
   }
@@ -470,6 +473,9 @@
   function posterKs(n) {
     if (posterCache.has(n)) return posterCache.get(n);
     const doors = floorData(n).doors, out = [];
+    /* above floor 10 posters thin out: every 2nd floor, then every 3rd (from floor 20), every 4th (30), at most every 5th */
+    const gap = n < 9 ? 1 : Math.min(5, 2 + Math.floor((n - 9) / 10));
+    if (gap > 1 && (n - 9) % gap !== 0) { posterCache.set(n, out); return out; }
     for (const base of (n < 9 && n % 3 === 1) ? [9, 18] : [13]) {
       let k = L0(n) + base;
       for (let tries = 0; tries < 10 && doors.some(d => Math.abs(d - k) < 2); tries++) k += 1;
