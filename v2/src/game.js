@@ -16,11 +16,11 @@
   let C = {};
   /* 1-bit bitmap look: the scene is drawn in greys, then every pixel is dithered to two tones (charcoal + bone) */
   function readColors() {
-    C = { bg: "#121212", surface: "#3a3a3a", line: "#5c5c5c", ink: "#ECECE8", soft: "#9a9a9a", accent: "#F4F4F0", accentInk: "#121212", ground: "#2e2e2e" };
+    C = { bg: "#000000", surface: "#1e1e1e", line: "#646464", ink: "#ECECE8", soft: "#9a9a9a", accent: "#F4F4F0", accentInk: "#121212", ground: "#3a3a3a" };
     C.inkRGB = hexRGB(C.ink);
   }
   const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(v => (v + .5) / 16);
-  const DK = [43, 41, 37], LT = [218, 214, 202];
+  const DK = [8, 8, 8], LT = [255, 255, 255];
   function bitmap(c, w, h) {
     let im; try { im = c.getImageData(0, 0, w, h); } catch { return; }
     const d = im.data;
