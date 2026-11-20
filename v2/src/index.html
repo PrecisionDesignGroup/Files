@@ -1233,7 +1233,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   function stepColor(d) { const n = WORK[pi].imgs.length; if (n > 1) showColor(ci + d); }
 
   /* size slider: step 1 = framed art, step 5 = art fills the whole screen shape */
-  let szi = 0; const SZN = 5, szEl = $("sz"), szBtns = [...szEl.querySelectorAll("button")];
+  let szi = 2; const SZN = 5, szEl = $("sz"), szBtns = [...szEl.querySelectorAll("button")];
   function sizeArt(img) {
     if (!img || !img.naturalWidth) return;
     const cs = getComputedStyle(img), W = img.clientWidth, H = img.clientHeight;
@@ -1546,7 +1546,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
     });
   }
   /* the size slider zooms the grid: fewer, bigger tiles at each step */
-  let gz = 0;
+  let gz = 2;
   const GCOLS = () => innerWidth <= 720 ? [4, 3, 2, 1, 1] : [8, 6, 4, 3, 2];
   function zoomGrid(k, keep) {
     gz = Math.max(0, Math.min(SZN - 1, k));
