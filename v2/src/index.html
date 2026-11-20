@@ -408,10 +408,13 @@ body { -webkit-font-smoothing: antialiased; }
 @media (max-width: 720px) { .jog { height: 128px; } }
 /* ---------- dials on the left (side switch) ---------- */
 .round#sideBtn:hover { transform: none; }
-/* while a game is running, Quit takes the place of the switch-sides (arrows) button */
-.g-quit-top { display: none; place-items: center; padding: 0; font-family: "Silkscreen", var(--font-mono); font-size: 8.5px; letter-spacing: .02em; text-transform: uppercase; cursor: pointer; }
-html.pd-gaming .g-quit-top { display: grid; }
-html.pd-gaming #sideBtn { display: none; }
+/* while a game is running, Quit sits under the side nav, in the slot the item slider uses on other sections */
+.g-quit-side { display: none; flex-shrink: 0; width: var(--btn); height: clamp(80px, 24svh, 150px); margin-right: 16px; border-radius: 999px; background: var(--frame); border: 1px solid var(--frame-line); color: var(--frame-fg, #ECECE8);
+  flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-family: "Silkscreen", var(--font-mono); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
+.g-quit-side:hover { background: #1c1d20; }
+html.pd-gaming .jog { display: none; }
+html.pd-gaming .g-quit-side { display: flex; animation: crankIn .35s var(--ease-out); }
+.screen.left .g-quit-side { transform: scaleX(-1); }
 .g-exit { display: none !important; }
 .round#sideBtn svg { transition: transform .45s var(--ease-spring); }
 .round#sideBtn[aria-pressed="true"] svg { transform: scaleX(-1); }
@@ -953,7 +956,6 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 
     <aside class="side" aria-label="Site navigation">
       <div class="side-top">
-      <button class="round sm g-quit-top" id="gQuitTop" type="button" aria-label="Quit the game">Quit</button>
       <button class="round sm" id="sideBtn" aria-label="Move the dials to the other side" aria-pressed="false">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7H20M16 3l4 4-4 4"/><path d="M16 17H4M8 13l-4 4 4 4"/></svg>
       </button>
@@ -1002,6 +1004,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
         <button class="jog-hit up" id="upBtn" tabindex="-1" aria-label="Previous item"></button>
         <button class="jog-hit down" id="downBtn" tabindex="-1" aria-label="Next item"></button>
       </div>
+      <button class="g-quit-side" id="gQuitTop" type="button" aria-label="Quit the game"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>Quit</button>
       <a class="cta" id="ctaBtn" href="#services" aria-label="Start Your Project"><i aria-hidden="true"></i>Start Your Project</a>
     </aside>
     <div class="hint" id="hint" role="status">Drag the small dial to cycle projects</div>

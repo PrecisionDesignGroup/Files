@@ -403,10 +403,13 @@ body { -webkit-font-smoothing: antialiased; }
 @media (max-width: 720px) { .jog { height: 128px; } }
 /* ---------- dials on the left (side switch) ---------- */
 .round#sideBtn:hover { transform: none; }
-/* while a game is running, Quit takes the place of the switch-sides (arrows) button */
-.g-quit-top { display: none; place-items: center; padding: 0; font-family: "Silkscreen", var(--font-mono); font-size: 8.5px; letter-spacing: .02em; text-transform: uppercase; cursor: pointer; }
-html.pd-gaming .g-quit-top { display: grid; }
-html.pd-gaming #sideBtn { display: none; }
+/* while a game is running, Quit sits under the side nav, in the slot the item slider uses on other sections */
+.g-quit-side { display: none; flex-shrink: 0; width: var(--btn); height: clamp(80px, 24svh, 150px); margin-right: 16px; border-radius: 999px; background: var(--frame); border: 1px solid var(--frame-line); color: var(--frame-fg, #ECECE8);
+  flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font-family: "Silkscreen", var(--font-mono); font-size: 9px; letter-spacing: .04em; text-transform: uppercase; }
+.g-quit-side:hover { background: #1c1d20; }
+html.pd-gaming .jog { display: none; }
+html.pd-gaming .g-quit-side { display: flex; animation: crankIn .35s var(--ease-out); }
+.screen.left .g-quit-side { transform: scaleX(-1); }
 .g-exit { display: none !important; }
 .round#sideBtn svg { transition: transform .45s var(--ease-spring); }
 .round#sideBtn[aria-pressed="true"] svg { transform: scaleX(-1); }
