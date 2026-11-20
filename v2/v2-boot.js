@@ -1622,11 +1622,18 @@ try{
   function hexRGB(h) { h = h.replace("#", ""); if (h.length === 3) h = [...h].map(c => c + c).join(""); const n = parseInt(h, 16) || 0; return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(","); }
   const ink = (a) => `rgba(${C.inkRGB},${a})`;
 
+  function artScale(w = W, h = H) {
+    const dd = window.devicePixelRatio || 1; let k = 2;
+    while ((w * dd / k) * (h * dd / k) > 650000) k++;
+    return dd / k;
+  }
   function resize() {
     const r = wrap.getBoundingClientRect(); W = Math.max(200, r.width); H = Math.max(200, r.height);
-    /* 32-bit look: draw the scene at about 360 px wide and blow it up with hard pixel edges */
-    const PX = W < 480 ? 1 : Math.max(2, Math.round(W / 520)); dpr = 1 / PX;
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.imageSmoothingEnabled = false; cv.style.width = W + "px"; cv.style.height = H + "px";
+    /* bitmap look, kept crisp: one art pixel = exactly ART device pixels (whole numbers, so no uneven or blurry pixels),
+       and the canvas is sized to a whole number of art pixels so the browser never stretches it */
+    dpr = artScale();
+    cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr); ctx.imageSmoothingEnabled = false;
+    cv.style.width = cv.width / dpr + "px"; cv.style.height = cv.height / dpr + "px";
     TR = Math.max(46, Math.min(W * .2, H * .19, 150)); SW = TR * .62; RISE = TR * .135;
     cx = W / 2; py0 = H * .56;
     readColors();
@@ -1787,7 +1794,7 @@ try{
   const prev = $("#gPrev"), pick = $("#gPick");
   function drawPreview() {
     if (!prev || !prev.offsetWidth) return;
-    const d = 1 / 2, w = prev.offsetWidth, h = prev.offsetHeight;
+    const d = artScale(96, 132), w = prev.offsetWidth, h = prev.offsetHeight;
     if (prev.width !== Math.round(w * d)) { prev.width = Math.round(w * d); prev.height = Math.round(h * d); }
     const c = prev.getContext("2d", { willReadFrequently: true }); c.imageSmoothingEnabled = false; c.setTransform(d, 0, 0, d, 0, 0); c.clearRect(0, 0, w, h);
     c.fillStyle = C.bg; c.fillRect(0, 0, w, h); c.fillStyle = C.line; c.beginPath(); c.ellipse(w / 2, h - 12, w * .3, 5, 0, 0, 7); c.fill();
