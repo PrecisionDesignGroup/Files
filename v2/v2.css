@@ -158,7 +158,7 @@ ul.svc, ol.steps { margin: 0; padding: 0; }
 /* studio */
 .studio { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: end; }
 .principles { display: grid; gap: 8px; }
-.principles div { border-radius: 18px; padding: 12px 16px; display: flex; gap: 14px; align-items: baseline; font-size: 14px; }
+.principles div, .principles .howto-btn { border-radius: 18px; padding: 12px 16px; display: flex; gap: 14px; align-items: baseline; font-size: 14px; }
 .principles b { font-family: var(--font-mono); font-size: 11px; color: var(--chev); font-weight: 500; letter-spacing: .06em; min-width: 80px; }
 .clients { margin: 0; max-width: 60ch; font-size: 13.5px; line-height: 1.5; color: var(--ink-soft); }
 .social { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 0; font-size: 14px; }
@@ -339,7 +339,7 @@ form .send small { font-size: 12px; color: var(--ink-soft); }
   .steps li { border: 1px solid var(--glass-line) !important; background: var(--glass); }
   .principles div:nth-child(n+3) { display: none; }
   .clients { display: none; }
-  .principles div { flex-direction: column; gap: 4px; }
+  .principles div, .principles .howto-btn { flex-direction: column; gap: 4px; }
   .mail { font-size: 1.15rem; }
   .logo-word { height: 12px; }
   .logo-mark { height: 26px; }
@@ -355,7 +355,7 @@ body { -webkit-font-smoothing: antialiased; }
 .screen { background: var(--bg) !important; }
 .screen::after { display: none; }
 .glass { background: var(--surface); border: 1px solid var(--line); backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: none; }
-.svc li, .steps li, .item, .principles div { border-radius: 14px; }
+.svc li, .steps li, .item, .principles div, .principles .howto-btn { border-radius: 14px; }
 .steps.glass { border-radius: 14px; }
 .svc h3, .steps h3, .item h3 { font-weight: 600; letter-spacing: -.005em; }
 .steps .n { color: var(--muted); }

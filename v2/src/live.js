@@ -84,6 +84,7 @@ const css=document.createElement("style");css.textContent=`
 .pdfp .ht-ok{align-self:flex-start;background:none;border:1.5px solid var(--ink);color:var(--ink);height:36px;padding:0 20px}
 .howto-btn{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%}
 @media (max-width:720px){.pdfp{top:clamp(118px,16vh,140px);bottom:14px;left:16px;right:86px;width:auto;transform:none}}
+@media (max-width:720px){.screen.left .pdfp{left:86px;right:16px}}
 `;document.head.appendChild(css);
 
 const screenEl=document.getElementById("screen");
