@@ -362,7 +362,9 @@ try{
     userTurn = true; clickSound();
     try { navigator.vibrate && navigator.vibrate(4); } catch {}
   }
-  function jogStep(d) { if (!isView(current)) return; jogKick(d); stepProject(d); }
+  /* in Grid view the dial scrolls the grid instead of changing project */
+  function gridRowH() { const b = pgridIn.firstElementChild; return b ? b.offsetHeight + parseFloat(getComputedStyle(pgridIn).rowGap || 10) : 120; }
+  function jogStep(d) { if (!isView(current)) return; jogKick(d); if (gridOn) { pgrid.scrollBy({ top: d * gridRowH(), behavior: "smooth" }); return; } stepProject(d); }
   window.pdJogStep = jogStep; window.pdRefresh = () => showColor(ci);
   window.pdGo = (i) => { if (!isView(current) || i === pi) return; const d = i > pi ? 1 : -1; jogKick(d); showProject(i, d); };
   function jogNum() {
@@ -371,24 +373,26 @@ try{
     $("jogNum").textContent = String(pi + 1).padStart(Math.max(2, w), "0");
     jog.setAttribute("aria-valuemax", n); jog.setAttribute("aria-valuenow", pi + 1);
   }
-  jog.addEventListener("pointerdown", e => { jSuppress = false; jDrag = { y: e.clientY, last: 0, id: e.pointerId, moved: false, start: jPos }; });
+  jog.addEventListener("pointerdown", e => { jSuppress = false; jDrag = { y: e.clientY, last: 0, id: e.pointerId, moved: false, start: jPos, st: gridOn ? pgrid.scrollTop : 0 }; });
   jog.addEventListener("pointermove", e => {
     if (!jDrag) return;
     const dy = jDrag.y - e.clientY;
     if (!jDrag.moved) { if (Math.abs(dy) < 5) return; jDrag.moved = true; jog.setPointerCapture(jDrag.id); jog.classList.add("dragging"); cancelAnimationFrame(jRaf); jRaf = 0; jVel = 0; }
     jPos = jTarget = jDrag.start + dy; jogRender();
+    if (gridOn) { pgrid.scrollTop = jDrag.st + dy * 2.4; const st = Math.trunc(dy / JSTEP) - jDrag.last; if (st) { clickSound(); jDrag.last += st; } return; }
     const steps = Math.trunc(dy / JSTEP) - jDrag.last;
     if (steps) { const d = Math.sign(steps); for (let k = 0; k < Math.abs(steps); k++) jogStep(d); jDrag.last += steps; }
   });
   const jogEnd = () => {
     if (!jDrag) return; const d = jDrag; jDrag = null; jog.classList.remove("dragging");
     if (!d.moved) return; jSuppress = true;
-    jTarget = d.start + d.last * JSTEP; if (!jRaf) jRaf = requestAnimationFrame(jogLoop);
+    jTarget = gridOn ? jPos : d.start + d.last * JSTEP; if (!jRaf) jRaf = requestAnimationFrame(jogLoop);
   };
   jog.addEventListener("pointerup", jogEnd); jog.addEventListener("pointercancel", jogEnd);
   let jAcc = 0, jLast = 0;
   jog.addEventListener("wheel", e => {
     e.preventDefault(); e.stopPropagation();
+    if (gridOn) { pgrid.scrollTop += e.deltaY; jTarget += e.deltaY * .3; if (!jRaf) jRaf = requestAnimationFrame(jogLoop); return; }
     const now = performance.now(); if (now - jLast > 250) jAcc = 0;
     jAcc += e.deltaY;
     if (Math.abs(jAcc) >= 30 && now - jLast > 110) { jLast = now; const d = Math.sign(jAcc); jAcc = 0; jogStep(d); }
@@ -490,7 +494,7 @@ try{
       pgridIn.querySelectorAll("button").forEach((b, k) => { b.setAttribute("aria-current", String(k === pi)); b.style.animation = "none"; void b.offsetWidth; b.style.animation = ""; });
       const cur = pgridIn.children[pi];
       if (cur) requestAnimationFrame(() => { pgrid.scrollTop = Math.max(0, cur.offsetTop - pgrid.clientHeight / 2 + cur.offsetHeight / 2); });
-      $("jogMsg").textContent = "Tap a project to open it";
+      $("jogMsg").textContent = "Scroll the grid";
     } else {
       if (!quiet) { const c = WORK[pi].cw[ci] || ["#111", 1]; screen.classList.toggle("dark", !!c[1]); }
       $("jogMsg").textContent = "Scroll to cycle projects";

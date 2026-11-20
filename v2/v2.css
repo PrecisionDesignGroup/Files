@@ -823,3 +823,18 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .screen.sec-play [data-panel="play"] .g-title, .screen.sec-play .g-jump { bottom: 52px; }
   .screen.sec-play .g-pick { max-height: calc(100% - 130px); }
 }
+
+/* Grid view fills the whole frame; colour swatches and project details stay hidden until a project is opened */
+.screen.gridon .headline-wrap { position: static; }
+.screen.gridon .pgrid { padding: 92px calc(var(--rail-w) + 64px) 80px 34px;
+  -webkit-mask: linear-gradient(transparent 64px, #000 96px, #000 calc(100% - 92px), transparent calc(100% - 62px)); mask: linear-gradient(transparent 64px, #000 96px, #000 calc(100% - 92px), transparent calc(100% - 62px)); }
+.screen.left.gridon .pgrid { padding: 92px 34px 80px calc(var(--rail-w) + 64px); }
+.screen.gridon .top { position: relative; z-index: 4; }
+.screen.gridon .cw-wrap, .screen.gridon .proj { display: none !important; }
+.screen.gridon [data-panel="work"] { position: relative; z-index: 4; }
+.screen.gridon [data-panel="work"] .sz-row { margin-bottom: 0; }
+@media (max-width: 720px) {
+  .screen.gridon .pgrid { padding: 76px calc(var(--rail-w) + 40px) 66px 20px;
+    -webkit-mask: linear-gradient(transparent 52px, #000 80px, #000 calc(100% - 76px), transparent calc(100% - 50px)); mask: linear-gradient(transparent 52px, #000 80px, #000 calc(100% - 76px), transparent calc(100% - 50px)); }
+  .screen.left.gridon .pgrid { padding: 76px 20px 66px calc(var(--rail-w) + 40px); }
+}
