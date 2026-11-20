@@ -8,7 +8,7 @@
   if (!screenEl || !rail || !panel) return;
   const $ = (s) => panel.querySelector(s);
   const cv = $("#gCanvas"), ctx = cv.getContext("2d", { willReadFrequently: true }), wrap = $(".g-stage");
-  const ui = { floor: $("#gFloor"), h: $("#gH"), falls: $("#gFalls"), best: $("#gBest"), best2: $("#gBest2"), banner: $("#gBanner"), title: $("#gTitle"), start: $("#gStart"), exit: $("#gExit") };
+  const ui = { floor: $("#gFloor"), h: $("#gH"), falls: $("#gFalls"), best: $("#gBest"), best2: $("#gBest2"), banner: $("#gBanner"), title: $("#gTitle"), start: $("#gStart"), exit: $("#gExit"), post: $("#gPost") };
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const SPR = 20, F = 26, TILT = .3, K = 2 * Math.PI / SPR, MAXV = 7.5;
@@ -81,6 +81,7 @@
         made++;
       }
     }
+    if (n >= 9) { const a = L + 6 + Math.floor(r() * 3), len = 9 + Math.floor(r() * 4); hz.push({ t: "monster", a, b: Math.min(L + F - 3, a + len), v: Math.min(4.2, 2.2 + (n - 9) * .15 + r() * .5), ph: r() * 2 }); }
     const d = { hz, doors }; floors.set(n, d); return d;
   }
   function spike(k, r, n) { return { t: "spike", k, P: Math.max(1.15, 1.6 + r() * .8 - n * .05), ph: r() * 3 }; }
@@ -88,13 +89,14 @@
   function state(h, t) {
     if (h.t === "spike") { const u = (((t + h.ph) % h.P) + h.P) % h.P / h.P; return { up: u < .42, warn: u > .82, u }; }
     if (h.t === "blade") { const th = 1.15 * Math.sin(2 * Math.PI * (t + h.ph) / h.P); return { th, hot: Math.abs(th) < .32 }; }
-    if (h.t === "ghost") return { s: h.a + (h.b - h.a) * tri(t * h.v / (h.b - h.a) + h.ph) };
+    if (h.t === "ghost" || h.t === "monster") return { s: h.a + (h.b - h.a) * tri(t * h.v / (h.b - h.a) + h.ph) };
     if (h.t === "boulder") { const l = (((t + h.ph) % h.P) + h.P) % h.P, s = h.top - l * h.v; return { s, live: s >= h.bot, l }; }
   }
 
   /* ---------- game state ---------- */
   let playing = false, active = false, sp = .5, camH = 0, camA = .5, t = 0, cp = 0, falls = 0, dead = 0, invul = 0, face = 1, best = 0;
   let jumpT = 0; const JUMP = .8;
+  let got = 0, power = 0, sword = false, slashT = 0; const taken = new Set(), slain = new Set();
   let pending = 0, holdDir = 0, keyDir = 0, crankPos = 0, shake = 0, lastStep = 0, bannerT;
   try { best = +localStorage.getItem("pd-ascent-best") || 0; } catch {}
   const L0 = (n) => n * F;
@@ -108,6 +110,7 @@
     ui.floor.textContent = String(cp + 1).padStart(2, "0");
     ui.h.textContent = String(Math.max(0, Math.floor(sp))).padStart(3, "0");
     ui.falls.textContent = String(falls).padStart(2, "0");
+    if (ui.post) ui.post.textContent = sword ? got + " + SWORD" : String(got);
     ui.best.textContent = ui.best2.textContent = String(best).padStart(2, "0");
   }
   function banner(txt, sub) {
@@ -159,7 +162,13 @@
     hit: { spike: () => { noise(.18, .12, "highpass", 2400); tone(240, .25, "sawtooth", .06, -170); },
            blade: () => { noise(.16, .12, "bandpass", 3000, 900); tone(520, .2, "square", .05, -380); },
            ghost: () => { tone(620, .5, "triangle", .07, -480); tone(930, .5, "sine", .03, -700, .05); },
-           boulder: () => { noise(.35, .18, "lowpass", 300, 80); tone(90, .35, "square", .07, -50); } }
+           boulder: () => { noise(.35, .18, "lowpass", 300, 80); tone(90, .35, "square", .07, -50); },
+           monster: () => { noise(.4, .16, "lowpass", 500, 90); tone(110, .45, "sawtooth", .08, -60); } },
+    poster: () => { tone(880, .07, "square", .04); tone(1320, .11, "square", .04, 0, .07); },
+    power: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, .1, "square", .045, 0, i * .07)); },
+    sword: () => { noise(.25, .08, "bandpass", 1200, 5000); [392, 523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .12, "square", .045, 0, i * .07)); },
+    slay: () => { noise(.2, .12, "bandpass", 4000, 800); tone(196, .4, "sawtooth", .07, -120, .05); },
+    roar: (k) => { noise(.35, .08 * k, "lowpass", 380, 120); tone(85, .35, "sawtooth", .05 * k, -30); }
   };
   /* hazards near the climber make their sounds when they change (spikes pop up, blades swing through, ghosts drift, boulders roll) */
   const hzPrev = new WeakMap();
@@ -172,6 +181,7 @@
       const k = Math.max(.15, 1 - dist / 9), p = hzPrev.get(h) || {};
       if (h.t === "spike") { if (st.warn && !p.warn) SFX.spikeWarn(k); if (st.up && !p.up) SFX.spikeUp(k); hzPrev.set(h, { up: st.up, warn: st.warn }); }
       else if (h.t === "blade") { if (st.hot && !p.hot) SFX.bladeSwish(k); hzPrev.set(h, { hot: st.hot }); }
+      else if (h.t === "monster") { if (slain.has(h)) continue; const due = (p.next || 0) <= now; if (due) { if (p.next) SFX.roar(k); hzPrev.set(h, { next: now + 1.6 + Math.random() * .8 }); } }
       else if (h.t === "ghost") { const due = (p.next || 0) <= now; if (due) { if (p.next) SFX.ghost(k); hzPrev.set(h, { next: now + 1.1 + Math.random() * .6 }); } }
       else if (h.t === "boulder") { if (st.live && !p.live) SFX.boulder(k); else if (st.live && (p.next || 0) <= now) { SFX.roll(k); } hzPrev.set(h, { live: st.live, next: st.live && (p.next || 0) <= now ? now + .28 : p.next }); }
     }
@@ -301,7 +311,7 @@
 
   /* ---------- run control ---------- */
   function start() {
-    playing = true; jumpT = 0; sp = .5; camH = 0; camA = .5; cp = 0; falls = 0; dead = 0; invul = 1; pending = 0; t = 0; lastStep = 0;
+    playing = true; jumpT = 0; sp = .5; camH = 0; camA = .5; cp = 0; falls = 0; dead = 0; invul = 1; pending = 0; t = 0; lastStep = 0; got = 0; power = 0; sword = false; slashT = 0; taken.clear(); slain.clear();
     screenEl.classList.add("gaming"); document.documentElement.classList.add("pd-gaming"); ui.title.hidden = true; hud(); banner("Floor 01", "Turn the dial up to climb");
     tone(523, .09); setTimeout(() => tone(784, .12), 90);
     crank.focus({ preventScroll: true });
@@ -312,10 +322,17 @@
     try { rail.focus({ preventScroll: true }); } catch {}
   }
   function die(kind) {
-    if (dead || invul > 0) return;
+    if (dead || invul > 0 || power > 0) return;
     dead = .95; falls++; shake = 1; pending = 0; hud();
     (SFX.hit[kind] || (() => tone(220, .25, "sawtooth", .06, -160)))();
     try { navigator.vibrate && navigator.vibrate(40); } catch {}
+  }
+  function collect(n) {
+    taken.add(n); got++; SFX.poster();
+    if (got === 9) { sword = true; power = 20; SFX.sword(); banner("Sword unlocked", "Walk into the monster to cut it down · 20s invincible"); }
+    else if (got % 3 === 0) { power = got >= 6 ? 20 : 15; SFX.power(); banner("Invincible", `${power} seconds · ${got} posters`); }
+    else banner(`Poster ${got}`, got < 3 ? `${3 - got} more for 15s invincible` : got < 6 ? `${6 - got} more for 20s invincible` : `${9 - got} more for the sword`);
+    hud();
   }
   ui.start.addEventListener("click", openPick);
   ui.exit.addEventListener("click", exit);
@@ -448,17 +465,24 @@
     if (!posters) { posters = (window.PD_POSTERS || []).map(p => ({ src: p.src, t: p.t, im: null })); posterOff = Math.floor(Math.random() * Math.max(1, posters.length)); }
     return posters;
   }
-  function posterK(n) {
-    if (n % 2 !== 1) return null;
-    const doors = floorData(n).doors; let k = L0(n) + 13;
-    for (let tries = 0; tries < 10 && doors.some(d => Math.abs(d - k) < 3); tries++) k += 1;
-    return k;
+  /* one poster on every floor, plus a second one on floors 2, 5 and 8: 12 to grab before the monster on floor 10, so 9 (the sword) is always in reach */
+  const posterCache = new Map();
+  function posterKs(n) {
+    if (posterCache.has(n)) return posterCache.get(n);
+    const doors = floorData(n).doors, out = [];
+    for (const base of (n < 9 && n % 3 === 1) ? [9, 18] : [13]) {
+      let k = L0(n) + base;
+      for (let tries = 0; tries < 10 && doors.some(d => Math.abs(d - k) < 2); tries++) k += 1;
+      out.push(k);
+    }
+    posterCache.set(n, out); return out;
   }
-  function drawPoster(n) {
+  function drawPoster(n) { posterKs(n).forEach((k, j) => drawPosterAt(n, j, k)); }
+  function drawPosterAt(n, j, k) {
     const list = posterList(); if (!list.length) return;
-    const k = posterK(n); if (k == null) return;
+    if (playing && taken.has(n * 10 + j)) return;
     const [x, y, c] = P(k + .5, k, TR); if (c < .22) return;
-    const p = list[(Math.floor(n / 2) + posterOff) % list.length];
+    const p = list[(n * 2 + j + posterOff) % list.length];
     if (!p.im) { p.im = new Image(); p.im.crossOrigin = "anonymous"; p.im.decoding = "async"; p.im.src = p.src; }
     const ok = p.im.complete && p.im.naturalWidth > 0;
     const ar = ok ? Math.min(1.25, Math.max(.62, p.im.naturalWidth / p.im.naturalHeight)) : .72;
@@ -504,6 +528,35 @@
     ctx.beginPath(); ctx.arc(0, 0, MR, 0, 7); ctx.fillStyle = C.surface; ctx.fill();
     ctx.translate(-MCX, -MCY); ctx.fillStyle = C.ink; MONO.forEach(p => ctx.fill(p)); ctx.restore();
   }
+  /* the monster (floor 10 and up): a horned brute that paces the stair. Jump it, wait out a power-up, or cut it down with the sword */
+  function drawMonster(s, now, h) {
+    const [x, y, c] = P(s, Math.floor(s), rMid()); if (c < .05) return;
+    const u = SW * .17 * Math.max(.55, c), st = Math.sin(now * 7 + h.ph * 4), dir = Math.cos(Math.PI * (t * h.v / (h.b - h.a) + h.ph)) >= 0 ? 1 : -1;
+    ctx.save(); ctx.translate(x, y); ctx.scale(dir, 1);
+    ctx.fillStyle = C.ink;
+    ctx.fillRect(-u * 2.3, -u * 1.6 + Math.max(0, st) * u * .5, u * 1.5, u * 1.6); ctx.fillRect(u * .8, -u * 1.6 + Math.max(0, -st) * u * .5, u * 1.5, u * 1.6);
+    rr(ctx, -u * 3.4, -u * 9.2, u * 6.8, u * 7.8, u * 2.4); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-u * 2.6, -u * 8.6); ctx.lineTo(-u * 4.1, -u * 11.6); ctx.lineTo(-u * 1.2, -u * 9); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(u * 2.6, -u * 8.6); ctx.lineTo(u * 4.1, -u * 11.6); ctx.lineTo(u * 1.2, -u * 9); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = C.bg; rr(ctx, -u * 2.8, -u * 8.6, u * 5.6, u * 6.6, u * 1.9); ctx.fill();
+    ctx.fillStyle = C.ink; const blink = (now + h.ph) % 3 < .12;
+    ctx.fillRect(-u * .4, -u * 7, u * 1.3, blink ? u * .25 : u * 1.2); ctx.fillRect(u * 1.5, -u * 7, u * 1.1, blink ? u * .25 : u * 1.2);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = Math.max(1, u * .35); ctx.beginPath();
+    for (let i = 0; i <= 6; i++) { const mx = -u * 1.8 + i * u * .75, my = -u * 4.6 + (i % 2 ? u * .7 : 0); i ? ctx.lineTo(mx, my) : ctx.moveTo(mx, my); } ctx.stroke();
+    ctx.fillStyle = C.ink; const arm = st * u * .8;
+    rr(ctx, u * 3.1, -u * 6.6 + arm, u * 1.4, u * 3.6, u * .6); ctx.fill(); rr(ctx, -u * 4.5, -u * 6.6 - arm, u * 1.4, u * 3.6, u * .6); ctx.fill();
+    ctx.restore();
+  }
+  function drawSword(x, y, u, now) {
+    const sw = slashT > 0 ? (1 - slashT / .35) : 0, ang = (-.55 + sw * 2.4) * face;
+    ctx.save(); ctx.translate(x + face * u * 3, y - u * 7.2); ctx.rotate(ang);
+    ctx.fillStyle = C.accentInk; ctx.fillRect(-u * .9, -u * 1.05, u * 1.8, u * 2.1);
+    ctx.fillStyle = C.ink; ctx.fillRect(-u * .55, -u * 9.5, u * 1.1, u * 8.6);
+    ctx.beginPath(); ctx.moveTo(-u * .55, -u * 9.5); ctx.lineTo(0, -u * 10.8); ctx.lineTo(u * .55, -u * 9.5); ctx.closePath(); ctx.fill();
+    ctx.fillRect(-u * 1.9, -u * 1.25, u * 3.8, u * .7); ctx.fillRect(-u * .4, -u * .55, u * .8, u * 1.9);
+    ctx.restore();
+    if (slashT > 0) { ctx.strokeStyle = C.ink; ctx.globalAlpha = slashT / .35; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(x + face * u * 3, y - u * 7, u * 10, -Math.PI * .5 - .9 * face, -Math.PI * .5 + 1.3 * face, face < 0); ctx.stroke(); ctx.globalAlpha = 1; }
+  }
   function drawGhost(s, now, h) {
     const [x, y, c] = P(s, Math.floor(s), rMid()); if (c < .05) return;
     const r = SW * .27 * (.65 + .35 * c), bob = Math.sin(now * 4 + s) * r * .18, gy = y - r * 2.2 + bob;
@@ -529,9 +582,11 @@
     ctx.save();
     if (dead) { ctx.globalAlpha = Math.max(0, dead); ctx.translate(x, y - u * 4); ctx.rotate((1 - dead) * 3 * -face); ctx.translate(-x, -(y - u * 4)); y -= (1 - dead) * u * 10; }
     if (invul > 0 && !dead && Math.floor(now * 14) % 2) ctx.globalAlpha = .45;
+    if (power > 0 && !dead) ctx.globalAlpha = power < 2.5 && Math.floor(now * 8) % 2 ? .8 : .5;
     if (hide) ctx.globalAlpha *= .7;
     const leg = walk ? Math.sin(fr * Math.PI * 2) * u * 1.2 : 0;
     drawClimber(ctx, x, y, u, face, leg, look, dpr);
+    if (sword && playing && !hide) drawSword(x, y, u, now);
     ctx.restore();
     if (dead) { ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.globalAlpha = dead; ctx.beginPath(); ctx.arc(x, y - u * 6, (1 - dead) * SW, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
   }
@@ -607,6 +662,7 @@
         else if (h.t === "blade") drawBlade(h, st);
         else if (h.t === "ghost") drawGhost(st.s, now, h);
         else if (h.t === "boulder" && st.live) drawBoulder(st);
+        else if (h.t === "monster" && !(playing && slain.has(h))) drawMonster(st.s, now, h);
       }
     }
     drawPlayer(now);
@@ -633,15 +689,22 @@
       if (Math.abs(mv) > 1e-4) face = Math.sign(mv);
       sp = Math.max(.3, sp + mv); crankPos += mv;
       const step = Math.floor(sp); if (step !== lastStep) { if (step > lastStep) tone(900 + (step % F) * 12, .025, "square", .02); lastStep = step; }
-      invul = Math.max(0, invul - dt); jumpT = Math.max(0, jumpT - dt);
+      invul = Math.max(0, invul - dt); jumpT = Math.max(0, jumpT - dt); slashT = Math.max(0, slashT - dt);
+      if (power > 0) { power = Math.max(0, power - dt); if (!power) { banner("Power-up over", "Careful again"); tone(392, .12, "square", .04, -120); } }
+      { const pn = Math.floor(sp / F);
+        posterKs(pn).forEach((pk, j) => { if (!taken.has(pn * 10 + j) && airborne() && Math.abs(sp - (pk + .5)) < 1) collect(pn * 10 + j); }); }
       const n = Math.floor(sp / F);
       if (n > cp && sp - L0(n) > .5) {
         cp = n; if (cp + 1 > best) { best = cp + 1; try { localStorage.setItem("pd-ascent-best", best); } catch {} }
         const next = floorData(n), tip = next.doors.length ? "Boulders ahead — jump them or duck into doorways" : n === 1 ? "Ghosts: jump over them" : n === 2 ? "Blades: go when they swing away — jumping won't help" : "";
-        banner(`Floor ${String(cp + 1).padStart(2, "0")}`, tip); tone(659, .1); setTimeout(() => tone(988, .16), 100);
+        const tip2 = n === 9 ? (sword ? "A monster! Walk into it with your sword" : "A monster! Jump it, or get 9 posters for the sword") : tip;
+        banner(`Floor ${String(cp + 1).padStart(2, "0")}`, tip2); tone(659, .1); setTimeout(() => tone(988, .16), 100);
       }
       // collisions
-      if (!invul) {
+      if (sword) { const fNow = Math.floor(sp / F);
+        for (let m = Math.max(0, fNow - 1); m <= fNow + 1; m++) for (const h of floorData(m).hz)
+          if (h.t === "monster" && !slain.has(h) && Math.abs(sp - state(h, t).s) < 1.1) { slain.add(h); slashT = .35; shake = .6; SFX.slay(); banner("Monster down!", "Keep climbing"); try { navigator.vibrate && navigator.vibrate(25); } catch {} } }
+      if (!invul && !power) {
         const fNow = Math.floor(sp / F);
         for (let m = Math.max(0, fNow - 1); m <= fNow + 1 && !dead; m++) for (const h of floorData(m).hz) {
           const st = state(h, t);
@@ -649,6 +712,7 @@
           else if (h.t === "blade" && st.hot && Math.abs(sp - (h.k + .5)) < .6) die("blade");
           else if (h.t === "ghost" && !airborne() && Math.abs(sp - st.s) < .48) die("ghost");
           else if (h.t === "boulder" && st.live && Math.abs(sp - st.s) < .62 && !inDoor(sp) && !airborne()) die("boulder");
+          else if (h.t === "monster" && !slain.has(h) && Math.abs(sp - st.s) < .7 && !(airborne() && air() > .55)) die("monster");
           if (dead) break;
         }
       }
@@ -680,5 +744,5 @@
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
   setActive(screenEl.classList.contains("sec-play"));
   hud();
-  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get floor() { return cp + 1; } };
+  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get posters() { return got; }, set posters(v) { got = v; }, get power() { return power; }, get sword() { return sword; }, get floor() { return cp + 1; } };
 })();

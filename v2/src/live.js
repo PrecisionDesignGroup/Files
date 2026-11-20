@@ -257,7 +257,7 @@ function openHowTo(from){
 window.pdOpenHowTo=openHowTo;
 document.addEventListener("click",x=>{const b=x.target.closest&&x.target.closest("#howtoBtn");if(b){x.preventDefault();openHowTo("studio")}},true);
 if(/^#help$/.test(location.hash)||/[?&]howto=1/.test(location.search))setTimeout(()=>openHowTo("link"),1200);
-else if(!lsGet(HKEY)&&!/[?&]nyp=1/.test(location.search))setTimeout(()=>{if(!fp)openHowTo("auto")},1600);
+/* the how-to no longer pops up on its own: it opens from the Studio page link (or #help) */
 
 /* /shop?nyp=1 (the old share link) opens the offer */
 if(/[?&]nyp=1/.test(location.search))setTimeout(()=>{try{if(screenEl&&!screenEl.classList.contains("sec-shop"))document.querySelector('.rail-btn[data-sec="shop"]').click()}catch(_){}setTimeout(openNYP,900)},1200);
