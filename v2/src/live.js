@@ -202,7 +202,7 @@ const pjLink=document.getElementById("pjLink");
 window.pdOnProject=function(p,sec){
   cur=p;curSec=sec;closePanel();
   if(!LIVE||!p)return;
-  const proj=sec==="work"||sec==="branding";
+  const proj=sec==="work"||sec==="branding"||sec==="collections"||sec==="albumart";
   if(pjLink&&proj){pjLink.textContent="Share project ↗";pjLink.href=`https://precisiondesign.club/#p/${p.id}`}
   setTimeout(()=>{try{if(proj)history.replaceState(null,"",location.pathname+location.search+"#p/"+p.id)}catch(_){}},0);
   clearTimeout(vt);if(proj)vt=setTimeout(()=>{if(lastViewed===p.id)return;lastViewed=p.id;ev("view_project",{project_id:String(p.id),project_title:p.t,project_client:p.c||""})},1200);
@@ -217,7 +217,7 @@ if(pjLink)pjLink.addEventListener("click",x=>{
     ev("start_project_click",{from:"shop",item:p.id});
     openContact(gift?p.t:"Custom graphic",gift?`I'd like to buy the ${p.t}.`:`I saw "${p.t}" in the shop and want a custom graphic like it.`);return;
   }
-  if(LIVE&&(curSec==="work"||curSec==="branding")){
+  if(LIVE&&(curSec==="work"||curSec==="branding"||curSec==="collections"||curSec==="albumart")){
     x.preventDefault();const url=`https://precisiondesign.club/#p/${p.id}`;
     (async()=>{try{if(navigator.share&&matchMedia("(pointer:coarse)").matches){await navigator.share({title:p.t+" · Precision Design",url});return}}catch(_){return}
       try{await navigator.clipboard.writeText(url);flash("Link copied")}catch(_){flash(url)}})();
@@ -243,7 +243,7 @@ function openHowTo(from){
   const row=(ic,t,d)=>`<li><span class="ht-ic" aria-hidden="true">${ic}</span><div><b>${t}</b><p>${d}</p></div></li>`;
   const p=openPanel(`<b>Guide</b> · New here?`,`<h3 class="pdfp-h">How to use the site</h3>
   <ol class="ht">
-  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Graphics, Branding, Apparel, Collections, Services, Process, Studio, Play and Shop.`)}
+  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Graphics, Branding, Apparel, Collections, Album Art, Services, Process, Studio, Play and Shop.`)}
   ${row('<span class="ht-jog"></span>',"Small dial: flip through",`${touch?"Drag":"Scroll or drag"} the small dial at the bottom to go to the next project, service or shop item.`)}
   ${row(icon("#gridBtn svg")||'<span class="ht-grid"></span>',"See everything","The grid button shows every project at once. Tap one to open it. The SZ slider makes the art bigger or smaller.")}
   ${row(icon("#sideBtn svg"),"Switch sides","Moves the dials to the left or right, whichever is easier for your hand.")}
