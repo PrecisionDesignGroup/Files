@@ -838,3 +838,10 @@ header .cw-wrap .cw-label { max-width: 72vw; }
     -webkit-mask: linear-gradient(transparent 52px, #000 80px, #000 calc(100% - 76px), transparent calc(100% - 50px)); mask: linear-gradient(transparent 52px, #000 80px, #000 calc(100% - 76px), transparent calc(100% - 50px)); }
   .screen.left.gridon .pgrid { padding: 76px 20px 66px calc(var(--rail-w) + 40px); }
 }
+/* Apparel / Collections placeholders */
+.panel.soon { display: flex; flex-direction: column; gap: 8px; padding: 0 0 6px; }
+.panel.soon[hidden] { display: none; }
+.soon-k { margin: 0; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; opacity: .6; }
+.soon-t { margin: 0; font-size: clamp(18px, 2.2vw, 24px); }
+.soon-a { color: inherit; font-size: 14px; opacity: .75; text-underline-offset: 3px; }
+.soon-a:hover { opacity: 1; }
