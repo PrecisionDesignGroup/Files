@@ -242,7 +242,7 @@ function openHowTo(from){
   const row=(ic,t,d)=>`<li><span class="ht-ic" aria-hidden="true">${ic}</span><div><b>${t}</b><p>${d}</p></div></li>`;
   const p=openPanel(`<b>Guide</b> · New here?`,`<h3 class="pdfp-h">How to use the site</h3>
   <ol class="ht">
-  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Work, Featured, Services, Process, Studio and Shop.`)}
+  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Work, Featured, Services, Process, Studio, Play and Shop.`)}
   ${row('<span class="ht-jog"></span>',"Small dial: flip through",`${touch?"Drag":"Scroll or drag"} the small dial at the bottom to go to the next project, service or shop item.`)}
   ${row(icon("#gridBtn svg")||'<span class="ht-grid"></span>',"See everything","The grid button shows every project at once. Tap one to open it. The SZ slider makes the art bigger or smaller.")}
   ${row(icon("#sideBtn svg"),"Switch sides","Moves the dials to the left or right, whichever is easier for your hand.")}

@@ -666,6 +666,66 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .st-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 64px; overflow: visible; }
   .st-grid img { max-height: 26px; }
 }
+
+/* ---------- play: Precision Ascent ---------- */
+.screen.sec-play .stage { grid-template-rows: auto 0 minmax(0, 1fr); }
+.screen.sec-play #panels, .screen.sec-play [data-panel="play"] { min-height: 0; height: 100%; }
+.g { position: relative; height: 100%; min-height: 0; color: var(--ink); }
+.g-stage { position: absolute; inset: 0 0 46px; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; touch-action: none; background: var(--bg); }
+.g-stage canvas { display: block; }
+.g-title { position: absolute; left: 0; bottom: 64px; z-index: 2; display: grid; gap: 12px; width: min(400px, 100%); padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; animation: stUp .5s var(--ease-out) backwards; }
+.g-title[hidden] { display: none; }
+.g-head { margin: 0; display: flex; flex-direction: column; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .95; font-size: clamp(1.8rem, 3.2vw, 2.9rem); letter-spacing: .005em; }
+.g-head span { opacity: .16; } .g-head span.on { opacity: 1; }
+.g-quick { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.g-quick .q { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.g-quick .q b { color: var(--ink); font-weight: 600; }
+.g-go { flex: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.g-go:active { transform: scale(.96); }
+.g-lede { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink); }
+.g-keys { margin: 0; padding: 0; list-style: none; display: grid; }
+.g-keys li { display: grid; grid-template-columns: 56px 1fr; gap: 10px; padding: 6px 0; border-top: 1px solid var(--line); font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.g-keys b { font-weight: 500; color: var(--ink-soft); letter-spacing: .12em; font-size: 10px; }
+.g-hud { position: absolute; left: 0; right: 0; bottom: 0; height: 34px; display: flex; align-items: center; gap: 22px; padding: 0 2px; border-top: 1px solid var(--line); font-family: var(--font-mono); text-transform: uppercase; }
+.g-hud span { display: inline-flex; align-items: baseline; gap: 8px; }
+.g-hud i { font-style: normal; font-size: 10px; letter-spacing: .12em; color: var(--ink-soft); }
+.g-hud b { font-size: 13px; font-weight: 500; letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+.g-exit { margin-left: auto; height: 26px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; visibility: hidden; }
+.screen.gaming .g-exit { visibility: visible; }
+.g-banner { position: absolute; left: 50%; top: 14%; z-index: 3; transform: translate(-50%, 8px); display: grid; justify-items: center; gap: 6px; pointer-events: none; opacity: 0; transition: opacity .3s var(--ease-out), transform .45s var(--ease-spring); text-align: center; }
+.g-banner.show { opacity: 1; transform: translate(-50%, 0); }
+.g-banner b { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 5vw, 3.6rem); line-height: .9; color: var(--ink); background: var(--bg); padding: 2px 10px; }
+.g-banner span { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); background: var(--accent); padding: 4px 9px; border-radius: 999px; }
+.g-banner span:empty { display: none; }
+.g-jump { position: absolute; left: 14px; bottom: 14px; z-index: 2; width: 64px; height: 64px; border-radius: 50%; border: 1px solid var(--ink); background: var(--accent); color: var(--accent-ink); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 1px; cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none; box-shadow: 0 3px 0 var(--ink); transition: transform .08s, box-shadow .08s; font-family: var(--font-mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+.g-jump svg { width: 20px; height: 20px; }
+.g-jump.down { transform: translateY(3px); box-shadow: 0 0 0 var(--ink); }
+.screen.gaming .g-jump { display: flex; }
+@media (max-width: 720px) { .g-jump { width: 58px; height: 58px; left: 10px; bottom: 10px; } .g-keys li:nth-child(4) { display: none; } }
+/* the section dial becomes the crank while a run is live */
+.crank { position: absolute; inset: 0; z-index: 8; display: none; border-radius: inherit; background: var(--frame); color: var(--frame-fg); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; outline: none; }
+.screen.gaming .crank { display: block; animation: crankIn .35s var(--ease-out); }
+@keyframes crankIn { from { opacity: 0; } }
+.crank.dragging { cursor: grabbing; }
+.screen.gaming .rail-label { display: none; }
+.crank-ticks { position: absolute; inset: 0; -webkit-mask: linear-gradient(transparent 14%, #000 34%, #000 66%, transparent 86%); mask: linear-gradient(transparent 14%, #000 34%, #000 66%, transparent 86%); }
+.crank-ticks i { position: absolute; left: 50%; top: 50%; width: 24px; height: 2px; margin: -1px 0 0 -12px; border-radius: 2px; background: var(--frame-line); }
+.crank-ticks i.major { width: 32px; margin-left: -16px; background: #6a6c72; }
+.crank-notch { position: absolute; left: 0; top: 50%; width: 3px; height: 18px; margin-top: -9px; border-radius: 0 3px 3px 0; background: var(--accent); }
+.crank-dir { position: absolute; left: 6px; right: 6px; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 8px 0; border-radius: 16px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: var(--frame-mute); transition: background .15s, color .15s; pointer-events: none; }
+.crank-dir svg { width: 12px; height: 12px; }
+.crank-dir.up { top: 10px; } .crank-dir.down { bottom: 10px; }
+.crank.hold-up .crank-dir.up, .crank.hold-down .crank-dir.down { background: var(--accent); color: var(--accent-ink); }
+.screen.left .crank-dir { transform: scaleX(-1); }
+@media (max-width: 720px) {
+  .g-stage { inset: 0 0 40px; }
+  .g-title { bottom: 52px; padding: 14px; gap: 10px; }
+  
+  .g-hud { gap: 12px; height: 30px; }
+  .g-hud span:nth-child(4) { display: none; }
+  .g-hud b { font-size: 12px; }
+  .crank-dir { font-size: 8px; left: 4px; right: 4px; }
+}
 </style>
 
 <div class="frame">
@@ -718,6 +778,23 @@ header .cw-wrap .cw-label { max-width: 72vw; }
           </ol>
         </div>
 
+        <!-- PLAY -->
+        <div class="panel" data-panel="play" hidden>
+          <div class="g">
+            <div class="g-stage"><canvas id="gCanvas" aria-label="The Ascent: a jester climbs a spiral tower"></canvas><button class="g-jump" id="gJump" type="button" aria-label="Jump (Space)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6M6.5 11.5 12 6l5.5 5.5"/></svg><span>Jump</span></button></div>
+            <div class="g-title" id="gTitle">
+              <h2 class="g-head"><span>Precision</span><span class="on">Ascent</span></h2>
+              <div class="g-quick"><span class="q"><b>Best floor <span id="gBest2">00</span></b> · Endless tower</span><button class="g-go" id="gStart" type="button">Start climbing →</button></div>
+              <p class="g-lede">Your dial turns into a crank. Turn it up to climb, back it off to dodge. Every floor saves your spot.</p>
+              <ul class="g-keys"><li><b>Dial</b>Drag or scroll</li><li><b>Hold</b>Top climbs · bottom backs off</li><li><b>Jump</b>Button or space · clears spikes, ghosts &amp; boulders</li><li><b>Keys</b>↑ ↓ · Esc to quit</li></ul>
+            </div>
+            <div class="g-hud" aria-live="polite">
+              <span><i>Floor</i><b id="gFloor">01</b></span><span><i>Height</i><b id="gH">000</b></span><span><i>Falls</i><b id="gFalls">00</b></span><span><i>Best</i><b id="gBest">00</b></span>
+              <button class="g-exit" id="gExit" type="button">Quit</button>
+            </div>
+            <div class="g-banner" id="gBanner" aria-live="assertive"></div>
+          </div>
+        </div>
         <!-- STUDIO -->
         <div class="panel" data-panel="studio" hidden>
           <div class="st">
@@ -816,6 +893,9 @@ header .cw-wrap .cw-label { max-width: 72vw; }
           <button class="rail-btn" data-sec="shop" aria-label="Shop" tabindex="-1">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z"/><path d="M9 10V7a3 3 0 0 1 6 0v3"/></svg>
           </button>
+          <button class="rail-btn" data-sec="play" aria-label="Play" tabindex="-1">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20h4v-4h4v-4h4V8"/><path d="M15 4l4 4M19 4v4h-4"/><circle cx="6" cy="9" r="1.6"/><path d="M6 11v4"/></svg>
+          </button>
           <div id="knurls" aria-hidden="true"></div>
         </div>
         <div class="rail-shade" aria-hidden="true"></div>
@@ -846,6 +926,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
     services: { name: "Services", head: "What we make",  pal: { light: ["#f2b59c", "#f3eee6", "#c7b5ea", "#e7d79c"], dark: ["#7a3d2c", "#1f1b20", "#4a3a78", "#5c5226"] } },
     process:  { name: "Process",  head: "How it runs",   pal: { light: ["#93d0c2", "#eef0e8", "#9db4e8", "#d9d6ae"], dark: ["#1f5a50", "#171d1f", "#2f4683", "#4d4b2a"] } },
     studio:   { name: "Studio",   head: "The studio",   pal: { light: ["#dba2c6", "#f0e9ea", "#8f9de2", "#ebc6a3"], dark: ["#6e2f57", "#1e1a20", "#323f86", "#6a4a2c"] } },
+    play:     { name: "Play",     head: "The ascent",   pal: { light: ["#f2c649", "#eceae4", "#a6b8e6", "#ddd0a9"], dark: ["#6b5420", "#1c1b20", "#34477e", "#5e4e2b"] } },
     shop:     { name: "Shop",     head: "Shop",    pal: { light: ["#b7c98c", "#eceae0", "#93b2d0", "#dcc38f"], dark: ["#44562a", "#1a1c19", "#2c4a68", "#5f4b25"] } },
   };
   const SHOPV = [{"id":"nyp","t":"Name Your Price","top":"You decide","d":"Limited time \u00b7 2 spots left \u00b7 ends Mon Nov 23, 6 PM ET","link":"https://precisiondesign.club/shop?nyp=1","lt":"Make an offer","imgs":["art/shop-nyp.jpg"],"cw":[["#101010",1]]},{"id":"g1","t":"Motorcross","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g1.jpg"],"cw":[["#060707",1]]},{"id":"g2","t":"The 3D One","top":"$100 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g2.jpg"],"cw":[["#038400",1]]},{"id":"g3","t":"Manhattan","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g3.jpg"],"cw":[["#b64d00",1]]},{"id":"g4","t":"Broken Clock","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g4.jpg"],"cw":[["#90e4a0",0]]},{"id":"g5","t":"PNMotors","top":"$185 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g5.jpg"],"cw":[["#c5c4c0",0]]},{"id":"g6","t":"Precision.fm","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 text edits included","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g6.jpg"],"cw":[["#a4d7c4",0]]},{"id":"g7","t":"One Persons Trash","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g7.jpg"],"cw":[["#e98223",0]]},{"id":"g8","t":"Million Man March","top":"$165 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g8.jpg"],"cw":[["#b8b8b8",0]]},{"id":"g9","t":"Peace","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g9.jpg"],"cw":[["#b9b9b9",0]]},{"id":"g10","t":"NYC","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["art/shop-g10.jpg"],"cw":[["#e3e3e3",0]]},{"id":"gc1","t":"$150 Gift Card","top":"$150","d":"Digital gift card \u00b7 +$100 bonus store credit ($250 to spend)","link":"https://precisiondesign.club/shop","lt":"View in shop","imgs":["art/shop-gc1.jpg"],"cw":[["#f26422",1]]},{"id":"gc2","t":"$325 Gift Card","top":"$325","d":"Digital gift card \u00b7 +$200 bonus store credit ($525 to spend)","link":"https://precisiondesign.club/shop","lt":"View in shop","imgs":["art/shop-gc2.jpg"],"cw":[["#9aca3c",0]]},{"id":"gc3","t":"$500 Gift Card","top":"$500","d":"Digital gift card \u00b7 +$300 bonus store credit ($800 to spend)","link":"https://precisiondesign.club/shop","lt":"View in shop","imgs":["art/shop-gc3.jpg"],"cw":[["#b14285",1]]}];
