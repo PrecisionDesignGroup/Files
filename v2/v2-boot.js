@@ -511,7 +511,10 @@ try{
   document.addEventListener("keydown", e => { if (e.key === "Escape" && gridOn) setGrid(false); });
 
   /* boot: spin the dial in to the starting section */
-  { const m = /^#p\/(.+)$/.exec(location.hash); if (m) { const id = decodeURIComponent(m[1]), k = PROJECTS.findIndex(p => p.id === id); if (k >= 0) { VIEW.work.i = k; pos = KEYS.indexOf("work"); target = pos; } } }
+  /* a different project first on each visit and reload, unless a shared #p/<id> link names one */
+  VIEW.work.i = Math.floor(Math.random() * PROJECTS.length);
+  { let rl = false; try { rl = (performance.getEntriesByType("navigation")[0] || {}).type === "reload"; } catch (_) {}
+    const m = !rl && /^#p\/(.+)$/.exec(location.hash); if (m) { const id = decodeURIComponent(m[1]), k = PROJECTS.findIndex(p => p.id === id); if (k >= 0) { VIEW.work.i = k; pos = KEYS.indexOf("work"); target = pos; } } }
   if (/[?&]nyp=1/.test(location.search)) { pos = KEYS.indexOf("shop"); target = pos; VIEW.shop.i = 0; }
   readR();
   const start = pos;
