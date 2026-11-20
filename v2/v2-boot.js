@@ -5,7 +5,7 @@ var B=(document.currentScript&&document.currentScript.src||"").replace(/v2-boot\
 for(var i=0,l=document.querySelectorAll('link[rel="stylesheet"]');i<l.length;i++)if(/website-files\.com|webflow\./.test(l[i].href))l[i].disabled=true;
 var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute("content","width=device-width, initial-scale=1, viewport-fit=cover");
 document.documentElement.classList.add("pd2");
-var BODY="<div class=\"frame\">\n  <main class=\"screen\" id=\"screen\">\n    <div class=\"art-layer\" id=\"artLayer\" aria-hidden=\"true\"><img id=\"artA\" alt=\"\"><img id=\"artB\" alt=\"\" class=\"out\"></div>\n    <section class=\"stage\" id=\"stage\">\n      <header class=\"top\">\n        <div class=\"logo\" aria-label=\"Precision Design Group\">\n          <svg class=\"logo-word logo-mark\" viewBox=\"24 54 96 96\" fill=\"currentColor\" role=\"img\" aria-label=\"Precision Design Group\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 71.2 61.1C49.8 61.1 32.3 78.6 32.3 100C32.3 121.5 49.8 138.9 71.2 138.9C92.7 138.9 110.1 121.5 110.1 100C110.1 78.6 92.7 61.1 71.2 61.1M71.2 144.5C46.7 144.5 26.7 124.6 26.7 100C26.7 75.5 46.7 55.5 71.2 55.5C95.8 55.5 115.7 75.5 115.7 100C115.7 124.6 95.8 144.5 71.2 144.5\"/><path d=\"M 71.2 76.8C58.4 76.8 48 87.2 48 100C48 112.8 58.4 123.2 71.2 123.2C84 123.2 94.4 112.8 94.4 100C94.4 87.2 84 76.8 71.2 76.8M71.2 128.8C55.3 128.8 42.4 115.9 42.4 100C42.4 84.1 55.3 71.2 71.2 71.2C87.1 71.2 100 84.1 100 100C100 115.9 87.1 128.8 71.2 128.8\"/><path d=\"M 71.2 92.5C67.1 92.5 63.7 95.9 63.7 100C63.7 104.1 67.1 107.5 71.2 107.5C75.3 107.5 78.7 104.1 78.7 100C78.7 95.9 75.3 92.5 71.2 92.5M71.2 113.1C64 113.1 58.1 107.2 58.1 100C58.1 92.8 64 86.9 71.2 86.9C78.4 86.9 84.3 92.8 84.3 100C84.3 107.2 78.4 113.1 71.2 113.1\"/></svg>\n        </div>\n        <div class=\"meta\"><b id=\"metaIdx\">01 / 05</b><span id=\"metaName\">Work</span></div>\n        <p class=\"meta-desc\" id=\"metaDesc\" hidden></p>\n        <div class=\"cw-wrap\" id=\"cwWrap\"><div class=\"cw glass\" id=\"cw\" role=\"tablist\" aria-label=\"Colorways\"><span class=\"cw-thumb\" id=\"cwThumb\"></span></div><span class=\"cw-label\" id=\"cwLabel\"></span></div>\n      </header>\n\n      <div class=\"headline-wrap\" id=\"headWrap\">\n        <h1 class=\"headline\" id=\"headline\">Selected work<span class=\"dot\">.</span></h1>\n        <div class=\"marks\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i></div>\n        <div class=\"pgrid\" id=\"pgrid\" aria-label=\"All projects\"><div class=\"pgrid-in\" id=\"pgridIn\"></div></div>\n      </div>\n\n      <div id=\"panels\">\n        <!-- WORK -->\n        <div class=\"panel\" data-panel=\"work\">\n          <div class=\"sz-row\"><span aria-hidden=\"true\">SZ</span><div class=\"sz\" id=\"sz\" role=\"slider\" tabindex=\"0\" aria-label=\"Art size\" aria-valuemin=\"1\" aria-valuemax=\"5\" aria-valuenow=\"1\"><span class=\"sz-knob\" id=\"szKnob\"></span><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 1\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 2\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 3\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 4\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Fill\"><i></i></button></div><button type=\"button\" class=\"grid-btn\" id=\"gridBtn\" aria-pressed=\"false\" aria-label=\"Show all projects as a grid\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"13.5\" y=\"3.5\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3.5\" y=\"13.5\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"13.5\" y=\"13.5\" width=\"7\" height=\"7\" rx=\"1.5\"/></svg><span class=\"g-open\">All projects</span><span class=\"g-close\">Back to project</span></button></div>\n          <article class=\"proj\" id=\"proj\">\n            <div class=\"proj-top\"><span><span id=\"pjIdx\">01 / 73</span><span class=\"feat-star\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 2.8l2.7 6 6.5.6-4.9 4.3 1.5 6.4L12 16.8 6.2 20.1l1.5-6.4L2.8 9.4l6.5-.6z\"/></svg>Featured</span></span><span id=\"pjYear\"></span></div>\n            <h2 id=\"pjTitle\">Project</h2>\n            <p id=\"pjMeta\"></p>\n            <div class=\"pj-press\" id=\"pjPress\" hidden><span class=\"pp-lbl\" id=\"ppLbl\">Seen in</span><div class=\"pp-row\" id=\"ppRow\"></div></div>\n            <div class=\"proj-foot\"><a id=\"pjLink\" href=\"https://precisiondesign.club\" target=\"_blank\" rel=\"noopener\">View on precisiondesign.club ↗</a><small>Arrows: next item</small></div>\n          </article>\n        </div>\n\n\n        <!-- PROCESS -->\n        <div class=\"panel\" data-panel=\"process\" hidden>\n          <ol class=\"tl\">\n            <li class=\"tl-phase\"><span>Getting started</span></li>\n            <li class=\"tl-step start\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">01</span><h3>Inquire</h3></div><p>Pick a service and send the Studio Inquiry form with your references.</p></div></li>\n            <li class=\"tl-step start\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">02</span><h3>Deposit</h3></div><p>Pay the deposit on Stripe. It also counts as your consultation fee.</p></div></li>\n            <li class=\"tl-step start\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">03</span><h3>Consult</h3></div><p>We talk it through. If you move forward, the deposit goes toward your project.</p></div></li>\n            <li class=\"tl-phase\"><span>Design · 3 draft rounds</span></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">04</span><h3>Mood Board</h3></div><p>You share your references (like you already have), and we add our own so we are fully aligned on direction before any design begins.</p><span class=\"tl-tag\">Direction set</span></div></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">05</span><h3>Rough Draft</h3><span class=\"tl-meter\" aria-label=\"Draft round 1 of 3\"><i class=\"on\"></i><i></i><i></i></span></div><p>The early construction of your logo. If the concept is not feeling right, this is the stage to switch directions.</p><span class=\"tl-tag\">Last chance to switch</span></div></li>\n            <li class=\"tl-lock\" aria-label=\"Concept locked\"><span class=\"tl-dot\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/></svg></span><span>Concept locked</span></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">06</span><h3>Concept Development</h3><span class=\"tl-meter\" aria-label=\"Draft round 2 of 3\"><i class=\"on\"></i><i class=\"on\"></i><i></i></span></div><p>The concept becomes more defined. At this point we cannot switch to a new concept, but you will have essentially unlimited revisions within the current one.</p><span class=\"tl-tag\">Unlimited revisions</span></div></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">07</span><h3>Refinement</h3><span class=\"tl-meter\" aria-label=\"Draft round 3 of 3\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span></div><p>We dial in the layout, colors, and composition.</p></div></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">08</span><h3>Finalization</h3></div><p>Everything is prepared and exported so it is print-ready and ready to send.</p><span class=\"tl-tag\">Print-ready files</span></div></li>\n          </ol>\n        </div>\n\n        <!-- STUDIO -->\n        <div class=\"panel\" data-panel=\"studio\" hidden>\n          <div class=\"st\">\n            <div class=\"st-l\">\n              <div class=\"st-d\">\n                <div class=\"st-quick\"><span class=\"q\"><b>Independent studio</b> · Fashion + lifestyle</span><a class=\"st-go\" href=\"mailto:info@precisiondesign.club?subject=Start%20Your%20Project\">Start a project →</a></div>\n                <p class=\"st-lede\">We build brands for fashion and lifestyle labels, from the first logo to the finished collection.</p>\n                <div class=\"st-chips\" aria-label=\"What we do\"><span>Brand identity</span><span>Apparel graphics</span><span>Cut &amp; sew</span><span>Graphic capsules</span><span>Packaging</span><span>Art direction</span><span>Collection design</span></div>\n                <dl class=\"st-spec\">\n                  <div><dt>Led by</dt><dd>Jakobi McLemore<small>Formerly senior graphic designer, Warner Music Group &amp; Sony Music</small></dd></div>\n                  <div><dt>Clients</dt><dd>40+ brands &amp; artists</dd></div>\n                  <div><dt>New here?</dt><dd><button type=\"button\" class=\"st-how\" id=\"howtoBtn\">See how to use the site →</button></dd></div>\n                </dl>\n              </div>\n            </div>\n            <div class=\"st-r\">\n              <div class=\"st-cap\"><span>Worked with</span><span>40 clients</span></div>\n              <ol class=\"st-grid\" aria-label=\"Clients we have worked with\">\n                <li><span>01</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/jfg.png\" alt=\"JFG\" width=\"120\" height=\"120\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>02</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/dreamville.png\" alt=\"Dreamville\" width=\"273\" height=\"96\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>03</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/trap-house.png\" alt=\"Trap House\" width=\"160\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>04</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/burna-boy.png\" alt=\"Burna Boy\" width=\"116\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>05</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/holiday.png\" alt=\"Holiday\" width=\"271\" height=\"70\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>06</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/matte.png\" alt=\"Matte\" width=\"197\" height=\"113\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>07</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/tuter.png\" alt=\"Tuter\" width=\"180\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>08</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/persona.png\" alt=\"Persona\" width=\"237\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>09</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/333-half-evil.png\" alt=\"333 Half-Evil\" width=\"219\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>10</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/7-eleven.png\" alt=\"7-Eleven\" width=\"271\" height=\"60\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>11</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/xlarge.png\" alt=\"XLARGE\" width=\"264\" height=\"62\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>12</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/portrait.png\" alt=\"Portrait\" width=\"97\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>13</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/cardi-b.png\" alt=\"Cardi B\" width=\"310\" height=\"53\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>14</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/monica.png\" alt=\"Monica\" width=\"320\" height=\"115\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>15</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/zumiez.png\" alt=\"Zumiez\" width=\"268\" height=\"65\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>16</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/skechers.png\" alt=\"Skechers\" width=\"266\" height=\"37\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>17</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/thats-a-awful-lot-of-cou.png\" alt=\"That&#x27;s a Awful Lot of Cough Syrup\" width=\"102\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>18</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/c4.png\" alt=\"C4\" width=\"191\" height=\"75\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>19</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/pythia.png\" alt=\"Pythia\" width=\"230\" height=\"55\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>20</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/psychworld.png\" alt=\"Psychworld\" width=\"268\" height=\"70\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>21</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/ice-kream.png\" alt=\"Ice Kream\" width=\"309\" height=\"94\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>22</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/carrots.png\" alt=\"Carrots\" width=\"274\" height=\"74\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>23</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/posture.png\" alt=\"Posture\" width=\"251\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>24</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/nrx.png\" alt=\"NRX\" width=\"222\" height=\"57\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>25</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/hip-hop-50.png\" alt=\"Hip Hop 50\" width=\"117\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>26</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/stomp-down.png\" alt=\"Stomp Down\" width=\"271\" height=\"120\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>27</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/roc-nation.png\" alt=\"Roc Nation\" width=\"270\" height=\"56\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>28</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/coachella.png\" alt=\"Coachella\" width=\"270\" height=\"51\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>29</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/heavens.png\" alt=\"Heavens\" width=\"269\" height=\"70\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>30</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/new-balance.png\" alt=\"New Balance\" width=\"270\" height=\"128\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>31</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/rally-golf-club.png\" alt=\"Rally Golf Club\" width=\"143\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>32</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/brkfst.png\" alt=\"BrkFst\" width=\"196\" height=\"137\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>33</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/manifest.png\" alt=\"Manifest\" width=\"277\" height=\"64\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>34</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/trill-burgers.png\" alt=\"Trill Burgers\" width=\"252\" height=\"130\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>35</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/frederick-scott.png\" alt=\"Frederick Scott\" width=\"294\" height=\"33\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>36</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/pooh-shiesty.png\" alt=\"Pooh Shiesty\" width=\"151\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>37</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/sprite.png\" alt=\"Sprite\" width=\"278\" height=\"113\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>38</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/sony-music.png\" alt=\"Sony Music\" width=\"267\" height=\"33\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>39</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/warner-music-group.png\" alt=\"Warner Music Group\" width=\"269\" height=\"120\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>40</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/felt.png\" alt=\"Felt\" width=\"266\" height=\"135\" loading=\"lazy\" decoding=\"async\"></li>\n              </ol>\n            </div>\n          </div>\n        </div>\n\n      </div>\n    </section>\n\n    <aside class=\"side\" aria-label=\"Site navigation\">\n      <div class=\"side-top\">\n      <button class=\"round sm\" id=\"sideBtn\" aria-label=\"Move the dials to the other side\" aria-pressed=\"false\">\n        <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 7H20M16 3l4 4-4 4\"/><path d=\"M16 17H4M8 13l-4 4 4 4\"/></svg>\n      </button>\n      <button class=\"round sm\" id=\"themeBtn\" aria-label=\"Switch to light mode\" aria-pressed=\"false\">\n        <svg class=\"ic-sun\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4\"/></svg>\n        <svg class=\"ic-moon\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z\"/></svg>\n      </button>\n      </div>\n\n      <nav class=\"rail\" id=\"rail\" tabindex=\"0\" aria-label=\"Section dial. Drag, scroll or press the up and down arrow keys to turn it.\">\n        <div class=\"wheel\">\n          <div class=\"rail-ind\" id=\"railInd\" aria-hidden=\"true\"><span></span></div>\n          <button class=\"rail-btn\" data-sec=\"work\" aria-label=\"Work\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"13\" y=\"13\" width=\"7\" height=\"7\" rx=\"2\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"featured\" aria-label=\"Featured\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3.2l2.6 5.6 6.1.7-4.5 4.2 1.2 6.1L12 16.8l-5.4 3 1.2-6.1-4.5-4.2 6.1-.7z\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"services\" aria-label=\"Services\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"process\" aria-label=\"Process\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 18h5v-5h5V8h6\"/><circle cx=\"4\" cy=\"18\" r=\"1.4\" fill=\"currentColor\"/><path d=\"M17 5l3 3-3 3\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"studio\" aria-label=\"Studio\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\" fill=\"currentColor\"/><path d=\"M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4\" stroke-linecap=\"round\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"shop\" aria-label=\"Shop\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z\"/><path d=\"M9 10V7a3 3 0 0 1 6 0v3\"/></svg>\n          </button>\n          <div id=\"knurls\" aria-hidden=\"true\"></div>\n        </div>\n        <div class=\"rail-shade\" aria-hidden=\"true\"></div>\n        <span class=\"notch\" aria-hidden=\"true\"></span>\n        <span class=\"rail-label\" id=\"railLabel\" aria-hidden=\"true\">Work</span>\n      </nav>\n\n      <p class=\"jog-msg\" id=\"jogMsg\" aria-hidden=\"true\">Scroll to cycle projects</p>\n      <div class=\"jog\" id=\"jog\" role=\"slider\" tabindex=\"0\" aria-label=\"Item dial. Drag, scroll or press the up and down arrow keys to turn it.\" aria-valuemin=\"1\">\n        <div class=\"jog-ticks\" id=\"jogTicks\" aria-hidden=\"true\"></div>\n        <span class=\"jog-notch\" aria-hidden=\"true\"></span>\n        <span class=\"jog-num\" id=\"jogNum\" aria-hidden=\"true\">01</span>\n        <button class=\"jog-hit up\" id=\"upBtn\" tabindex=\"-1\" aria-label=\"Previous item\"></button>\n        <button class=\"jog-hit down\" id=\"downBtn\" tabindex=\"-1\" aria-label=\"Next item\"></button>\n      </div>\n      <a class=\"cta\" id=\"ctaBtn\" href=\"#services\" aria-label=\"Start Your Project\"><i aria-hidden=\"true\"></i>Start Your Project</a>\n    </aside>\n    <div class=\"hint\" id=\"hint\" role=\"status\">Drag the small dial to cycle projects</div>\n    <div class=\"toast\" id=\"toast\" role=\"status\"></div>\n  </main>\n</div>";
+var BODY="<div class=\"frame\">\n  <main class=\"screen\" id=\"screen\">\n    <div class=\"art-layer\" id=\"artLayer\" aria-hidden=\"true\"><img id=\"artA\" alt=\"\"><img id=\"artB\" alt=\"\" class=\"out\"></div>\n    <section class=\"stage\" id=\"stage\">\n      <header class=\"top\">\n        <div class=\"logo\" aria-label=\"Precision Design Group\">\n          <svg class=\"logo-word logo-mark\" viewBox=\"24 54 96 96\" fill=\"currentColor\" role=\"img\" aria-label=\"Precision Design Group\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 71.2 61.1C49.8 61.1 32.3 78.6 32.3 100C32.3 121.5 49.8 138.9 71.2 138.9C92.7 138.9 110.1 121.5 110.1 100C110.1 78.6 92.7 61.1 71.2 61.1M71.2 144.5C46.7 144.5 26.7 124.6 26.7 100C26.7 75.5 46.7 55.5 71.2 55.5C95.8 55.5 115.7 75.5 115.7 100C115.7 124.6 95.8 144.5 71.2 144.5\"/><path d=\"M 71.2 76.8C58.4 76.8 48 87.2 48 100C48 112.8 58.4 123.2 71.2 123.2C84 123.2 94.4 112.8 94.4 100C94.4 87.2 84 76.8 71.2 76.8M71.2 128.8C55.3 128.8 42.4 115.9 42.4 100C42.4 84.1 55.3 71.2 71.2 71.2C87.1 71.2 100 84.1 100 100C100 115.9 87.1 128.8 71.2 128.8\"/><path d=\"M 71.2 92.5C67.1 92.5 63.7 95.9 63.7 100C63.7 104.1 67.1 107.5 71.2 107.5C75.3 107.5 78.7 104.1 78.7 100C78.7 95.9 75.3 92.5 71.2 92.5M71.2 113.1C64 113.1 58.1 107.2 58.1 100C58.1 92.8 64 86.9 71.2 86.9C78.4 86.9 84.3 92.8 84.3 100C84.3 107.2 78.4 113.1 71.2 113.1\"/></svg>\n        </div>\n        <div class=\"meta\"><b id=\"metaIdx\">01 / 05</b><span id=\"metaName\">Work</span></div>\n        <p class=\"meta-desc\" id=\"metaDesc\" hidden></p>\n        <div class=\"cw-wrap\" id=\"cwWrap\"><div class=\"cw glass\" id=\"cw\" role=\"tablist\" aria-label=\"Colorways\"><span class=\"cw-thumb\" id=\"cwThumb\"></span></div><span class=\"cw-label\" id=\"cwLabel\"></span></div>\n      </header>\n\n      <div class=\"headline-wrap\" id=\"headWrap\">\n        <h1 class=\"headline\" id=\"headline\">Selected work<span class=\"dot\">.</span></h1>\n        <div class=\"marks\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i></div>\n        <div class=\"pgrid\" id=\"pgrid\" aria-label=\"All projects\"><div class=\"pgrid-in\" id=\"pgridIn\"></div></div>\n      </div>\n\n      <div id=\"panels\">\n        <!-- WORK -->\n        <div class=\"panel\" data-panel=\"work\">\n          <div class=\"sz-row\"><span aria-hidden=\"true\">SZ</span><div class=\"sz\" id=\"sz\" role=\"slider\" tabindex=\"0\" aria-label=\"Art size\" aria-valuemin=\"1\" aria-valuemax=\"5\" aria-valuenow=\"1\"><span class=\"sz-knob\" id=\"szKnob\"></span><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 1\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 2\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 3\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Size 4\"><i></i></button><button type=\"button\" tabindex=\"-1\" aria-label=\"Fill\"><i></i></button></div><button type=\"button\" class=\"grid-btn\" id=\"gridBtn\" aria-pressed=\"false\" aria-label=\"Show all projects as a grid\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"3.5\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"13.5\" y=\"3.5\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3.5\" y=\"13.5\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"13.5\" y=\"13.5\" width=\"7\" height=\"7\" rx=\"1.5\"/></svg><span class=\"g-open\">All projects</span><span class=\"g-close\">Back to project</span></button></div>\n          <article class=\"proj\" id=\"proj\">\n            <div class=\"proj-top\"><span><span id=\"pjIdx\">01 / 73</span><span class=\"feat-star\"><svg viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 2.8l2.7 6 6.5.6-4.9 4.3 1.5 6.4L12 16.8 6.2 20.1l1.5-6.4L2.8 9.4l6.5-.6z\"/></svg>Featured</span></span><span id=\"pjYear\"></span></div>\n            <h2 id=\"pjTitle\">Project</h2>\n            <p id=\"pjMeta\"></p>\n            <div class=\"pj-press\" id=\"pjPress\" hidden><span class=\"pp-lbl\" id=\"ppLbl\">Seen in</span><div class=\"pp-row\" id=\"ppRow\"></div></div>\n            <div class=\"proj-foot\"><a id=\"pjLink\" href=\"https://precisiondesign.club\" target=\"_blank\" rel=\"noopener\">View on precisiondesign.club ↗</a><small>Arrows: next item</small></div>\n          </article>\n        </div>\n\n\n        <!-- PROCESS -->\n        <div class=\"panel\" data-panel=\"process\" hidden>\n          <ol class=\"tl\">\n            <li class=\"tl-phase\"><span>Getting started</span></li>\n            <li class=\"tl-step start\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">01</span><h3>Inquire</h3></div><p>Pick a service and send the Studio Inquiry form with your references.</p></div></li>\n            <li class=\"tl-step start\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">02</span><h3>Deposit</h3></div><p>Pay the deposit on Stripe. It also counts as your consultation fee.</p></div></li>\n            <li class=\"tl-step start\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">03</span><h3>Consult</h3></div><p>We talk it through. If you move forward, the deposit goes toward your project.</p></div></li>\n            <li class=\"tl-phase\"><span>Design · 3 draft rounds</span></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">04</span><h3>Mood Board</h3></div><p>You share your references (like you already have), and we add our own so we are fully aligned on direction before any design begins.</p><span class=\"tl-tag\">Direction set</span></div></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">05</span><h3>Rough Draft</h3><span class=\"tl-meter\" aria-label=\"Draft round 1 of 3\"><i class=\"on\"></i><i></i><i></i></span></div><p>The early construction of your logo. If the concept is not feeling right, this is the stage to switch directions.</p><span class=\"tl-tag\">Last chance to switch</span></div></li>\n            <li class=\"tl-lock\" aria-label=\"Concept locked\"><span class=\"tl-dot\"><svg width=\"12\" height=\"12\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" aria-hidden=\"true\"><rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/></svg></span><span>Concept locked</span></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">06</span><h3>Concept Development</h3><span class=\"tl-meter\" aria-label=\"Draft round 2 of 3\"><i class=\"on\"></i><i class=\"on\"></i><i></i></span></div><p>The concept becomes more defined. At this point we cannot switch to a new concept, but you will have essentially unlimited revisions within the current one.</p><span class=\"tl-tag\">Unlimited revisions</span></div></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">07</span><h3>Refinement</h3><span class=\"tl-meter\" aria-label=\"Draft round 3 of 3\"><i class=\"on\"></i><i class=\"on\"></i><i class=\"on\"></i></span></div><p>We dial in the layout, colors, and composition.</p></div></li>\n            <li class=\"tl-step design\"><span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-head\"><span class=\"tl-n\">08</span><h3>Finalization</h3></div><p>Everything is prepared and exported so it is print-ready and ready to send.</p><span class=\"tl-tag\">Print-ready files</span></div></li>\n          </ol>\n        </div>\n\n        <!-- PLAY -->\n        <div class=\"panel\" data-panel=\"play\" hidden>\n          <div class=\"g\">\n            <div class=\"g-stage\"><canvas id=\"gCanvas\" aria-label=\"The Ascent: a jester climbs a spiral tower\"></canvas><button class=\"g-jump\" id=\"gJump\" type=\"button\" aria-label=\"Jump (Space)\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 19V6M6.5 11.5 12 6l5.5 5.5\"/></svg><span>Jump</span></button></div>\n            <div class=\"g-title\" id=\"gTitle\">\n              <h2 class=\"g-head\"><span>Precision</span><span class=\"on\">Ascent</span></h2>\n              <div class=\"g-quick\"><span class=\"q\"><b>Best floor <span id=\"gBest2\">00</span></b> · Endless tower</span><button class=\"g-go\" id=\"gStart\" type=\"button\">Start climbing →</button></div>\n              <p class=\"g-lede\">Your dial turns into a crank. Turn it up to climb, back it off to dodge. Every floor saves your spot.</p>\n              <ul class=\"g-keys\"><li><b>Dial</b>Drag or scroll</li><li><b>Hold</b>Top climbs · bottom backs off</li><li><b>Jump</b>Button or space · clears spikes, ghosts &amp; boulders</li><li><b>Keys</b>↑ ↓ · Esc to quit</li></ul>\n            </div>\n            <div class=\"g-hud\" aria-live=\"polite\">\n              <span><i>Floor</i><b id=\"gFloor\">01</b></span><span><i>Height</i><b id=\"gH\">000</b></span><span><i>Falls</i><b id=\"gFalls\">00</b></span><span><i>Best</i><b id=\"gBest\">00</b></span>\n              <button class=\"g-exit\" id=\"gExit\" type=\"button\">Quit</button>\n            </div>\n            <div class=\"g-banner\" id=\"gBanner\" aria-live=\"assertive\"></div>\n          </div>\n        </div>\n        <!-- STUDIO -->\n        <div class=\"panel\" data-panel=\"studio\" hidden>\n          <div class=\"st\">\n            <div class=\"st-l\">\n              <div class=\"st-d\">\n                <div class=\"st-quick\"><span class=\"q\"><b>Independent studio</b> · Fashion + lifestyle</span><a class=\"st-go\" href=\"mailto:info@precisiondesign.club?subject=Start%20Your%20Project\">Start a project →</a></div>\n                <p class=\"st-lede\">We build brands for fashion and lifestyle labels, from the first logo to the finished collection.</p>\n                <div class=\"st-chips\" aria-label=\"What we do\"><span>Brand identity</span><span>Apparel graphics</span><span>Cut &amp; sew</span><span>Graphic capsules</span><span>Packaging</span><span>Art direction</span><span>Collection design</span></div>\n                <dl class=\"st-spec\">\n                  <div><dt>Led by</dt><dd>Jakobi McLemore<small>Formerly senior graphic designer, Warner Music Group &amp; Sony Music</small></dd></div>\n                  <div><dt>Clients</dt><dd>40+ brands &amp; artists</dd></div>\n                  <div><dt>New here?</dt><dd><button type=\"button\" class=\"st-how\" id=\"howtoBtn\">See how to use the site →</button></dd></div>\n                </dl>\n              </div>\n            </div>\n            <div class=\"st-r\">\n              <div class=\"st-cap\"><span>Worked with</span><span>40 clients</span></div>\n              <ol class=\"st-grid\" aria-label=\"Clients we have worked with\">\n                <li><span>01</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/jfg.png\" alt=\"JFG\" width=\"120\" height=\"120\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>02</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/dreamville.png\" alt=\"Dreamville\" width=\"273\" height=\"96\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>03</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/trap-house.png\" alt=\"Trap House\" width=\"160\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>04</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/burna-boy.png\" alt=\"Burna Boy\" width=\"116\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>05</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/holiday.png\" alt=\"Holiday\" width=\"271\" height=\"70\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>06</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/matte.png\" alt=\"Matte\" width=\"197\" height=\"113\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>07</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/tuter.png\" alt=\"Tuter\" width=\"180\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>08</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/persona.png\" alt=\"Persona\" width=\"237\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>09</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/333-half-evil.png\" alt=\"333 Half-Evil\" width=\"219\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>10</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/7-eleven.png\" alt=\"7-Eleven\" width=\"271\" height=\"60\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>11</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/xlarge.png\" alt=\"XLARGE\" width=\"264\" height=\"62\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>12</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/portrait.png\" alt=\"Portrait\" width=\"97\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>13</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/cardi-b.png\" alt=\"Cardi B\" width=\"310\" height=\"53\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>14</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/monica.png\" alt=\"Monica\" width=\"320\" height=\"115\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>15</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/zumiez.png\" alt=\"Zumiez\" width=\"268\" height=\"65\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>16</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/skechers.png\" alt=\"Skechers\" width=\"266\" height=\"37\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>17</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/thats-a-awful-lot-of-cou.png\" alt=\"That&#x27;s a Awful Lot of Cough Syrup\" width=\"102\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>18</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/c4.png\" alt=\"C4\" width=\"191\" height=\"75\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>19</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/pythia.png\" alt=\"Pythia\" width=\"230\" height=\"55\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>20</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/psychworld.png\" alt=\"Psychworld\" width=\"268\" height=\"70\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>21</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/ice-kream.png\" alt=\"Ice Kream\" width=\"309\" height=\"94\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>22</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/carrots.png\" alt=\"Carrots\" width=\"274\" height=\"74\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>23</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/posture.png\" alt=\"Posture\" width=\"251\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>24</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/nrx.png\" alt=\"NRX\" width=\"222\" height=\"57\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>25</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/hip-hop-50.png\" alt=\"Hip Hop 50\" width=\"117\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>26</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/stomp-down.png\" alt=\"Stomp Down\" width=\"271\" height=\"120\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>27</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/roc-nation.png\" alt=\"Roc Nation\" width=\"270\" height=\"56\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>28</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/coachella.png\" alt=\"Coachella\" width=\"270\" height=\"51\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>29</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/heavens.png\" alt=\"Heavens\" width=\"269\" height=\"70\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>30</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/new-balance.png\" alt=\"New Balance\" width=\"270\" height=\"128\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>31</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/rally-golf-club.png\" alt=\"Rally Golf Club\" width=\"143\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>32</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/brkfst.png\" alt=\"BrkFst\" width=\"196\" height=\"137\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>33</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/manifest.png\" alt=\"Manifest\" width=\"277\" height=\"64\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>34</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/trill-burgers.png\" alt=\"Trill Burgers\" width=\"252\" height=\"130\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>35</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/frederick-scott.png\" alt=\"Frederick Scott\" width=\"294\" height=\"33\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>36</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/pooh-shiesty.png\" alt=\"Pooh Shiesty\" width=\"151\" height=\"140\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>37</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/sprite.png\" alt=\"Sprite\" width=\"278\" height=\"113\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>38</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/sony-music.png\" alt=\"Sony Music\" width=\"267\" height=\"33\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>39</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/warner-music-group.png\" alt=\"Warner Music Group\" width=\"269\" height=\"120\" loading=\"lazy\" decoding=\"async\"></li>\n                <li><span>40</span><img src=\"https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/logos/felt.png\" alt=\"Felt\" width=\"266\" height=\"135\" loading=\"lazy\" decoding=\"async\"></li>\n              </ol>\n            </div>\n          </div>\n        </div>\n\n      </div>\n    </section>\n\n    <aside class=\"side\" aria-label=\"Site navigation\">\n      <div class=\"side-top\">\n      <button class=\"round sm\" id=\"sideBtn\" aria-label=\"Move the dials to the other side\" aria-pressed=\"false\">\n        <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 7H20M16 3l4 4-4 4\"/><path d=\"M16 17H4M8 13l-4 4 4 4\"/></svg>\n      </button>\n      <button class=\"round sm\" id=\"themeBtn\" aria-label=\"Switch to light mode\" aria-pressed=\"false\">\n        <svg class=\"ic-sun\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4\"/></svg>\n        <svg class=\"ic-moon\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z\"/></svg>\n      </button>\n      </div>\n\n      <nav class=\"rail\" id=\"rail\" tabindex=\"0\" aria-label=\"Section dial. Drag, scroll or press the up and down arrow keys to turn it.\">\n        <div class=\"wheel\">\n          <div class=\"rail-ind\" id=\"railInd\" aria-hidden=\"true\"><span></span></div>\n          <button class=\"rail-btn\" data-sec=\"work\" aria-label=\"Work\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><rect x=\"4\" y=\"4\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"13\" y=\"4\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"4\" y=\"13\" width=\"7\" height=\"7\" rx=\"2\"/><rect x=\"13\" y=\"13\" width=\"7\" height=\"7\" rx=\"2\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"featured\" aria-label=\"Featured\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 3.2l2.6 5.6 6.1.7-4.5 4.2 1.2 6.1L12 16.8l-5.4 3 1.2-6.1-4.5-4.2 6.1-.7z\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"services\" aria-label=\"Services\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" aria-hidden=\"true\"><path d=\"M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"process\" aria-label=\"Process\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 18h5v-5h5V8h6\"/><circle cx=\"4\" cy=\"18\" r=\"1.4\" fill=\"currentColor\"/><path d=\"M17 5l3 3-3 3\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"studio\" aria-label=\"Studio\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8.5\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\" fill=\"currentColor\"/><path d=\"M12 1.5v4M12 18.5v4M1.5 12h4M18.5 12h4\" stroke-linecap=\"round\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"shop\" aria-label=\"Shop\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8z\"/><path d=\"M9 10V7a3 3 0 0 1 6 0v3\"/></svg>\n          </button>\n          <button class=\"rail-btn\" data-sec=\"play\" aria-label=\"Play\" tabindex=\"-1\">\n            <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 20h4v-4h4v-4h4V8\"/><path d=\"M15 4l4 4M19 4v4h-4\"/><circle cx=\"6\" cy=\"9\" r=\"1.6\"/><path d=\"M6 11v4\"/></svg>\n          </button>\n          <div id=\"knurls\" aria-hidden=\"true\"></div>\n        </div>\n        <div class=\"rail-shade\" aria-hidden=\"true\"></div>\n        <span class=\"notch\" aria-hidden=\"true\"></span>\n        <span class=\"rail-label\" id=\"railLabel\" aria-hidden=\"true\">Work</span>\n      </nav>\n\n      <p class=\"jog-msg\" id=\"jogMsg\" aria-hidden=\"true\">Scroll to cycle projects</p>\n      <div class=\"jog\" id=\"jog\" role=\"slider\" tabindex=\"0\" aria-label=\"Item dial. Drag, scroll or press the up and down arrow keys to turn it.\" aria-valuemin=\"1\">\n        <div class=\"jog-ticks\" id=\"jogTicks\" aria-hidden=\"true\"></div>\n        <span class=\"jog-notch\" aria-hidden=\"true\"></span>\n        <span class=\"jog-num\" id=\"jogNum\" aria-hidden=\"true\">01</span>\n        <button class=\"jog-hit up\" id=\"upBtn\" tabindex=\"-1\" aria-label=\"Previous item\"></button>\n        <button class=\"jog-hit down\" id=\"downBtn\" tabindex=\"-1\" aria-label=\"Next item\"></button>\n      </div>\n      <a class=\"cta\" id=\"ctaBtn\" href=\"#services\" aria-label=\"Start Your Project\"><i aria-hidden=\"true\"></i>Start Your Project</a>\n    </aside>\n    <div class=\"hint\" id=\"hint\" role=\"status\">Drag the small dial to cycle projects</div>\n    <div class=\"toast\" id=\"toast\" role=\"status\"></div>\n  </main>\n</div>";
 document.write('<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="'+B+'v2.css">'+BODY);
 /* the site code runs inline (a script added with document.write can be blocked by Chrome on slow connections) */
 /* v2.js — generated by build-v2.js from v2/src. Edit those files, not this one. */
@@ -19,6 +19,7 @@ try{
     services: { name: "Services", head: "What we make",  pal: { light: ["#f2b59c", "#f3eee6", "#c7b5ea", "#e7d79c"], dark: ["#7a3d2c", "#1f1b20", "#4a3a78", "#5c5226"] } },
     process:  { name: "Process",  head: "How it runs",   pal: { light: ["#93d0c2", "#eef0e8", "#9db4e8", "#d9d6ae"], dark: ["#1f5a50", "#171d1f", "#2f4683", "#4d4b2a"] } },
     studio:   { name: "Studio",   head: "The studio",   pal: { light: ["#dba2c6", "#f0e9ea", "#8f9de2", "#ebc6a3"], dark: ["#6e2f57", "#1e1a20", "#323f86", "#6a4a2c"] } },
+    play:     { name: "Play",     head: "The ascent",   pal: { light: ["#f2c649", "#eceae4", "#a6b8e6", "#ddd0a9"], dark: ["#6b5420", "#1c1b20", "#34477e", "#5e4e2b"] } },
     shop:     { name: "Shop",     head: "Shop",    pal: { light: ["#b7c98c", "#eceae0", "#93b2d0", "#dcc38f"], dark: ["#44562a", "#1a1c19", "#2c4a68", "#5f4b25"] } },
   };
   const SHOPV = [{"id":"nyp","t":"Name Your Price","top":"You decide","d":"Limited time \u00b7 2 spots left \u00b7 ends Mon Nov 23, 6 PM ET","link":"https://precisiondesign.club/shop?nyp=1","lt":"Make an offer","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-nyp.jpg"],"cw":[["#101010",1]]},{"id":"g1","t":"Motorcross","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-g1.jpg"],"cw":[["#060707",1]]},{"id":"g2","t":"The 3D One","top":"$100 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-g2.jpg"],"cw":[["#038400",1]]},{"id":"g3","t":"Manhattan","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-g3.jpg"],"cw":[["#b64d00",1]]},{"id":"g4","t":"Broken Clock","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@aaca7e646042c406200e5048f9871f46c69e4772/art/shop-g4.jpg"],"cw":[["#90e4a0",0]]},{"id":"g5","t":"PNMotors","top":"$185 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-g5.jpg"],"cw":[["#c5c4c0",0]]},{"id":"g6","t":"Precision.fm","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 text edits included","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@aaca7e646042c406200e5048f9871f46c69e4772/art/shop-g6.jpg"],"cw":[["#a4d7c4",0]]},{"id":"g7","t":"One Persons Trash","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-g7.jpg"],"cw":[["#e98223",0]]},{"id":"g8","t":"Million Man March","top":"$165 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@aaca7e646042c406200e5048f9871f46c69e4772/art/shop-g8.jpg"],"cw":[["#b8b8b8",0]]},{"id":"g9","t":"Peace","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-g9.jpg"],"cw":[["#b9b9b9",0]]},{"id":"g10","t":"NYC","top":"$125 \u00b7 Sold out","d":"Premade graphic \u00b7 custom text +$35","link":"https://precisiondesign.club/shop","lt":"Ask about a custom graphic","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@aaca7e646042c406200e5048f9871f46c69e4772/art/shop-g10.jpg"],"cw":[["#e3e3e3",0]]},{"id":"gc1","t":"$150 Gift Card","top":"$150","d":"Digital gift card \u00b7 +$100 bonus store credit ($250 to spend)","link":"https://precisiondesign.club/shop","lt":"View in shop","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@aaca7e646042c406200e5048f9871f46c69e4772/art/shop-gc1.jpg"],"cw":[["#f26422",1]]},{"id":"gc2","t":"$325 Gift Card","top":"$325","d":"Digital gift card \u00b7 +$200 bonus store credit ($525 to spend)","link":"https://precisiondesign.club/shop","lt":"View in shop","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@aaca7e646042c406200e5048f9871f46c69e4772/art/shop-gc2.jpg"],"cw":[["#9aca3c",0]]},{"id":"gc3","t":"$500 Gift Card","top":"$500","d":"Digital gift card \u00b7 +$300 bonus store credit ($800 to spend)","link":"https://precisiondesign.club/shop","lt":"View in shop","imgs":["https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@e0b1e81204f8234733f9773f3efb307da2bc8998/art/shop-gc3.jpg"],"cw":[["#b14285",1]]}];
@@ -1555,7 +1556,7 @@ function openHowTo(from){
   const row=(ic,t,d)=>`<li><span class="ht-ic" aria-hidden="true">${ic}</span><div><b>${t}</b><p>${d}</p></div></li>`;
   const p=openPanel(`<b>Guide</b> · New here?`,`<h3 class="pdfp-h">How to use the site</h3>
   <ol class="ht">
-  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Work, Featured, Services, Process, Studio and Shop.`)}
+  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Work, Featured, Services, Process, Studio, Play and Shop.`)}
   ${row('<span class="ht-jog"></span>',"Small dial: flip through",`${touch?"Drag":"Scroll or drag"} the small dial at the bottom to go to the next project, service or shop item.`)}
   ${row(icon("#gridBtn svg")||'<span class="ht-grid"></span>',"See everything","The grid button shows every project at once. Tap one to open it. The SZ slider makes the art bigger or smaller.")}
   ${row(icon("#sideBtn svg"),"Switch sides","Moves the dials to the left or right, whichever is easier for your hand.")}
@@ -1580,6 +1581,427 @@ if(/[?&]nyp=1/.test(location.search))setTimeout(()=>{try{if(screenEl&&!screenEl.
   const p=list&&list.find(x=>x.t===t);if(p&&window.pdOnProject)pdOnProject(p,k)}catch(_){}})();
 
 }catch(e){console.error("live.js",e)}
+/* ===== game.js ===== */
+try{
+/* ---------- PLAY: "The Ascent" — a 1D climb up a spiral tower ----------
+   The player only moves along the stair. The section dial becomes the crank while a run is live:
+   drag or scroll it up to climb, down to back off. Hold the top / bottom of the crank to walk.
+   Floors are checkpoints. Hazards: spikes (timed), blades (timed), ghosts (patrol), boulders (hide in doorways). */
+(function () {
+  const screenEl = document.getElementById("screen"), rail = document.getElementById("rail");
+  const panel = document.querySelector('[data-panel="play"]');
+  if (!screenEl || !rail || !panel) return;
+  const $ = (s) => panel.querySelector(s);
+  const cv = $("#gCanvas"), ctx = cv.getContext("2d"), wrap = $(".g-stage");
+  const ui = { floor: $("#gFloor"), h: $("#gH"), falls: $("#gFalls"), best: $("#gBest"), best2: $("#gBest2"), banner: $("#gBanner"), title: $("#gTitle"), start: $("#gStart"), exit: $("#gExit") };
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const SPR = 20, F = 26, TILT = .3, K = 2 * Math.PI / SPR, MAXV = 7.5;
+  let W = 0, H = 0, dpr = 1, TR = 100, SW = 55, RISE = 13, cx = 0, py0 = 0;
+  let C = {};
+  function readColors() {
+    const cs = getComputedStyle(screenEl), g = (n, d) => (cs.getPropertyValue(n).trim() || d);
+    C = { bg: g("--bg", "#E7E8E4"), surface: g("--surface", "#F5F5F2"), line: g("--line", "#CBCCC7"), ink: g("--ink", "#121316"), soft: g("--muted", "#62666C"), accent: g("--accent", "#F2C649"), accentInk: g("--accent-ink", "#1A1608") };
+    C.inkRGB = hexRGB(C.ink);
+  }
+  function hexRGB(h) { h = h.replace("#", ""); if (h.length === 3) h = [...h].map(c => c + c).join(""); const n = parseInt(h, 16) || 0; return [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(","); }
+  const ink = (a) => `rgba(${C.inkRGB},${a})`;
+
+  function resize() {
+    const r = wrap.getBoundingClientRect(); W = Math.max(200, r.width); H = Math.max(200, r.height);
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
+    TR = Math.max(46, Math.min(W * .2, H * .19, 150)); SW = TR * .62; RISE = TR * .135;
+    cx = W / 2; py0 = H * .56;
+    readColors();
+  }
+
+  /* ---------- floors & hazards (seeded so a floor is the same every run) ---------- */
+  function rng(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  const floors = new Map();
+  function floorData(n) {
+    if (floors.has(n)) return floors.get(n);
+    const r = rng(n * 9973 + 17), L = n * F, hz = [], doors = [];
+    const between = (a, b) => a + r() * (b - a);
+    if (n >= 3 && n % 2 === 1) {
+      for (let k = L + 4; k <= L + F - 4; k += 5) doors.push(k);
+      const v = Math.min(7.5, 3.6 + n * .25), span = F - 4;
+      hz.push({ t: "boulder", top: L + F - 1, bot: L + 2, v, P: span / v + between(1.8, 2.8), ph: r() * 10 });
+      const spots = [];
+      for (let k = L + 6; k < L + F - 4; k++) if (!doors.includes(k) && !doors.includes(k - 1) && !doors.includes(k + 1)) spots.push(k);
+      if (spots.length && n >= 5) { const k = spots[Math.floor(r() * spots.length)]; hz.push(spike(k, r, n)); }
+    } else {
+      const pool = ["spike"]; if (n >= 1) pool.push("ghost"); if (n >= 2) pool.push("blade");
+      const want = Math.min(2 + n, 7); let k = L + 4 + Math.floor(r() * 2), made = 0;
+      while (made < want && k < L + F - 3) {
+        const type = made === 0 && n > 0 ? pool[pool.length - 1] : pool[Math.floor(r() * pool.length)];
+        if (type === "ghost") {
+          const len = 3 + Math.floor(r() * 3); if (k + len > L + F - 3) { k += 1; continue; }
+          hz.push({ t: "ghost", a: k, b: k + len, v: Math.min(3.4, 1.3 + n * .18 + r() * .6), ph: r() * 2 }); k += len + 3;
+        } else if (type === "blade") { hz.push({ t: "blade", k, P: Math.max(1.5, between(2, 2.7) - n * .05), ph: r() * 3 }); k += 3 + Math.floor(r() * 2); }
+        else { hz.push(spike(k, r, n)); k += 3 + Math.floor(r() * 2); }
+        made++;
+      }
+    }
+    const d = { hz, doors }; floors.set(n, d); return d;
+  }
+  function spike(k, r, n) { return { t: "spike", k, P: Math.max(1.15, 1.6 + r() * .8 - n * .05), ph: r() * 3 }; }
+  const tri = (x) => 1 - Math.abs(((x % 2) + 2) % 2 - 1);
+  function state(h, t) {
+    if (h.t === "spike") { const u = (((t + h.ph) % h.P) + h.P) % h.P / h.P; return { up: u < .42, warn: u > .82, u }; }
+    if (h.t === "blade") { const th = 1.15 * Math.sin(2 * Math.PI * (t + h.ph) / h.P); return { th, hot: Math.abs(th) < .32 }; }
+    if (h.t === "ghost") return { s: h.a + (h.b - h.a) * tri(t * h.v / (h.b - h.a) + h.ph) };
+    if (h.t === "boulder") { const l = (((t + h.ph) % h.P) + h.P) % h.P, s = h.top - l * h.v; return { s, live: s >= h.bot, l }; }
+  }
+
+  /* ---------- game state ---------- */
+  let playing = false, active = false, sp = .5, camH = 0, camA = .5, t = 0, cp = 0, falls = 0, dead = 0, invul = 0, face = 1, best = 0;
+  let jumpT = 0; const JUMP = .8;
+  let pending = 0, holdDir = 0, keyDir = 0, crankPos = 0, shake = 0, lastStep = 0, bannerT;
+  try { best = +localStorage.getItem("pd-ascent-best") || 0; } catch {}
+  const L0 = (n) => n * F;
+  const footH = (s) => { const f = Math.floor(s), fr = s - f; return f + (fr < .72 ? 0 : (x => x * x * (3 - 2 * x))((fr - .72) / .28)); };
+  const air = () => jumpT > 0 ? Math.sin(Math.PI * (1 - jumpT / JUMP)) : 0;
+  const airborne = () => jumpT > 0 && air() > .2;
+  function jump() { if (!playing || dead || jumpT > 0) return; jumpT = JUMP; tone(520, .12, "square", .04, 380); try { navigator.vibrate && navigator.vibrate(6); } catch {} }
+  const inDoor = (s) => floorData(Math.floor(s / F)).doors.some(k => Math.abs(s - (k + .5)) < .38);
+
+  function hud() {
+    ui.floor.textContent = String(cp + 1).padStart(2, "0");
+    ui.h.textContent = String(Math.max(0, Math.floor(sp))).padStart(3, "0");
+    ui.falls.textContent = String(falls).padStart(2, "0");
+    ui.best.textContent = ui.best2.textContent = String(best).padStart(2, "0");
+  }
+  function banner(txt, sub) {
+    ui.banner.innerHTML = `<b>${txt}</b>${sub ? `<span>${sub}</span>` : ""}`;
+    ui.banner.classList.remove("show"); void ui.banner.offsetWidth; ui.banner.classList.add("show");
+    clearTimeout(bannerT); bannerT = setTimeout(() => ui.banner.classList.remove("show"), 1400);
+  }
+
+  /* ---------- sound ---------- */
+  let ac;
+  function tone(f, d = .08, type = "square", g = .05, slide = 0) {
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume();
+      const o = ac.createOscillator(), v = ac.createGain(), n = ac.currentTime;
+      o.type = type; o.frequency.setValueAtTime(f, n); if (slide) o.frequency.exponentialRampToValueAtTime(Math.max(40, f + slide), n + d);
+      v.gain.setValueAtTime(g, n); v.gain.exponentialRampToValueAtTime(.0001, n + d);
+      o.connect(v).connect(ac.destination); o.start(n); o.stop(n + d + .02);
+    } catch {}
+  }
+
+  /* ---------- run control ---------- */
+  function start() {
+    playing = true; jumpT = 0; sp = .5; camH = 0; camA = .5; cp = 0; falls = 0; dead = 0; invul = 1; pending = 0; t = 0; lastStep = 0;
+    screenEl.classList.add("gaming"); ui.title.hidden = true; hud(); banner("Floor 01", "Turn the dial up to climb");
+    tone(523, .09); setTimeout(() => tone(784, .12), 90);
+    crank.focus({ preventScroll: true });
+  }
+  function exit() {
+    playing = false; holdDir = keyDir = 0; pending = 0;
+    screenEl.classList.remove("gaming"); ui.title.hidden = false; hud();
+    try { rail.focus({ preventScroll: true }); } catch {}
+  }
+  function die() {
+    if (dead || invul > 0) return;
+    dead = .95; falls++; shake = 1; pending = 0; hud();
+    tone(220, .25, "sawtooth", .06, -160);
+    try { navigator.vibrate && navigator.vibrate(40); } catch {}
+  }
+  ui.start.addEventListener("click", start);
+  ui.exit.addEventListener("click", exit);
+  const jb = $("#gJump");
+  if (jb) { jb.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); jump(); jb.classList.add("down"); }); const up = () => jb.classList.remove("down"); jb.addEventListener("pointerup", up); jb.addEventListener("pointercancel", up); jb.addEventListener("pointerleave", up); jb.addEventListener("click", e => e.preventDefault()); jb.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); jump(); } }); }
+
+  /* ---------- the crank: lives over the section dial during a run ---------- */
+  const crank = document.createElement("div");
+  crank.className = "crank"; crank.id = "crank"; crank.tabIndex = -1;
+  crank.setAttribute("role", "slider"); crank.setAttribute("aria-label", "Crank. Drag or scroll up to climb, down to back off. Arrow keys work too.");
+  crank.innerHTML = `<span class="crank-dir up"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 2.5 10 8.5H2z" fill="currentColor"/></svg>Climb</span>
+    <div class="crank-ticks" aria-hidden="true">${Array.from({ length: 19 }, (_, i) => `<i${i % 3 === 0 ? ' class="major"' : ""}></i>`).join("")}</div>
+    <span class="crank-notch" aria-hidden="true"></span>
+    <span class="crank-dir down">Back<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 9.5 10 3.5H2z" fill="currentColor"/></svg></span>`;
+  rail.appendChild(crank);
+  const ticks = [...crank.querySelectorAll(".crank-ticks i")];
+  function renderCrank() {
+    const sp_ = 12, off = ((crankPos * 26) % (sp_ * 3) + sp_ * 3) % (sp_ * 3), mid = (ticks.length - 1) / 2;
+    ticks.forEach((k, i) => { k.style.transform = `translateY(${((i - mid) * sp_ + off - sp_ * 1.5).toFixed(1)}px)`; });
+    crank.classList.toggle("hold-up", holdDir > 0 || keyDir > 0);
+    crank.classList.toggle("hold-down", holdDir < 0 || keyDir < 0);
+  }
+  let cd = null;
+  const stop = (e) => { e.stopPropagation(); };
+  crank.addEventListener("pointerdown", e => {
+    stop(e); if (!playing) return; e.preventDefault();
+    const r = crank.getBoundingClientRect(), fy = (e.clientY - r.top) / r.height;
+    cd = { y: e.clientY, id: e.pointerId, moved: false }; crank.setPointerCapture(e.pointerId);
+    holdDir = fy < .3 ? 1 : fy > .7 ? -1 : 0;
+  });
+  crank.addEventListener("pointermove", e => {
+    stop(e); if (!cd) return;
+    const dy = e.clientY - cd.y;
+    if (!cd.moved && Math.abs(dy) > 4) { cd.moved = true; holdDir = 0; crank.classList.add("dragging"); }
+    if (cd.moved) { pending -= dy / 17; cd.y = e.clientY; }
+  });
+  const cEnd = (e) => { stop(e); cd = null; holdDir = 0; crank.classList.remove("dragging"); };
+  crank.addEventListener("pointerup", cEnd); crank.addEventListener("pointercancel", cEnd);
+  crank.addEventListener("click", stop);
+
+  /* drag on the tower itself works as a crank too (phones) */
+  let td = null;
+  wrap.addEventListener("pointerdown", e => { if (!playing) return; td = { y: e.clientY, id: e.pointerId }; wrap.setPointerCapture(e.pointerId); });
+  wrap.addEventListener("pointermove", e => { if (!td) return; pending -= (e.clientY - td.y) / 17; td.y = e.clientY; });
+  const tEnd = () => { td = null; }; wrap.addEventListener("pointerup", tEnd); wrap.addEventListener("pointercancel", tEnd);
+
+  /* while playing, scrolling anywhere turns the crank instead of changing sections */
+  screenEl.addEventListener("wheel", e => {
+    if (!playing) return;
+    e.preventDefault(); e.stopPropagation();
+    const d = (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * (e.deltaMode === 1 ? 16 : 1);
+    pending -= Math.max(-60, Math.min(60, d)) / 40;
+  }, { capture: true, passive: false });
+  window.addEventListener("keydown", e => {
+    if (!playing) return;
+    const up = e.key === "ArrowUp" || e.key === "w" || e.key === "W", dn = e.key === "ArrowDown" || e.key === "s" || e.key === "S";
+    if (up || dn || e.key === "PageUp" || e.key === "PageDown" || e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); e.stopPropagation(); if (up) keyDir = 1; if (dn) keyDir = -1; }
+    if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); exit(); }
+    if ((e.key === " " || e.code === "Space") && !e.repeat && !(e.target.closest && e.target.closest("button"))) { e.preventDefault(); e.stopPropagation(); jump(); }
+  }, true);
+  window.addEventListener("keyup", e => { if (["ArrowUp", "ArrowDown", "w", "W", "s", "S"].includes(e.key)) keyDir = 0; }, true);
+
+  /* ---------- projection ---------- */
+  function P(a, h, r) {
+    const rel = (a - camA) * K, c = Math.cos(rel);
+    return [cx + r * Math.sin(rel), py0 - (h - camH) * RISE + r * c * TILT, c];
+  }
+  function poly(pts) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.closePath(); }
+
+  /* ---------- drawing ---------- */
+  function drawTower(lo, hi) {
+    const top = 0, bot = H;
+    ctx.fillStyle = C.surface; ctx.fillRect(cx - TR, top, TR * 2, bot);
+    // mortar rows + staggered joints, following the cylinder's curve
+    ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+    const rowH = 1.5, r0 = Math.floor(lo / rowH) - 2, r1 = Math.ceil(hi / rowH) + 2, cols = 14;
+    for (let row = r0; row <= r1; row++) {
+      const h = row * rowH, yb = py0 - (h - camH) * RISE;
+      if (yb < -TR * TILT - 10 || yb > H + 10) continue;
+      ctx.beginPath(); ctx.ellipse(cx, yb, TR, TR * TILT, 0, 0, Math.PI); ctx.stroke();
+      const yt = yb - rowH * RISE;
+      for (let j = 0; j < cols; j++) {
+        const ang = (j + (row & 1) * .5) / cols * 2 * Math.PI - camA * K, c = Math.cos(ang);
+        if (c < .12) continue;
+        const x = cx + TR * Math.sin(ang), off = TR * c * TILT;
+        ctx.beginPath(); ctx.moveTo(x, yb + off); ctx.lineTo(x, yt + off); ctx.stroke();
+      }
+    }
+    const g = ctx.createLinearGradient(cx - TR, 0, cx + TR, 0);
+    g.addColorStop(0, ink(.22)); g.addColorStop(.28, ink(0)); g.addColorStop(.7, ink(0)); g.addColorStop(1, ink(.26));
+    ctx.fillStyle = g; ctx.fillRect(cx - TR, top, TR * 2, bot);
+    ctx.strokeStyle = ink(.55); ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(cx - TR, 0); ctx.lineTo(cx - TR, H); ctx.moveTo(cx + TR, 0); ctx.lineTo(cx + TR, H); ctx.stroke();
+  }
+  function drawDoor(k, isLanding, n) {
+    const a = k + .5, [x, y, c] = P(a, k, TR);
+    if (c < .2) return;
+    const w = SW * .42 * c, h = RISE * 3.3;
+    ctx.fillStyle = C.ink; ctx.beginPath();
+    ctx.moveTo(x - w / 2, y); ctx.lineTo(x - w / 2, y - h + w / 2); ctx.arc(x, y - h + w / 2, w / 2, Math.PI, 0); ctx.lineTo(x + w / 2, y); ctx.closePath(); ctx.fill();
+    if (isLanding && c > .45) {
+      ctx.save(); ctx.translate(x, y - h - RISE * 1.1); ctx.scale(c, 1);
+      ctx.fillStyle = C.accent; ctx.fillRect(-15, -9, 30, 16);
+      ctx.fillStyle = C.accentInk; ctx.font = `600 10px "IBM Plex Mono", ui-monospace, monospace`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(String(n + 1).padStart(2, "0"), 0, 0); ctx.restore();
+    }
+  }
+  function drawStep(i, back) {
+    const o = TR + SW, landing = i % F <= 1;
+    const a = P(i, i, TR), b = P(i, i, o), c2 = P(i + 1, i, o), d = P(i + 1, i, TR);
+    if (back) {
+      poly([a, b, c2, d]); ctx.fillStyle = ink(.08); ctx.fill(); ctx.strokeStyle = ink(.18); ctx.lineWidth = 1; ctx.stroke(); return;
+    }
+    // riser (faces the way down the stair)
+    const ra = P(i, i - 1, TR), rb = P(i, i - 1, o);
+    if (Math.sin((i - camA) * K) > -.98) { poly([a, b, rb, ra]); ctx.fillStyle = C.line; ctx.fill(); ctx.strokeStyle = C.ink; ctx.lineWidth = 1; ctx.stroke(); }
+    // outer face
+    const ob = P(i, i - 1.1, o), oc = P(i + 1, i - 1.1, o);
+    poly([b, c2, oc, ob]); ctx.fillStyle = C.ink; ctx.fill();
+    // tread
+    poly([a, b, c2, d]); ctx.fillStyle = landing ? C.bg : C.surface; ctx.fill(); ctx.strokeStyle = C.ink; ctx.lineWidth = 1.2; ctx.stroke();
+    if (landing && i % F === 0) { const m1 = P(i + .15, i, o - SW * .12), m2 = P(i + 1.85, i, o - SW * .12); ctx.strokeStyle = C.accent; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(m1[0], m1[1]); ctx.lineTo(m2[0], m2[1]); ctx.stroke(); }
+  }
+  const rMid = () => TR + SW * .5;
+  function drawSpike(h, st) {
+    const amt = st.up ? 1 : st.warn ? .28 : 0; if (!amt) return;
+    for (let j = 0; j < 3; j++) {
+      const r = TR + SW * (.2 + j * .3);
+      for (let q = 0; q < 2; q++) {
+        const s0 = h.k + .2 + q * .35, [x, y, c] = P(s0 + .18, h.k, r); if (c < .05) continue;
+        const w = SW * .11 * Math.max(.35, c), ht = RISE * 2.1 * amt;
+        ctx.beginPath(); ctx.moveTo(x - w, y); ctx.lineTo(x, y - ht); ctx.lineTo(x + w, y); ctx.closePath();
+        ctx.fillStyle = C.ink; ctx.fill(); if (st.up) { ctx.strokeStyle = C.surface; ctx.lineWidth = .8; ctx.stroke(); }
+      }
+    }
+  }
+  function drawBlade(h, st) {
+    const [x, y, c] = P(h.k + .5, h.k, rMid()); if (c < .05) return;
+    const len = RISE * 5.2, px = x, py = y - len - RISE * 1.4;
+    const ex = px + Math.sin(st.th) * len, ey = py + Math.cos(st.th) * len;
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(px, py, 3, 0, 7); ctx.fill();
+    ctx.save(); ctx.translate(ex, ey); ctx.rotate(-st.th);
+    const bw = SW * .32 * Math.max(.5, c);
+    ctx.beginPath(); ctx.moveTo(-bw, -3); ctx.quadraticCurveTo(0, RISE * 1.6, bw, -3); ctx.closePath();
+    ctx.fillStyle = st.hot ? C.ink : C.soft; ctx.fill(); ctx.strokeStyle = C.surface; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
+  }
+  /* ghosts are floating Precision Design monograms (the logo mark, drawn from its own path data) */
+  const MONO = ["M 71.2 61.1C49.8 61.1 32.3 78.6 32.3 100C32.3 121.5 49.8 138.9 71.2 138.9C92.7 138.9 110.1 121.5 110.1 100C110.1 78.6 92.7 61.1 71.2 61.1M71.2 144.5C46.7 144.5 26.7 124.6 26.7 100C26.7 75.5 46.7 55.5 71.2 55.5C95.8 55.5 115.7 75.5 115.7 100C115.7 124.6 95.8 144.5 71.2 144.5","M 71.2 76.8C58.4 76.8 48 87.2 48 100C48 112.8 58.4 123.2 71.2 123.2C84 123.2 94.4 112.8 94.4 100C94.4 87.2 84 76.8 71.2 76.8M71.2 128.8C55.3 128.8 42.4 115.9 42.4 100C42.4 84.1 55.3 71.2 71.2 71.2C87.1 71.2 100 84.1 100 100C100 115.9 87.1 128.8 71.2 128.8","M 71.2 92.5C67.1 92.5 63.7 95.9 63.7 100C63.7 104.1 67.1 107.5 71.2 107.5C75.3 107.5 78.7 104.1 78.7 100C78.7 95.9 75.3 92.5 71.2 92.5M71.2 113.1C64 113.1 58.1 107.2 58.1 100C58.1 92.8 64 86.9 71.2 86.9C78.4 86.9 84.3 92.8 84.3 100C84.3 107.2 78.4 113.1 71.2 113.1"].map(d => new Path2D(d)), MCX = 71.2, MCY = 100, MR = 45;
+  function monogram(x, y, r, spin, alpha) {
+    ctx.save(); ctx.globalAlpha = alpha; ctx.translate(x, y); ctx.scale(Math.max(.12, Math.abs(Math.cos(spin))) * r / MR, r / MR);
+    ctx.beginPath(); ctx.arc(0, 0, MR, 0, 7); ctx.fillStyle = C.surface; ctx.fill();
+    ctx.translate(-MCX, -MCY); ctx.fillStyle = C.ink; MONO.forEach(p => ctx.fill(p)); ctx.restore();
+  }
+  function drawGhost(s, now, h) {
+    const [x, y, c] = P(s, Math.floor(s), rMid()); if (c < .05) return;
+    const r = SW * .27 * (.65 + .35 * c), bob = Math.sin(now * 4 + s) * r * .18, gy = y - r * 2.2 + bob;
+    const dir = h ? Math.sign(Math.cos(Math.PI * (now * h.v / (h.b - h.a) + h.ph))) || 1 : 1;
+    ctx.fillStyle = ink(.12); ctx.beginPath(); ctx.ellipse(x, y, r * .8, r * .22, 0, 0, 7); ctx.fill();
+    for (let k = 3; k >= 1; k--) { const [tx, ty] = P(s - dir * k * .28, Math.floor(s), rMid()); monogram(tx, ty - r * 2.2 + bob, r * (1 - k * .08), now * 1.6, .1 * (4 - k)); }
+    monogram(x, gy, r, now * 1.6, 1);
+  }
+  function drawBoulder(st) {
+    const [x, y, c] = P(st.s, footH(st.s), rMid()); if (c < .05) return;
+    const r = SW * .3 * (.65 + .35 * c);
+    ctx.beginPath(); ctx.arc(x, y - r, r, 0, 7); ctx.fillStyle = C.ink; ctx.fill();
+    ctx.save(); ctx.translate(x, y - r); ctx.rotate(st.s * 1.3); ctx.strokeStyle = C.surface; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(-r * .6, 0); ctx.lineTo(r * .5, -r * .2); ctx.moveTo(-r * .1, r * .55); ctx.lineTo(r * .2, -r * .5); ctx.stroke(); ctx.restore();
+  }
+  function drawPlayer(now) {
+    const hide = inDoor(sp);
+    const r = hide ? TR + SW * .02 : rMid();
+    let [x, y] = P(sp, footH(sp), r);
+    const lift = air() * RISE * 3.4;
+    if (lift > 0) { ctx.fillStyle = ink(.18 * (1 - air() * .6)); ctx.beginPath(); ctx.ellipse(x, y, SW * .16 * (1 - air() * .4), SW * .05, 0, 0, 7); ctx.fill(); y -= lift; }
+    const u = SW * .075, fr = sp - Math.floor(sp), walk = Math.abs(pending) > .02 || holdDir || keyDir;
+    ctx.save();
+    if (dead) { ctx.globalAlpha = Math.max(0, dead); ctx.translate(x, y - u * 4); ctx.rotate((1 - dead) * 3 * -face); ctx.translate(-x, -(y - u * 4)); y -= (1 - dead) * u * 10; }
+    if (invul > 0 && !dead && Math.floor(now * 14) % 2) ctx.globalAlpha = .45;
+    if (hide) ctx.globalAlpha *= .7;
+    const leg = walk ? Math.sin(fr * Math.PI * 2) * u * 1.2 : 0;
+    ctx.fillStyle = C.ink;
+    ctx.fillRect(x - u * 1.4 + leg * .5, y - u * 3, u * 1.1, u * 3); ctx.fillRect(x + u * .3 - leg * .5, y - u * 3, u * 1.1, u * 3);
+    ctx.fillRect(x - u * 2.2, y - u * 8, u * 4.4, u * 5.2);
+    ctx.beginPath(); ctx.arc(x, y - u * 10, u * 2.1, 0, 7); ctx.fillStyle = C.surface; ctx.fill(); ctx.strokeStyle = C.ink; ctx.lineWidth = 1.3; ctx.stroke();
+    ctx.fillStyle = C.ink; ctx.fillRect(x + face * u * .6 - u * .3, y - u * 10.4, u * .7, u * .8);
+    // jester cap
+    ctx.fillStyle = C.accent; ctx.strokeStyle = C.ink; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x - u * 2.3, y - u * 11.2); ctx.lineTo(x - u * 3.6, y - u * 14.2); ctx.lineTo(x, y - u * 12.6); ctx.lineTo(x + u * 3.6, y - u * 14.2); ctx.lineTo(x + u * 2.3, y - u * 11.2); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(x - u * 3.6, y - u * 14.2, u * .7, 0, 7); ctx.arc(x + u * 3.6, y - u * 14.2, u * .7, 0, 7); ctx.fill();
+    ctx.restore();
+    if (dead) { ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.globalAlpha = dead; ctx.beginPath(); ctx.arc(x, y - u * 6, (1 - dead) * SW, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
+  }
+
+  function draw(now) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    if (shake > 0 && !reduced) ctx.translate((Math.random() - .5) * 8 * shake, (Math.random() - .5) * 8 * shake);
+    const lo = Math.floor(camH - (H - py0) / RISE - 4), hi = Math.ceil(camH + py0 / RISE + 4);
+    const i0 = Math.max(0, lo), i1 = hi;
+    // ground
+    const gy = py0 - (0 - camH) * RISE;
+    if (gy < H + TR) { ctx.fillStyle = C.line; ctx.beginPath(); ctx.ellipse(cx, gy + RISE, W, TR * TILT * 2.2, 0, Math.PI, 0); ctx.lineTo(W * 2, H * 2); ctx.lineTo(-W, H * 2); ctx.closePath(); ctx.fill(); ctx.fillRect(-W, gy + RISE, W * 3, H); }
+    const front = [], backs = [];
+    for (let i = i0; i <= i1; i++) { const c = Math.cos((i + .5 - camA) * K); (c < 0 ? backs : front).push([i, c]); }
+    backs.forEach(([i]) => drawStep(i, true));
+    drawTower(lo, hi);
+    const fl = Math.floor(Math.max(0, camA) / F);
+    for (let n = Math.max(0, fl - 2); n <= fl + 2; n++) {
+      const d = floorData(n); d.doors.forEach(k => drawDoor(k, false, n));
+      drawDoor(L0(n) + .5, true, n);
+    }
+    front.sort((a, b) => a[1] - b[1]).forEach(([i]) => drawStep(i, false));
+    for (let n = Math.max(0, fl - 2); n <= fl + 2; n++) {
+      for (const h of floorData(n).hz) {
+        const st = state(h, t);
+        if (h.t === "spike") drawSpike(h, st);
+        else if (h.t === "blade") drawBlade(h, st);
+        else if (h.t === "ghost") drawGhost(st.s, now, h);
+        else if (h.t === "boulder" && st.live) drawBoulder(st);
+      }
+    }
+    drawPlayer(now);
+  }
+
+  /* ---------- update ---------- */
+  function update(dt, now) {
+    t += dt;
+    if (!playing) { // attract mode: the fool wanders up on his own
+      sp += dt * 1.4; if (sp > F * 3) sp = .5;
+      camA += (sp - camA) * Math.min(1, dt * 8); camH += (footH(sp) - camH) * Math.min(1, dt * 6); face = 1;
+      return;
+    }
+    if (dead > 0) {
+      dead -= dt;
+      if (dead <= 0) { dead = 0; sp = L0(cp) + .6; camA = sp; invul = 1.2; pending = 0; tone(392, .08); }
+    } else {
+      pending = Math.max(-2, Math.min(2, pending));
+      let mv = Math.max(-MAXV * dt, Math.min(MAXV * dt, pending)); pending -= mv;
+      mv += (holdDir || keyDir) * 4.2 * dt;
+      if (jumpT > 0) mv += face * 2.6 * dt; // a jump carries you forward a couple of steps
+      pending *= Math.pow(.02, dt);
+      if (Math.abs(mv) > 1e-4) face = Math.sign(mv);
+      sp = Math.max(.3, sp + mv); crankPos += mv;
+      const step = Math.floor(sp); if (step !== lastStep) { if (step > lastStep) tone(900 + (step % F) * 12, .025, "square", .02); lastStep = step; }
+      invul = Math.max(0, invul - dt); jumpT = Math.max(0, jumpT - dt);
+      const n = Math.floor(sp / F);
+      if (n > cp && sp - L0(n) > .5) {
+        cp = n; if (cp + 1 > best) { best = cp + 1; try { localStorage.setItem("pd-ascent-best", best); } catch {} }
+        const next = floorData(n), tip = next.doors.length ? "Boulders ahead — jump them or duck into doorways" : n === 1 ? "Ghosts: jump over them" : n === 2 ? "Blades: go when they swing away — jumping won't help" : "";
+        banner(`Floor ${String(cp + 1).padStart(2, "0")}`, tip); tone(659, .1); setTimeout(() => tone(988, .16), 100);
+      }
+      // collisions
+      if (!invul) {
+        const fNow = Math.floor(sp / F);
+        for (let m = Math.max(0, fNow - 1); m <= fNow + 1 && !dead; m++) for (const h of floorData(m).hz) {
+          const st = state(h, t);
+          if (h.t === "spike" && st.up && !airborne() && Math.abs(sp - (h.k + .5)) < .48) die("spike");
+          else if (h.t === "blade" && st.hot && Math.abs(sp - (h.k + .5)) < .6) die("blade");
+          else if (h.t === "ghost" && !airborne() && Math.abs(sp - st.s) < .48) die("ghost");
+          else if (h.t === "boulder" && st.live && Math.abs(sp - st.s) < .62 && !inDoor(sp) && !airborne()) die("boulder");
+          if (dead) break;
+        }
+      }
+      hud();
+    }
+    shake = Math.max(0, shake - dt * 3);
+    camA += (sp - camA) * Math.min(1, dt * 14);
+    camH += (footH(sp) - camH) * Math.min(1, dt * 9);
+    renderCrank();
+  }
+
+  let raf = 0, last = 0;
+  function frame(ts) {
+    raf = 0; if (!active || document.hidden) return;
+    const now = ts / 1000, dt = Math.min(.05, last ? now - last : .016); last = now;
+    update(dt, now); draw(now);
+    raf = requestAnimationFrame(frame);
+  }
+  function setActive(on) {
+    if (on === active) return; active = on;
+    if (on) { resize(); hud(); last = 0; if (!raf) raf = requestAnimationFrame(frame); }
+    else if (playing) exit();
+  }
+  new MutationObserver(() => setActive(screenEl.classList.contains("sec-play"))).observe(screenEl, { attributes: true, attributeFilter: ["class"] });
+  new ResizeObserver(() => { if (active) resize(); }).observe(wrap);
+  document.addEventListener("visibilitychange", () => { if (active && !document.hidden && !raf) { last = 0; raf = requestAnimationFrame(frame); } });
+  window.addEventListener("pdtheme", readColors);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
+  setActive(screenEl.classList.contains("sec-play"));
+  hud();
+  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get floor() { return cp + 1; } };
+})();
+
+}catch(e){console.error("game.js",e)}
 
 /* stop the rest of the Webflow page (old site embeds) from loading */
 document.write('<plaintext style="display:none">');
