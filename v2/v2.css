@@ -603,3 +603,10 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .round.sm { width: 30px; height: 30px; }
   .round.sm svg { width: 14px; height: 14px; }
 }
+/* short screens (tablets and phones held sideways): shrink the dials so they fit the frame */
+.rail { min-height: min(var(--rail-h), 32svh); }
+.jog { height: clamp(80px, 24svh, 150px); }
+@media (max-height: 600px) {
+  .side { top: 14px; bottom: 14px; gap: 12px; }
+  .side .jog-msg { margin-bottom: -10px; }
+}

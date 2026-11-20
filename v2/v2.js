@@ -316,7 +316,7 @@ try{
 
   let acc = 0, lastWheel = 0;
   function onWheel(e) {
-    if (e.target.closest && e.target.closest(".row-scroll, .svc, .steps, .tl, .shop, .pgrid, textarea")) return;
+    if (e.target.closest && e.target.closest(".row-scroll, .svc, .steps, .tl, .shop, .pgrid, .svu-l, textarea")) return;
     e.preventDefault();
     const now = performance.now();
     if (now - lastWheel > 250) acc = 0;
@@ -995,11 +995,11 @@ const css=document.createElement("style");css.textContent=`
 .screen.svui .art-layer{background:var(--bg)!important}
 .screen.svui .art-layer img{opacity:0!important}
 .screen.svui #proj,.screen.svui .cw-label{display:none!important}
-.svu{position:absolute;inset:0;z-index:2;display:grid;overflow:hidden;grid-template-columns:minmax(0,min(38%,400px)) minmax(0,1fr);gap:clamp(20px,4vw,64px);color:var(--ink);animation:svuIn .5s var(--ease-out)}
+.svu{position:absolute;inset:0;z-index:2;display:grid;overflow:hidden;grid-template-columns:minmax(0,min(38%,400px)) minmax(0,1fr);grid-template-rows:minmax(0,1fr);gap:clamp(20px,4vw,64px);color:var(--ink);animation:svuIn .5s var(--ease-out)}
 @keyframes svuIn{from{opacity:0}}
-.svu-l{display:flex;flex-direction:column;justify-content:center;min-width:0;gap:clamp(18px,3vh,30px)}
+.svu-l{display:flex;flex-direction:column;justify-content:safe center;min-width:0;min-height:0;gap:clamp(12px,3vh,30px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;-webkit-mask:linear-gradient(#000 calc(100% - 18px),transparent);mask:linear-gradient(#000 calc(100% - 18px),transparent)}.svu-l::-webkit-scrollbar{display:none}
 .svu-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
-.svu-list li{font-family:var(--font-display);font-weight:900;text-transform:uppercase;line-height:.98;font-size:clamp(1.5rem,2.9vw,2.7rem);letter-spacing:.005em;color:var(--ink);opacity:.16;cursor:pointer;white-space:nowrap;transition:opacity .4s var(--ease-out)}
+.svu-list li{font-family:var(--font-display);font-weight:900;text-transform:uppercase;line-height:.98;font-size:clamp(1.15rem,min(2.9vw,5.4vh),2.7rem);letter-spacing:.005em;color:var(--ink);opacity:.16;cursor:pointer;white-space:nowrap;transition:opacity .4s var(--ease-out)}
 .svu-list li:hover{opacity:.45}
 .svu-list li.on{opacity:1}
 .svu-list li.on .ch{display:inline-block;animation:chUp .5s var(--ease-out) backwards;animation-delay:calc(var(--i)*14ms)}
@@ -1013,7 +1013,7 @@ const css=document.createElement("style");css.textContent=`
 .svu-tabs::-webkit-scrollbar{display:none}
 .svu-tabs button{flex:none;background:none;border:0;padding:4px 0;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;border-bottom:1.5px solid transparent;opacity:.75}
 .svu-tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--ink);opacity:1}
-.svu-pane{min-height:8.6em;font-size:13px;line-height:1.45;color:var(--ink-soft);animation:dIn .35s var(--ease-out)}
+.svu-pane{min-height:min(8.6em,18vh);font-size:13px;line-height:1.45;color:var(--ink-soft);animation:dIn .35s var(--ease-out)}
 .svu-pane ul,.svu-pane ol{margin:0;padding:0;list-style:none;display:grid;gap:5px}
 .svu-pane li{display:grid;grid-template-columns:22px 1fr;gap:4px}
 .svu-pane li i{font-style:normal;font-family:var(--font-mono);font-size:10px;color:var(--ink-soft);padding-top:2px}
@@ -1098,7 +1098,7 @@ function layout(n,k){
     Object.assign(b.style,{left:(x0+i*sx)+"px",top:(y0+i*sy)+"px",width:sz+"px",height:sz+"px"});b.classList.toggle("on",i===k)});
   const r=ui.querySelector(".svu-r");r.style.paddingTop="0px";
   const rr=r.getBoundingClientRect(),stairR=S.left+x0+(n-1)*sx+sz,stairB=S.top+y0+(n-1)*sy+sz;
-  if(rr.left<stairR&&rr.top<stairB+10)r.style.paddingTop=Math.ceil(stairB+10-rr.top)+"px";
+  if(rr.left<stairR&&rr.top<stairB+10)r.style.paddingTop=Math.min(Math.ceil(stairB+10-rr.top),Math.round(ui.clientHeight*.45))+"px";
 }
 function setImg(u){
   const [a,b]=ui.querySelectorAll(".svu-img img"),front=a.classList.contains("out")?b:a,back=front===a?b:a;
