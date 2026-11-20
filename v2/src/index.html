@@ -806,6 +806,24 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .g-hud b { font-size: 12px; }
   .crank-dir { font-size: 8px; left: 4px; right: 4px; }
 }
+
+/* Play fills the whole inside of the frame; the header and side nav float on top of it */
+.screen.sec-play [data-panel="play"] { position: absolute; inset: 0; z-index: 1; }
+.screen.sec-play .top { position: relative; z-index: 3; --ink: #FFFFFF; --ink-soft: #BDBDBD; color: #FFFFFF; }
+.screen.sec-play .g { --gl: 34px; --gr: calc(var(--rail-w) + 64px); padding: 0 var(--gr) 0 var(--gl); border-radius: 0; }
+.screen.sec-play.left .g { --gl: calc(var(--rail-w) + 64px); --gr: 34px; }
+.screen.sec-play .g-stage { inset: 0; }
+.screen.sec-play .g-hud { left: var(--gl); right: var(--gr); bottom: 10px; padding: 0; background: #080808; }
+.screen.sec-play [data-panel="play"] .g-title { left: var(--gl); bottom: 60px; width: min(400px, calc(100% - var(--gl) - var(--gr))); }
+.screen.sec-play .g-pick { max-height: calc(100% - 150px); }
+.screen.sec-play .g-jump { left: var(--gl); bottom: 60px; }
+.screen.sec-play .g-banner { left: calc(var(--gl) + (100% - var(--gl) - var(--gr)) / 2); }
+@media (max-width: 720px) {
+  .screen.sec-play .g { --gl: 20px; --gr: calc(var(--rail-w) + 40px); }
+  .screen.sec-play.left .g { --gl: calc(var(--rail-w) + 40px); --gr: 20px; }
+  .screen.sec-play [data-panel="play"] .g-title, .screen.sec-play .g-jump { bottom: 52px; }
+  .screen.sec-play .g-pick { max-height: calc(100% - 130px); }
+}
 </style>
 
 <div class="frame">

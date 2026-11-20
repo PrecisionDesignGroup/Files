@@ -1634,8 +1634,10 @@ try{
     dpr = artScale();
     cv.width = Math.floor(W * dpr); cv.height = Math.floor(H * dpr); ctx.imageSmoothingEnabled = false;
     cv.style.width = cv.width / dpr + "px"; cv.style.height = cv.height / dpr + "px";
-    TR = Math.max(46, Math.min(W * .2, H * .19, 150)); SW = TR * .62; RISE = TR * .135;
-    cx = W / 2; py0 = H * .56;
+    TR = Math.max(46, Math.min((W - (parseFloat(getComputedStyle(panel.querySelector(".g")).paddingLeft) || 0) - (parseFloat(getComputedStyle(panel.querySelector(".g")).paddingRight) || 0)) * .2, H * .19, 150)); SW = TR * .62; RISE = TR * .135;
+    /* the game fills the whole frame; centre the tower in the part not covered by the side nav */
+    const gcs = getComputedStyle(panel.querySelector(".g")), gl = parseFloat(gcs.paddingLeft) || 0, gr = parseFloat(gcs.paddingRight) || 0;
+    cx = gl + (W - gl - gr) / 2; py0 = H * .56;
     readColors();
   }
 
