@@ -442,6 +442,38 @@
     if (landing && i % F === 0) { const m1 = P(i + .15, i, o - SW * .12), m2 = P(i + 1.85, i, o - SW * .12); ctx.strokeStyle = C.accent; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(m1[0], m1[1]); ctx.lineTo(m2[0], m2[1]); ctx.stroke(); }
   }
   const rMid = () => TR + SW * .5;
+  /* posters: portfolio graphics hung on the tower wall every other floor (dithered with everything else) */
+  let posters = null, posterOff = 0;
+  function posterList() {
+    if (!posters) { posters = (window.PD_POSTERS || []).map(p => ({ src: p.src, t: p.t, im: null })); posterOff = Math.floor(Math.random() * Math.max(1, posters.length)); }
+    return posters;
+  }
+  function posterK(n) {
+    if (n % 2 !== 1) return null;
+    const doors = floorData(n).doors; let k = L0(n) + 13;
+    for (let tries = 0; tries < 10 && doors.some(d => Math.abs(d - k) < 3); tries++) k += 1;
+    return k;
+  }
+  function drawPoster(n) {
+    const list = posterList(); if (!list.length) return;
+    const k = posterK(n); if (k == null) return;
+    const [x, y, c] = P(k + .5, k, TR); if (c < .22) return;
+    const p = list[(Math.floor(n / 2) + posterOff) % list.length];
+    if (!p.im) { p.im = new Image(); p.im.crossOrigin = "anonymous"; p.im.decoding = "async"; p.im.src = p.src; }
+    const ok = p.im.complete && p.im.naturalWidth > 0;
+    const ar = ok ? Math.min(1.25, Math.max(.62, p.im.naturalWidth / p.im.naturalHeight)) : .72;
+    const ph = Math.min(RISE * 7.5, TR * 1.25), w = ph * ar * c, top = y - RISE * 4.8 - ph, b = Math.max(2, 3 * c);
+    ctx.fillStyle = C.ink; ctx.fillRect(x - w / 2 - b, top - b, w + b * 2, ph + b * 2);
+    if (ok) ctx.drawImage(p.im, x - w / 2, top, w, ph); else { ctx.fillStyle = C.surface; ctx.fillRect(x - w / 2, top, w, ph); }
+    ctx.fillStyle = C.bg; ctx.beginPath(); ctx.arc(x, top - b * .2, Math.max(1.6, 2.4 * c), 0, 7); ctx.fill();
+    if (c > .6 && p.t) {
+      ctx.save(); ctx.translate(x, top + ph + b + 9); ctx.scale(c, 1);
+      ctx.font = `500 8px "IBM Plex Mono", ui-monospace, monospace`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      const label = p.t.toUpperCase(), tw = Math.min(ctx.measureText(label).width, w / c + 20);
+      ctx.fillStyle = C.bg; ctx.fillRect(-tw / 2 - 4, -6, tw + 8, 12);
+      ctx.fillStyle = C.ink; ctx.fillText(label, 0, 0, w / c + 20); ctx.restore();
+    }
+  }
   function drawSpike(h, st) {
     const amt = st.up ? 1 : st.warn ? .28 : 0; if (!amt) return;
     for (let j = 0; j < 3; j++) {
@@ -563,6 +595,7 @@
     drawTower(lo, hi);
     const fl = Math.floor(Math.max(0, camA) / F);
     for (let n = Math.max(0, fl - 2); n <= fl + 2; n++) {
+      drawPoster(n);
       const d = floorData(n); d.doors.forEach(k => drawDoor(k, false, n));
       drawDoor(L0(n) + .5, true, n);
     }
