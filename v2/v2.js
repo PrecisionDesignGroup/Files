@@ -528,6 +528,7 @@ const THREE_URL="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.m
 const ASSETS="https://cdn.jsdelivr.net/gh/PrecisionDesignGroup/Files@b99da27d9b237f6faa90fdb6804daed1192b667c/gm/";
 const IDS=["g1","g2","g3","g4","g5","g6","g7","g8","g9","g10","x1"];
 const pngURL=id=>IDS.includes(id)?ASSETS+"art-"+id+".png":null;
+window.PD_GM_ART=pngURL;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const screenEl=document.querySelector(".screen"),headWrap=document.getElementById("headWrap"),szRow=document.querySelector(".sz-row");
 if(!screenEl||!headWrap||!szRow||typeof SHOPV==="undefined")return;
@@ -1600,8 +1601,9 @@ try{
 
   function resize() {
     const r = wrap.getBoundingClientRect(); W = Math.max(200, r.width); H = Math.max(200, r.height);
-    dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); cv.style.width = W + "px"; cv.style.height = H + "px";
+    /* 32-bit look: draw the scene at about 360 px wide and blow it up with hard pixel edges */
+    const PX = Math.max(2, Math.round(W / 360)); dpr = 1 / PX;
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.imageSmoothingEnabled = false; cv.style.width = W + "px"; cv.style.height = H + "px";
     TR = Math.max(46, Math.min(W * .2, H * .19, 150)); SW = TR * .62; RISE = TR * .135;
     cx = W / 2; py0 = H * .56;
     readColors();
@@ -1681,6 +1683,99 @@ try{
     } catch {}
   }
 
+
+  /* ---------- the climber: boy or girl, long-sleeve tee or hoodie with a premade graphic, shorts or pants ---------- */
+  const GRAPHICS = (window.SHOPV || []).filter(p => /^g\d+$/.test(p.id)).map(p => ({ id: p.id, t: p.t, c: (p.cw && p.cw[0] && p.cw[0][0]) || "#d9d9d6" }));
+  const LOOK_KEY = "pd-ascent-look", artImg = {};
+  let look = { g: "boy", top: "tee", art: (GRAPHICS[1] || GRAPHICS[0] || {}).id || "", bot: "pants" };
+  try { const v = JSON.parse(localStorage.getItem(LOOK_KEY) || "null"); if (v) look = Object.assign(look, v); } catch {}
+  if (GRAPHICS.length && !GRAPHICS.some(g => g.id === look.art)) look.art = GRAPHICS[0].id;
+  function art(id) {
+    if (artImg[id] !== undefined) return artImg[id];
+    const url = window.PD_GM_ART && window.PD_GM_ART(id); if (!url) return (artImg[id] = null);
+    const im = new Image(); im.crossOrigin = "anonymous"; im.onload = () => { im.ok = 1; drawPreview(); }; im.src = url; return (artImg[id] = im);
+  }
+  function rr(c, x, y, w, h, r) { c.beginPath(); if (c.roundRect) c.roundRect(x, y, w, h, r); else c.rect(x, y, w, h); }
+  /* sprite colours stay fixed in light and dark mode (dark outline, light skin), like a pixel sprite */
+  const INK = "#141519";
+  function drawClimber(c, x, y, u, face, leg, lk) {
+    const g = GRAPHICS.find(q => q.id === lk.art) || { c: C.surface }, cloth = g.c, skin = "#F3F1EC", hood = lk.top === "hood", girl = lk.g === "girl";
+    c.lineWidth = Math.max(1, u * .28); c.strokeStyle = INK; c.lineJoin = "round";
+    // legs
+    for (const [lx, d] of [[x - u * 1.45, leg * .5], [x + u * .35, -leg * .5]]) {
+      const X = lx + d;
+      if (lk.bot === "shorts") {
+        rr(c, X, y - u * 1.9, u * 1.1, u * 1.6, u * .3); c.fillStyle = skin; c.fill(); c.stroke();
+        c.fillStyle = INK; c.fillRect(X - u * .1, y - u * 3.1, u * 1.3, u * 1.4);
+      } else { c.fillStyle = INK; c.fillRect(X, y - u * 3.1, u * 1.1, u * 2.8); }
+      c.fillStyle = INK; rr(c, X - (face < 0 ? u * .45 : 0), y - u * .55, u * 1.55, u * .6, u * .25); c.fill();
+    }
+    // hood behind the head
+    if (hood) { c.beginPath(); c.arc(x - face * u * .35, y - u * 9.7, u * 2.75, 0, 7); c.fillStyle = cloth; c.fill(); c.stroke(); }
+    // ponytail behind the head
+    if (girl) {
+      c.fillStyle = INK; c.beginPath(); c.ellipse(x - face * u * 2.5, y - u * 9.3, u * .95, u * 2, -face * .35, 0, 7); c.fill();
+      c.fillStyle = C.accent; c.beginPath(); c.arc(x - face * u * 2.05, y - u * 11.1, u * .5, 0, 7); c.fill(); c.stroke();
+    }
+    // sleeves (both tops are long-sleeved) + hands
+    const sw = hood ? u * 2.6 : u * 2.4;
+    for (const s of [-1, 1]) {
+      const ax = x + s * sw, sy = y - u * 7.7, swing = -s * leg * .35;
+      rr(c, ax - u * .65 + swing * .3, sy, u * 1.3, u * 4, u * .5); c.fillStyle = cloth; c.fill(); c.stroke();
+      if (hood) { c.fillStyle = INK; c.fillRect(ax - u * .6 + swing * .3, sy + u * 3.4, u * 1.2, u * .35); }
+      c.beginPath(); c.arc(ax + swing * .3, sy + u * 4.45, u * .62, 0, 7); c.fillStyle = skin; c.fill(); c.stroke();
+    }
+    // torso
+    const tw = hood ? u * 4.8 : u * 4.4, th = hood ? u * 5.6 : u * 5.2;
+    rr(c, x - tw / 2, y - u * 8, tw, th, u * .7); c.fillStyle = cloth; c.fill(); c.stroke();
+    if (hood) {
+      c.beginPath(); c.moveTo(x - u * 1.5, y - u * 3.6); c.lineTo(x - u * 1.1, y - u * 4.9); c.lineTo(x + u * 1.1, y - u * 4.9); c.lineTo(x + u * 1.5, y - u * 3.6); c.stroke();
+      c.beginPath(); c.moveTo(x - u * .5, y - u * 7.9); c.lineTo(x - u * .6, y - u * 6.6); c.moveTo(x + u * .5, y - u * 7.9); c.lineTo(x + u * .6, y - u * 6.6); c.stroke();
+    } else { c.beginPath(); c.arc(x, y - u * 8.05, u * .95, 0, Math.PI); c.fillStyle = skin; c.fill(); c.stroke(); }
+    // the graphic on the chest
+    const im = art(lk.art);
+    if (im && im.ok) {
+      const box = hood ? u * 2.5 : u * 3, k = Math.min(box / im.naturalWidth, box / im.naturalHeight), iw = im.naturalWidth * k, ih = im.naturalHeight * k;
+      c.drawImage(im, x - iw / 2, (hood ? y - u * 6.25 : y - u * 5.6) - ih / 2, iw, ih);
+    }
+    // head + hair
+    c.beginPath(); c.arc(x, y - u * 10, u * 2.1, 0, 7); c.fillStyle = skin; c.fill(); c.stroke();
+    c.fillStyle = INK; c.beginPath(); c.arc(x, y - u * 10, u * 2.25, Math.PI * 1.02, Math.PI * 1.98); c.lineTo(x + face * u * 1.9, y - u * 10.4); c.lineTo(x - face * u * .2, y - u * 11.2); c.lineTo(x - face * u * 2.2, y - u * 9.6); c.closePath(); c.fill();
+    if (girl) { c.beginPath(); c.ellipse(x - face * u * 1.75, y - u * 9.3, u * .6, u * 1.5, 0, 0, 7); c.fill(); }
+    c.fillRect(x + face * u * .7 - u * .3, y - u * 10.1, u * .6, u * .75);
+  }
+  const prev = $("#gPrev"), pick = $("#gPick");
+  function drawPreview() {
+    if (!prev || !prev.offsetWidth) return;
+    const d = .5, w = prev.offsetWidth, h = prev.offsetHeight;
+    if (prev.width !== Math.round(w * d)) { prev.width = Math.round(w * d); prev.height = Math.round(h * d); }
+    const c = prev.getContext("2d"); c.imageSmoothingEnabled = false; c.setTransform(d, 0, 0, d, 0, 0); c.clearRect(0, 0, w, h);
+    c.fillStyle = C.line; c.beginPath(); c.ellipse(w / 2, h - 12, w * .3, 5, 0, 0, 7); c.fill();
+    drawClimber(c, w / 2, h - 12, h / 17, 1, 0, look);
+  }
+  function paintPick() {
+    if (!pick) return;
+    pick.querySelectorAll(".gp-seg").forEach(sg => sg.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(look[sg.dataset.k] === b.dataset.v))));
+    pick.querySelectorAll(".gp-arts button").forEach(b => b.setAttribute("aria-checked", String(b.dataset.id === look.art)));
+    const g = GRAPHICS.find(q => q.id === look.art); $("#gArtName").textContent = g ? g.t : "";
+    try { localStorage.setItem(LOOK_KEY, JSON.stringify(look)); } catch {}
+    drawPreview();
+  }
+  if (pick) {
+    const arts = $("#gArts");
+    arts.innerHTML = GRAPHICS.map(g => { const u = window.PD_GM_ART && window.PD_GM_ART(g.id); return `<button type="button" role="radio" data-id="${g.id}" style="background:${g.c}" aria-label="${g.t.replace(/"/g, "&quot;")}">${u ? `<img src="${u}" alt="" loading="lazy">` : ""}</button>`; }).join("");
+    arts.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; look.art = b.dataset.id; tone(660, .05); paintPick(); });
+    pick.querySelectorAll(".gp-seg").forEach(sg => sg.addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; look[sg.dataset.k] = b.dataset.v; tone(587, .05); paintPick(); }));
+    $("#gPickBack").addEventListener("click", () => { pick.hidden = true; ui.title.hidden = false; });
+    $("#gGo").addEventListener("click", () => { pick.hidden = true; start(); });
+  }
+  function openPick() {
+    if (!pick) return start();
+    ui.title.hidden = true; pick.hidden = false; paintPick();
+    pick.scrollTop = 0; const sel = pick.querySelector('.gp-arts [aria-checked="true"]'); if (sel) sel.parentNode.scrollLeft = sel.offsetLeft - sel.parentNode.offsetLeft - sel.parentNode.clientWidth / 2 + sel.offsetWidth / 2;
+    try { window.gtag && gtag("event", "game_pick_open"); } catch {}
+  }
+
   /* ---------- run control ---------- */
   function start() {
     playing = true; jumpT = 0; sp = .5; camH = 0; camA = .5; cp = 0; falls = 0; dead = 0; invul = 1; pending = 0; t = 0; lastStep = 0;
@@ -1690,7 +1785,7 @@ try{
   }
   function exit() {
     playing = false; holdDir = keyDir = 0; pending = 0;
-    screenEl.classList.remove("gaming"); ui.title.hidden = false; hud();
+    screenEl.classList.remove("gaming"); if (pick) pick.hidden = true; ui.title.hidden = false; hud();
     try { rail.focus({ preventScroll: true }); } catch {}
   }
   function die() {
@@ -1699,7 +1794,7 @@ try{
     tone(220, .25, "sawtooth", .06, -160);
     try { navigator.vibrate && navigator.vibrate(40); } catch {}
   }
-  ui.start.addEventListener("click", start);
+  ui.start.addEventListener("click", openPick);
   ui.exit.addEventListener("click", exit);
   const jb = $("#gJump");
   if (jb) { jb.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); jump(); jb.classList.add("down"); }); const up = () => jb.classList.remove("down"); jb.addEventListener("pointerup", up); jb.addEventListener("pointercancel", up); jb.addEventListener("pointerleave", up); jb.addEventListener("click", e => e.preventDefault()); jb.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); jump(); } }); }
@@ -1879,15 +1974,7 @@ try{
     if (invul > 0 && !dead && Math.floor(now * 14) % 2) ctx.globalAlpha = .45;
     if (hide) ctx.globalAlpha *= .7;
     const leg = walk ? Math.sin(fr * Math.PI * 2) * u * 1.2 : 0;
-    ctx.fillStyle = C.ink;
-    ctx.fillRect(x - u * 1.4 + leg * .5, y - u * 3, u * 1.1, u * 3); ctx.fillRect(x + u * .3 - leg * .5, y - u * 3, u * 1.1, u * 3);
-    ctx.fillRect(x - u * 2.2, y - u * 8, u * 4.4, u * 5.2);
-    ctx.beginPath(); ctx.arc(x, y - u * 10, u * 2.1, 0, 7); ctx.fillStyle = C.surface; ctx.fill(); ctx.strokeStyle = C.ink; ctx.lineWidth = 1.3; ctx.stroke();
-    ctx.fillStyle = C.ink; ctx.fillRect(x + face * u * .6 - u * .3, y - u * 10.4, u * .7, u * .8);
-    // jester cap
-    ctx.fillStyle = C.accent; ctx.strokeStyle = C.ink; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(x - u * 2.3, y - u * 11.2); ctx.lineTo(x - u * 3.6, y - u * 14.2); ctx.lineTo(x, y - u * 12.6); ctx.lineTo(x + u * 3.6, y - u * 14.2); ctx.lineTo(x + u * 2.3, y - u * 11.2); ctx.closePath(); ctx.fill(); ctx.stroke();
-    ctx.beginPath(); ctx.arc(x - u * 3.6, y - u * 14.2, u * .7, 0, 7); ctx.arc(x + u * 3.6, y - u * 14.2, u * .7, 0, 7); ctx.fill();
+    drawClimber(ctx, x, y, u, face, leg, look);
     ctx.restore();
     if (dead) { ctx.strokeStyle = C.accent; ctx.lineWidth = 2; ctx.globalAlpha = dead; ctx.beginPath(); ctx.arc(x, y - u * 6, (1 - dead) * SW, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
   }

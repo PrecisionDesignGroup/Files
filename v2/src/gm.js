@@ -7,6 +7,7 @@ const THREE_URL="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.m
 const ASSETS="gm/";
 const IDS=["g1","g2","g3","g4","g5","g6","g7","g8","g9","g10","x1"];
 const pngURL=id=>IDS.includes(id)?ASSETS+"art-"+id+".png":null;
+window.PD_GM_ART=pngURL;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const screenEl=document.querySelector(".screen"),headWrap=document.getElementById("headWrap"),szRow=document.querySelector(".sz-row");
 if(!screenEl||!headWrap||!szRow||typeof SHOPV==="undefined")return;
