@@ -4,8 +4,10 @@ try{
 
 (() => {
   const SECTIONS = {
-    work:     { name: "Work",     head: "Selected work", pal: { light: ["#8fb0dc", "#eceae4", "#a99ce3", "#ddd0a9"], dark: ["#2c4470", "#1d1c24", "#4b3d86", "#5e4e2b"] } },
-    featured: { name: "Featured", head: "Featured work", pal: { light: ["#f0cf7a", "#eeebe2", "#a6b8e6", "#e3b9a0"], dark: ["#6b5420", "#1c1b20", "#34477e", "#5e3a2a"] } },
+    work:     { name: "Graphics", head: "Selected graphics", pal: { light: ["#8fb0dc", "#eceae4", "#a99ce3", "#ddd0a9"], dark: ["#2c4470", "#1d1c24", "#4b3d86", "#5e4e2b"] } },
+    branding: { name: "Branding", head: "Brand identity", pal: { light: ["#f0cf7a", "#eeebe2", "#a6b8e6", "#e3b9a0"], dark: ["#6b5420", "#1c1b20", "#34477e", "#5e3a2a"] } },
+    apparel:  { name: "Apparel",  head: "Apparel",       pal: { light: ["#c9b28f", "#eeebe2", "#9fb5c9", "#ddd0a9"], dark: ["#5a4a2e", "#1c1b20", "#2f4a5e", "#5e4e2b"] } },
+    collections: { name: "Collections", head: "Collections", pal: { light: ["#a9c4b0", "#eceae4", "#c2a9d9", "#e0c9a0"], dark: ["#2f4f3a", "#1b1c1d", "#4a3570", "#5e4a2a"] } },
     services: { name: "Services", head: "What we make",  pal: { light: ["#f2b59c", "#f3eee6", "#c7b5ea", "#e7d79c"], dark: ["#7a3d2c", "#1f1b20", "#4a3a78", "#5c5226"] } },
     process:  { name: "Process",  head: "How it runs",   pal: { light: ["#93d0c2", "#eef0e8", "#9db4e8", "#d9d6ae"], dark: ["#1f5a50", "#171d1f", "#2f4683", "#4d4b2a"] } },
     studio:   { name: "Studio",   head: "The studio",   pal: { light: ["#dba2c6", "#f0e9ea", "#8f9de2", "#ebc6a3"], dark: ["#6e2f57", "#1e1a20", "#323f86", "#6a4a2c"] } },
@@ -20,10 +22,14 @@ try{
   WORK = PROJECTS; window.PDPROJ = PROJECTS;
   const PRESS = {"burna": {"press": [{"pub": "Essence", "what": "Burna Boy's Madison Square Garden merch", "url": "https://essence.com/entertainment/burna-boy-madison-square-garden-merch"}, {"pub": "The Source", "what": "Limited merch line for One Night in Space", "url": "https://thesource.com/?p=650972"}, {"pub": "StyleRave", "what": "One Night in Space, the night and the merch", "url": "https://stylerave.com/burna-boy-one-night-in-space/"}], "shop": [{"store": "On a Spaceship", "item": "Burna Boy official store", "url": "https://onaspaceship.com"}]}, "burna-space": {"press": [{"pub": "Essence", "what": "Burna Boy's Madison Square Garden merch", "url": "https://essence.com/entertainment/burna-boy-madison-square-garden-merch"}, {"pub": "The Source", "what": "Limited merch line for One Night in Space", "url": "https://thesource.com/?p=650972"}, {"pub": "StyleRave", "what": "One Night in Space, the night and the merch", "url": "https://stylerave.com/burna-boy-one-night-in-space/"}], "shop": [{"store": "On a Spaceship", "item": "Burna Boy official store", "url": "https://onaspaceship.com"}]}, "hh50": {"press": [{"pub": "Uproxx", "what": "Dreamville's Hip-Hop 50 capsule collection", "url": "https://uproxx.com/music/dreamville-hip-hop-50-capsule-collection"}, {"pub": "Boardroom", "what": "Dreamville \u00d7 Starter for hip-hop's 50th", "url": "https://boardroom.tv/?p=84158"}, {"pub": "The Source", "what": "The Hip-Hop 50 \u00d7 Dreamville drop", "url": "https://thesource.com/?p=702174"}], "shop": [{"store": "Mass Appeal", "item": "Black Starter jacket", "url": "https://shop.massappeal.com/products/hh50-x-dreamville-black-starter-jacket"}, {"store": "Mass Appeal", "item": "Hoodie", "url": "https://shop.massappeal.com/products/hh50-x-dreamville-black-hoodie"}, {"store": "Mass Appeal", "item": "Hat", "url": "https://shop.massappeal.com/products/hh50-x-dreamville-hat"}]}, "dreamville": {"press": [{"pub": "Highsnobiety", "what": "Dreamville's merch collection", "url": "https://www.highsnobiety.com/p/dreamville-merch-collection"}, {"pub": "Complex", "what": "Dreamville shares a new apparel collection", "url": "https://www.complex.com/style/dreamville-shares-new-apparel-collection"}, {"pub": "The Source", "what": "Dreamville's outerwear drop", "url": "https://thesource.com/?p=676401"}], "shop": []}, "conversations": {"press": [{"pub": "Hypebeast", "what": "New Balance unveils the Conversations Amongst Us collection", "url": "https://hypebeast.com/2022/4/new-balance-2002r-550-conversation-amongst-us-release-date"}, {"pub": "Highsnobiety", "what": "Joe Freshgoods \u00d7 New Balance 550, Conversations Amongst Us", "url": "https://www.highsnobiety.com/p/joe-freshgoods-new-balance-conversations-amongst-us-550"}, {"pub": "Essence", "what": "The collection and the story behind it", "url": "https://essence.com/fashion/new-balance-conversations-among-us"}, {"pub": "Hypebae", "what": "Release info for the full range", "url": "https://hypebae.com/2022/4/joe-freshgoods-new-balance-conversations-amongst-us-release-info"}, {"pub": "Gear Patrol", "what": "A New Balance collab that champions diversity", "url": "https://www.gearpatrol.com/style/shoes-boots/g39717051/new-balance-conversations-amongst-us-550"}], "shop": [{"store": "GOAT", "item": "574 Conversations Amongst Us", "url": "https://www.goat.com/sneakers/joe-freshgoods-x-574-conversations-amongst-us-u574bh2"}]}, "jfgnb": {"press": [{"pub": "Highsnobiety", "what": "Joe Freshgoods, New Balance and conversations that matter", "url": "https://highsnobiety.com/p/joe-freshgoods-new-balance-campaign-interview"}, {"pub": "Hypebeast", "what": "The Conversations Amongst Us collection", "url": "https://hypebeast.com/2022/4/new-balance-2002r-550-conversation-amongst-us-release-date"}, {"pub": "Black Enterprise", "what": "Joe Freshgoods releases his New Balance collection", "url": "https://blackenterprise.com/chicago-designer-joe-freshgoods-releases-his-new-sneaker-collection-in-collaboration-with-new-balance/"}], "shop": []}, "jfgsprite": {"press": [{"pub": "Essence", "what": "ICYMI: the Joe Freshgoods \u00d7 Sprite launch", "url": "https://www.essence.com/fashion/icymi-joe-fresh-goods-sprite-launch/"}, {"pub": "FoodSided", "what": "Sprite \u00d7 Joe Freshgoods, Chicago-inspired cans", "url": "https://foodsided.com/sprite-joe-freshgoods-obey-your-thirst"}, {"pub": "Beverage Industry", "what": "Sprite and Joe Freshgoods partner on a capsule", "url": "https://www.bevindustry.com/articles/97116-sprite-joe-freshgoods-partner-on-capsule-collection"}, {"pub": "Packaging Connections", "what": "Sprite launches its Joe Freshgoods collab", "url": "https://packagingconnections.com/news/sprite-launches-new-collaboration-joe-freshgoods"}], "shop": []}, "ed-sheeran": {"press": [{"pub": "TWTD", "what": "The Sheeran Town shirt on sale at the Ipswich pop-up", "url": "https://www.twtd.co.uk/amp/news/36542/sheeran-town-shirt-on-sale-at-pop-up-shop-ahead-of-ipswich-gigs"}], "shop": []}, "cardi-b-bodega": {"press": [{"pub": "CBS New York", "what": "Cardi B's Bodega Baddie pop-up in Washington Heights", "url": "https://www.cbsnews.com/amp/newyork/news/cardi-b-bodega-baddie-pop-up-washington-heights"}, {"pub": "Complex", "what": "The turnout at Cardi B's NYC pop-up", "url": "https://www.complex.com/music/a/treyalston/cardi-b-atlantic-records-underestimated-nyc-pop-up"}], "shop": []}, "cleveland-collage": {"press": [], "shop": [{"store": "Zumiez", "item": "EST 19XX Cleveland Collage white tee", "url": "https://www.zumiez.com/est-19xx-cleveland-collage-white-t-shirt.html"}]}, "earl-idls": {"press": [{"pub": "Grimy Goods", "what": "Earl's surprise IDLSIDGO 10-year show at the Echoplex, and its anniversary shirts", "url": "https://www.grimygoods.com/?p=266690"}, {"pub": "The Poly Post", "what": "A packed one-night-only 10-year anniversary show in LA", "url": "https://thepolypost.com/arts-and-culture/2025/04/15/earl-sweatshirt-delivers-nostalgia-humor-for-packed-10-year-anniversary-show-at-las-echoplex/"}, {"pub": "The FADER", "what": "I Don't Like Shit\u2026 turns 10", "url": "https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"}], "shop": []}, "earl-10-years": {"press": [{"pub": "Grimy Goods", "what": "Earl's surprise IDLSIDGO 10-year show at the Echoplex, and its anniversary shirts", "url": "https://www.grimygoods.com/?p=266690"}, {"pub": "The Poly Post", "what": "A packed one-night-only 10-year anniversary show in LA", "url": "https://thepolypost.com/arts-and-culture/2025/04/15/earl-sweatshirt-delivers-nostalgia-humor-for-packed-10-year-anniversary-show-at-las-echoplex/"}, {"pub": "The FADER", "what": "I Don't Like Shit\u2026 turns 10", "url": "https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"}], "shop": []}, "idls-gate": {"press": [{"pub": "Grimy Goods", "what": "Earl's surprise IDLSIDGO 10-year show at the Echoplex, and its anniversary shirts", "url": "https://www.grimygoods.com/?p=266690"}, {"pub": "The Poly Post", "what": "A packed one-night-only 10-year anniversary show in LA", "url": "https://thepolypost.com/arts-and-culture/2025/04/15/earl-sweatshirt-delivers-nostalgia-humor-for-packed-10-year-anniversary-show-at-las-echoplex/"}, {"pub": "The FADER", "what": "I Don't Like Shit\u2026 turns 10", "url": "https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"}], "shop": []}, "idls": {"press": [{"pub": "Hypebeast", "what": "Review: I Don't Like Shit, I Don't Go Outside", "url": "https://hypebeast.com/2015/4/earl-sweatshirt-i-dont-like-shit-i-dont-go-outside-review"}, {"pub": "XXL", "what": "Review of Earl's second album", "url": "https://www.xxlmag.com/earl-sweatshirt-dont-like-shit-go-outside-review/"}, {"pub": "The FADER", "what": "The album turns 10", "url": "https://www.thefader.com/2025/03/27/liam-inscoe-jones-songs-in-the-key-of-mp3-earl-sweatshirt"}, {"pub": "PopMatters", "what": "Review: I Don't Like Shit, I Don't Go Outside", "url": "https://popmatters.com/review/191714-earl-sweatshirt-i-dont-like-shit-i-dont-go-outside"}, {"pub": "Slant", "what": "Review of the 2015 album", "url": "https://slantmagazine.com/music/earl-sweatshirt-i-dont-do-shit-i-dont-go-outside"}], "shop": []}, "lll": {"press": [{"pub": "Billboard", "what": "Earl Sweatshirt releases Live Laugh Love", "url": "https://ca.billboard.com/music/rb-hip-hop/earl-sweatshirt-live-laugh-love-album-release-track-list-1236047511/"}, {"pub": "The FADER", "what": "Review: Earl Sweatshirt unwinds on Live Laugh Love", "url": "https://www.thefader.com/2025/08/27/earl-sweatshirt-live-laugh-love-review"}, {"pub": "Complex", "what": "Stream Earl's new album Live Laugh Love", "url": "https://www.complex.com/music/a/joshua-espinoza/earl-sweatshirt-live-laugh-love-album-stream"}, {"pub": "Stereogum", "what": "Album of the week: Live Laugh Love", "url": "https://stereogum.com/2320176/earl-sweatshirt-live-laugh-love-album-review/columns"}, {"pub": "Consequence", "what": "Live Laugh Love review", "url": "https://consequence.net/2025/08/earl-sweatshirt-live-laugh-love-review"}, {"pub": "SSENSE", "what": "The Normal Life of Earl Sweatshirt", "url": "https://www.ssense.com/en-lv/editorial/music/earl-sweatshirt-live-laugh-love"}, {"pub": "Uproxx", "what": "Earl Sweatshirt releases Live Laugh Love", "url": "https://uproxx.com/music/earl-sweatshirt-releases-live-laugh-love-album"}, {"pub": "Slant", "what": "Live Laugh Love review: keep calm and carry on", "url": "https://www.slantmagazine.com/music/earl-sweatshirt-live-laugh-love-album-review"}], "shop": [{"store": "Turntable Lab", "item": "Live Laugh Love vinyl LP", "url": "https://turntablelab.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"}, {"store": "Good Taste Records", "item": "Live Laugh Love vinyl LP", "url": "https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-vinyl-lp"}, {"store": "Good Taste Records", "item": "Alternative cover vinyl, black & orange crush", "url": "https://goodtasterecords.com/products/earl-sweatshirt-live-laugh-love-alternative-cover-black-orange-crush-color-vinyl-lp"}]}};
   PROJECTS.forEach(p => { if (PRESS[p.id]) { p.press = PRESS[p.id].press; p.shop = PRESS[p.id].shop; } });
-  const FEATURED = PROJECTS.filter(p => p.press || p.shop).map((p, k) => [p, k]).sort((a, b) => (b[0].press.length + b[0].shop.length) - (a[0].press.length + a[0].shop.length) || a[1] - b[1]).map(x => x[0]);
-  const VIEW = { work: { list: PROJECTS, i: 0 }, featured: { list: FEATURED, i: 0 }, shop: { list: SHOPV, i: 0 }, services: { list: SVCV, i: 0 } };
-  const isView = (k) => k === "work" || k === "featured" || k === "shop" || k === "services";
+  /* logo work lives in Branding; everything else in Graphics */
+  const isLogo = p => /^logo/i.test(p.d || "");
+  const BRANDING = PROJECTS.filter(isLogo), GRAPHICS = PROJECTS.filter(p => !isLogo(p));
+  const VIEW = { work: { list: GRAPHICS, i: 0 }, branding: { list: BRANDING, i: 0 }, shop: { list: SHOPV, i: 0 }, services: { list: SVCV, i: 0 } };
+  const isView = (k) => k === "work" || k === "branding" || k === "shop" || k === "services";
   const $ = (id) => document.getElementById(id);
+  /* Work is shown as Graphics and Featured became Branding: old #work / #featured links still land */
+  const HASH_OUT = { work: "graphics" }, HASH_IN = { graphics: "work", featured: "branding" };
   const root = document.documentElement, screen = $("screen"), headline = $("headline"), headWrap = $("headWrap");
   const rail = $("rail"), railInd = $("railInd"), railBtns = [...rail.querySelectorAll(".rail-btn")];
   const KEYS = railBtns.map(b => b.dataset.sec), N = KEYS.length;
@@ -61,13 +67,13 @@ try{
     $("metaDesc").hidden = !DESC[key];
     if (typeof hideHint === "function" && key !== "work") hideHint();
     screen.classList.toggle("work", isView(key));
-    if (key !== "work") { try { setGrid(false, true); } catch {} }
+    try { setGrid(false, true); } catch {}
     if (isView(key)) { if (prevView && VIEW[prevView]) VIEW[prevView].i = pi; WORK = VIEW[key].list; prevView = key; showProject(VIEW[key].i, 0, 0, true); }
     applyPalette(); fit();
     if (!reduced) headline.animate(
       [{ opacity: 0, transform: `translateY(${dir * 40}px)`, filter: "blur(8px)" }, { opacity: 1, transform: "none", filter: "blur(0)" }],
       { duration: 460, easing: "cubic-bezier(.2,.8,.2,1)" });
-    try { if (location.hash.slice(1) !== key) history.replaceState(null, "", "#" + key); } catch {}
+    try { const slug = HASH_OUT[key] || key; if (location.hash.slice(1) !== slug) history.replaceState(null, "", "#" + slug); } catch {}
   }
 
 
@@ -118,7 +124,7 @@ try{
     $("pjIdx").textContent = `${pad(pi + 1)} / ${WORK.length}`;
     try { jogNum(); } catch {}
     setTimeout(() => { try { window.gmSync && gmSync(); } catch {} }, 0);
-    $("jogMsg").textContent = "Scroll to cycle " + ({ work: "projects", featured: "featured work", services: "services", shop: "items" }[current] || "projects");
+    $("jogMsg").textContent = "Scroll to cycle " + ({ work: "projects", branding: "brand work", services: "services", shop: "items" }[current] || "projects");
     $("pjYear").textContent = p.top !== undefined ? p.top : (p.y || "");
     $("pjTitle").textContent = p.t;
     $("pjMeta").textContent = p.c ? `${p.c} · ${p.d}` : p.d;
@@ -229,7 +235,7 @@ try{
   });
   const modIdx = (n) => ((n % N) + N) % N;
   const wrapD = (d) => ((((d % N) + N) + N / 2) % N) - N / 2;
-  const fromHash = () => KEYS.indexOf(location.hash.slice(1));
+  const fromHash = () => { const h = location.hash.slice(1); return KEYS.indexOf(HASH_IN[h] || h); };
   let R = 92, pos = Math.max(0, fromHash()), vel = 0, target = pos, raf = 0;
   let lastSlot = Math.round(pos), booting = true, userTurn = false, lastDir = 1;
 
@@ -454,8 +460,8 @@ try{
   let gridOn = false, gridBuilt = false;
   const pgrid = $("pgrid"), pgridIn = $("pgridIn"), gridBtn = $("gridBtn");
   function buildGrid() {
-    if (gridBuilt) return; gridBuilt = true;
-    PROJECTS.forEach((p, k) => {
+    if (gridBuilt === WORK) return; gridBuilt = WORK; pgridIn.textContent = "";
+    WORK.forEach((p, k) => {
       const b = document.createElement("button");
       b.type = "button"; b.style.setProperty("--tile", (p.cw[0] || [p.bg])[0] || p.bg); b.style.setProperty("--k", Math.min(k, 40));
       b.setAttribute("aria-label", p.t + (p.c ? " \u00b7 " + p.c : ""));
@@ -478,14 +484,14 @@ try{
     const mid = pgrid.scrollHeight ? (pgrid.scrollTop + pgrid.clientHeight / 2) / pgrid.scrollHeight : 0;
     pgridIn.style.setProperty("--gc", cols);
     pgrid.classList.toggle("big", cols <= 3);
-    if (cols <= 3) pgridIn.querySelectorAll("img").forEach((im, j) => { const u = PROJECTS[j].imgs[0]; if (im.getAttribute("src") !== u) im.src = u; });
+    if (cols <= 3) pgridIn.querySelectorAll("img").forEach((im, j) => { const u = WORK[j].imgs[0]; if (im.getAttribute("src") !== u) im.src = u; });
     pgrid.classList.toggle("fill", gz === SZN - 1 && innerWidth <= 720);
     if (!keep && prev !== cols) requestAnimationFrame(() => { pgrid.scrollTop = mid * pgrid.scrollHeight - pgrid.clientHeight / 2; });
   }
   addEventListener("resize", () => { if (gridOn) zoomGrid(gz, true); });
   function setGrid(on, quiet) {
     if (on === gridOn) return;
-    if (on && current !== "work") return;
+    if (on && current !== "work" && current !== "branding") return;
     gridOn = on; screen.classList.toggle("gridon", on);
     gridBtn.setAttribute("aria-pressed", String(on));
     gridBtn.setAttribute("aria-label", on ? "Back to the project" : "Show all projects as a grid");
@@ -507,9 +513,9 @@ try{
 
   /* boot: spin the dial in to the starting section */
   /* a different project first on each visit and reload, unless a shared #p/<id> link names one */
-  VIEW.work.i = Math.floor(Math.random() * PROJECTS.length);
+  VIEW.work.i = Math.floor(Math.random() * GRAPHICS.length); VIEW.branding.i = Math.floor(Math.random() * BRANDING.length);
   { let rl = false; try { rl = (performance.getEntriesByType("navigation")[0] || {}).type === "reload"; } catch (_) {}
-    const m = !rl && /^#p\/(.+)$/.exec(location.hash); if (m) { const id = decodeURIComponent(m[1]), k = PROJECTS.findIndex(p => p.id === id); if (k >= 0) { VIEW.work.i = k; pos = KEYS.indexOf("work"); target = pos; } } }
+    const m = !rl && /^#p\/(.+)$/.exec(location.hash); if (m) { const id = decodeURIComponent(m[1]), sec = BRANDING.some(p => p.id === id) ? "branding" : "work", k = VIEW[sec].list.findIndex(p => p.id === id); if (k >= 0) { VIEW[sec].i = k; pos = KEYS.indexOf(sec); target = pos; } } }
   if (/[?&]nyp=1/.test(location.search)) { pos = KEYS.indexOf("shop"); target = pos; VIEW.shop.i = 0; }
   readR();
   const start = pos;
@@ -1511,7 +1517,7 @@ const pjLink=document.getElementById("pjLink");
 window.pdOnProject=function(p,sec){
   cur=p;curSec=sec;closePanel();
   if(!LIVE||!p)return;
-  const proj=sec==="work"||sec==="featured";
+  const proj=sec==="work"||sec==="branding";
   if(pjLink&&proj){pjLink.textContent="Share project ↗";pjLink.href=`https://precisiondesign.club/#p/${p.id}`}
   setTimeout(()=>{try{if(proj)history.replaceState(null,"",location.pathname+location.search+"#p/"+p.id)}catch(_){}},0);
   clearTimeout(vt);if(proj)vt=setTimeout(()=>{if(lastViewed===p.id)return;lastViewed=p.id;ev("view_project",{project_id:String(p.id),project_title:p.t,project_client:p.c||""})},1200);
@@ -1526,7 +1532,7 @@ if(pjLink)pjLink.addEventListener("click",x=>{
     ev("start_project_click",{from:"shop",item:p.id});
     openContact(gift?p.t:"Custom graphic",gift?`I'd like to buy the ${p.t}.`:`I saw "${p.t}" in the shop and want a custom graphic like it.`);return;
   }
-  if(LIVE&&(curSec==="work"||curSec==="featured")){
+  if(LIVE&&(curSec==="work"||curSec==="branding")){
     x.preventDefault();const url=`https://precisiondesign.club/#p/${p.id}`;
     (async()=>{try{if(navigator.share&&matchMedia("(pointer:coarse)").matches){await navigator.share({title:p.t+" · Precision Design",url});return}}catch(_){return}
       try{await navigator.clipboard.writeText(url);flash("Link copied")}catch(_){flash(url)}})();
@@ -1552,7 +1558,7 @@ function openHowTo(from){
   const row=(ic,t,d)=>`<li><span class="ht-ic" aria-hidden="true">${ic}</span><div><b>${t}</b><p>${d}</p></div></li>`;
   const p=openPanel(`<b>Guide</b> · New here?`,`<h3 class="pdfp-h">How to use the site</h3>
   <ol class="ht">
-  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Work, Featured, Services, Process, Studio, Play and Shop.`)}
+  ${row(icon('.rail-btn[data-sec="work"] svg'),"Big dial: sections",`Tap an icon on the big dial${touch?"":" (or drag it)"} to switch between Graphics, Branding, Apparel, Collections, Services, Process, Studio, Play and Shop.`)}
   ${row('<span class="ht-jog"></span>',"Small dial: flip through",`${touch?"Drag":"Scroll or drag"} the small dial at the bottom to go to the next project, service or shop item.`)}
   ${row(icon("#gridBtn svg")||'<span class="ht-grid"></span>',"See everything","The grid button shows every project at once. Tap one to open it. The SZ slider makes the art bigger or smaller.")}
   ${row(icon("#sideBtn svg"),"Switch sides","Moves the dials to the left or right, whichever is easier for your hand.")}
