@@ -202,7 +202,7 @@ const pjLink=document.getElementById("pjLink");
 window.pdOnProject=function(p,sec){
   cur=p;curSec=sec;closePanel();
   if(!LIVE||!p)return;
-  const proj=sec==="work"||sec==="branding"||sec==="collections"||sec==="albumart";
+  const proj=sec==="work"||sec==="branding"||sec==="collections"||sec==="apparel"||sec==="albumart";
   if(pjLink&&proj){pjLink.textContent="Share project ↗";pjLink.href=`https://precisiondesign.club/#p/${p.id}`}
   setTimeout(()=>{try{if(proj)history.replaceState(null,"",location.pathname+location.search+"#p/"+p.id)}catch(_){}},0);
   clearTimeout(vt);if(proj)vt=setTimeout(()=>{if(lastViewed===p.id)return;lastViewed=p.id;ev("view_project",{project_id:String(p.id),project_title:p.t,project_client:p.c||""})},1200);
@@ -217,7 +217,7 @@ if(pjLink)pjLink.addEventListener("click",x=>{
     ev("start_project_click",{from:"shop",item:p.id});
     openContact(gift?p.t:"Custom graphic",gift?`I'd like to buy the ${p.t}.`:`I saw "${p.t}" in the shop and want a custom graphic like it.`);return;
   }
-  if(LIVE&&(curSec==="work"||curSec==="branding"||curSec==="collections"||curSec==="albumart")){
+  if(LIVE&&(curSec==="work"||curSec==="branding"||curSec==="collections"||curSec==="apparel"||curSec==="albumart")){
     x.preventDefault();const url=`https://precisiondesign.club/#p/${p.id}`;
     (async()=>{try{if(navigator.share&&matchMedia("(pointer:coarse)").matches){await navigator.share({title:p.t+" · Precision Design",url});return}}catch(_){return}
       try{await navigator.clipboard.writeText(url);flash("Link copied")}catch(_){flash(url)}})();

@@ -933,7 +933,6 @@ header .cw-wrap .cw-label { max-width: 72vw; }
           </div>
         </div>
         <!-- APPAREL / COLLECTIONS: placeholders until photos arrive -->
-        <div class="panel soon" data-panel="apparel" hidden><p class="soon-k">Apparel</p><p class="soon-t">New photos are on the way.</p><a class="soon-a" href="#work">See graphics in the meantime →</a></div>
         <!-- STUDIO -->
         <div class="panel" data-panel="studio" hidden>
           <div class="st">
@@ -1097,9 +1096,10 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   /* album covers and packaging live in Album Art */
   const isAlbum = p => /packaging & layout/i.test(p.d || "");
   const BRANDING = PROJECTS.filter(isLogo), ALBUMS = PROJECTS.filter(isAlbum), GRAPHICS = PROJECTS.filter(p => !isLogo(p) && !isAlbum(p));
+  const APPAREL = [{"id": "ap-carrots", "t": "Carrots", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-carrots__0.jpg", "art/ap-carrots__1.jpg"], "cw": [["#ffffff", 0], ["#ffffff", 0]], "th": "art/th/ap-carrots.jpg"}, {"id": "ap-choppagang", "t": "Choppagang", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-choppagang__0.jpg"], "cw": [["#ffffff", 0]], "th": "art/th/ap-choppagang.jpg"}, {"id": "ap-psychworld", "t": "Psychworld", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-psychworld__0.jpg"], "cw": [["#ffffff", 0]], "th": "art/th/ap-psychworld.jpg"}, {"id": "ap-shiesty", "t": "Shiesty", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-shiesty__0.jpg"], "cw": [["#ffffff", 0]], "th": "art/th/ap-shiesty.jpg"}, {"id": "ap-saweetie", "t": "Saweetie", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-saweetie__0.jpg"], "cw": [["#ffffff", 0]], "th": "art/th/ap-saweetie.jpg"}, {"id": "ap-jfg-trill", "t": "Joe Freshgoods × Trill Burgers", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-jfg-trill__0.jpg", "art/ap-jfg-trill__1.jpg", "art/ap-jfg-trill__2.jpg", "art/ap-jfg-trill__3.jpg"], "cw": [["#ffffff", 0], ["#ffffff", 0], ["#ffffff", 0], ["#ffffff", 0]], "th": "art/th/ap-jfg-trill.jpg"}, {"id": "ap-ed-sheeran", "t": "Ed Sheeran", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-ed-sheeran__0.jpg", "art/ap-ed-sheeran__1.jpg", "art/ap-ed-sheeran__2.jpg"], "cw": [["#ffffff", 0], ["#ffffff", 0], ["#ffffff", 0]], "th": "art/th/ap-ed-sheeran.jpg"}, {"id": "ap-xlarge", "t": "XLARGE", "c": "", "y": "", "d": "Apparel", "bg": "#ffffff", "imgs": ["art/ap-xlarge__0.jpg", "art/ap-xlarge__1.jpg", "art/ap-xlarge__2.jpg"], "cw": [["#ffffff", 0], ["#ffffff", 0], ["#ffffff", 0]], "th": "art/th/ap-xlarge.jpg"}];
   const COLLECTIONS = [{"id": "col-carrots", "t": "Carrots", "c": "Carrots by Anwar Carrots", "y": "", "d": "Multiple collections · 100+ pieces", "bg": "#ffffff", "imgs": ["art/col-carrots__0.jpg"], "th": "art/th/col-carrots.jpg", "cw": [["#ffffff", 0]]}, {"id": "col-xlarge", "t": "XLARGE", "c": "XLARGE", "y": "", "d": "Multiple collections", "bg": "#ffffff", "imgs": ["art/col-xlarge__0.jpg"], "th": "art/th/col-xlarge.jpg", "cw": [["#ffffff", 0]]}, {"id": "col-jfg", "t": "Joe Freshgoods", "c": "Joe Freshgoods", "y": "", "d": "Multiple collections", "bg": "#ffffff", "imgs": ["art/col-jfg__0.jpg"], "th": "art/th/col-jfg.jpg", "cw": [["#ffffff", 0]]}, {"id": "col-pooh-shiesty", "t": "Pooh Shiesty", "c": "Pooh Shiesty · Warner Music", "y": "", "d": "Collection", "bg": "#ffffff", "imgs": ["art/col-pooh-shiesty__0.jpg"], "th": "art/th/col-pooh-shiesty.jpg", "cw": [["#ffffff", 0]]}, {"id": "col-persona", "t": "Persona", "c": "Persona", "y": "", "d": "Multiple collections", "bg": "#ffffff", "imgs": ["art/col-persona__0.jpg"], "th": "art/th/col-persona.jpg", "cw": [["#ffffff", 0]]}, {"id": "col-burna", "t": "Burna Boy", "c": "Burna Boy", "y": "", "d": "Multiple collections", "bg": "#ffffff", "imgs": ["art/col-burna__0.jpg"], "th": "art/th/col-burna.jpg", "cw": [["#ffffff", 0]]}, {"id": "col-cardi-b", "t": "Cardi B", "c": "Cardi B · Warner Music", "y": "", "d": "Unused collection", "bg": "#ffffff", "imgs": ["art/col-cardi-b__0.jpg"], "th": "art/th/col-cardi-b.jpg", "cw": [["#ffffff", 0]]}];
-  const VIEW = { work: { list: GRAPHICS, i: 0 }, branding: { list: BRANDING, i: 0 }, collections: { list: COLLECTIONS, i: 0 }, albumart: { list: ALBUMS, i: 0 }, shop: { list: SHOPV, i: 0 }, services: { list: SVCV, i: 0 } };
-  const isView = (k) => k === "work" || k === "branding" || k === "collections" || k === "albumart" || k === "shop" || k === "services";
+  const VIEW = { work: { list: GRAPHICS, i: 0 }, branding: { list: BRANDING, i: 0 }, apparel: { list: APPAREL, i: 0 }, collections: { list: COLLECTIONS, i: 0 }, albumart: { list: ALBUMS, i: 0 }, shop: { list: SHOPV, i: 0 }, services: { list: SVCV, i: 0 } };
+  const isView = (k) => k === "work" || k === "branding" || k === "collections" || k === "apparel" || k === "albumart" || k === "shop" || k === "services";
   const $ = (id) => document.getElementById(id);
   /* Work is shown as Graphics and Featured became Branding: old #work / #featured links still land */
   const HASH_OUT = { work: "graphics", albumart: "album-art" }, HASH_IN = { graphics: "work", featured: "branding", "album-art": "albumart" };
@@ -1197,7 +1197,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
     $("pjIdx").textContent = `${pad(pi + 1)} / ${WORK.length}`;
     try { jogNum(); } catch {}
     setTimeout(() => { try { window.gmSync && gmSync(); } catch {} }, 0);
-    $("jogMsg").textContent = "Scroll to cycle " + ({ work: "projects", branding: "brand work", collections: "collections", albumart: "album art", services: "services", shop: "items" }[current] || "projects");
+    $("jogMsg").textContent = "Scroll to cycle " + ({ work: "projects", branding: "brand work", collections: "collections", apparel: "apparel", albumart: "album art", services: "services", shop: "items" }[current] || "projects");
     $("pjYear").textContent = p.top !== undefined ? p.top : (p.y || "");
     $("pjTitle").textContent = p.t;
     $("pjMeta").textContent = p.c ? `${p.c} · ${p.d}` : p.d;
@@ -1564,7 +1564,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   addEventListener("resize", () => { if (gridOn) zoomGrid(gz, true); });
   function setGrid(on, quiet) {
     if (on === gridOn) return;
-    if (on && !["work", "branding", "collections", "albumart"].includes(current)) return;
+    if (on && !["work", "branding", "apparel", "collections", "albumart"].includes(current)) return;
     gridOn = on; screen.classList.toggle("gridon", on);
     gridBtn.setAttribute("aria-pressed", String(on));
     gridBtn.setAttribute("aria-label", on ? "Back to the project" : "Show all projects as a grid");
@@ -1588,7 +1588,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   /* a different project first on each visit and reload, unless a shared #p/<id> link names one */
   VIEW.work.i = Math.floor(Math.random() * GRAPHICS.length); VIEW.branding.i = Math.floor(Math.random() * BRANDING.length);
   { let rl = false; try { rl = (performance.getEntriesByType("navigation")[0] || {}).type === "reload"; } catch (_) {}
-    const m = !rl && /^#p\/(.+)$/.exec(location.hash); if (m) { const id = decodeURIComponent(m[1]), sec = ["branding", "collections", "albumart"].find(s => VIEW[s].list.some(p => p.id === id)) || "work", k = VIEW[sec].list.findIndex(p => p.id === id); if (k >= 0) { VIEW[sec].i = k; pos = KEYS.indexOf(sec); target = pos; } } }
+    const m = !rl && /^#p\/(.+)$/.exec(location.hash); if (m) { const id = decodeURIComponent(m[1]), sec = ["branding", "apparel", "collections", "albumart"].find(s => VIEW[s].list.some(p => p.id === id)) || "work", k = VIEW[sec].list.findIndex(p => p.id === id); if (k >= 0) { VIEW[sec].i = k; pos = KEYS.indexOf(sec); target = pos; } } }
   if (/[?&]nyp=1/.test(location.search)) { pos = KEYS.indexOf("shop"); target = pos; VIEW.shop.i = 0; }
   readR();
   const start = pos;
