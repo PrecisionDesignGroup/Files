@@ -749,7 +749,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .g-head span { opacity: .35; }
 .gp-h { font-size: clamp(1rem, 1.6vw, 1.3rem); }
 .g-banner b { font-size: clamp(1.2rem, 3vw, 2rem); }
-#gTitle { gap: 9px; } #gTitle .g-lede { font-size: 12px; } #gTitle .g-quick .q { font-size: 9px; } #gTitle .g-keys li { font-size: 9px; padding: 5px 0; } #gTitle .g-keys b { font-size: 8.5px; }
+#gTitle { gap: 9px; } #gTitle .g-lede { font-family: "Silkscreen", var(--font-mono); text-transform: uppercase; font-size: 9px; line-height: 1.6; letter-spacing: .02em; } #gTitle .g-quick .q { font-size: 9px; } #gTitle .g-keys li { font-size: 9px; padding: 5px 0; } #gTitle .g-keys b { font-size: 8.5px; }
 .g-go, .gp-seg button, .gp-back, .g-hud, .g-exit, .g-quick .q, .gp-row > b, .g-keys li, .g-banner span, .g-jump { font-family: "Silkscreen", var(--font-mono); letter-spacing: .02em; }
 /* ribbon-tag buttons, like a pixel score banner */
 .g-go { border: 0; border-radius: 0; height: 30px; font-size: 10.5px; padding: 0 16px 0 22px; background: var(--ink); color: var(--accent-ink); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 10px 50%); box-shadow: none; }
@@ -766,7 +766,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .g-banner span { clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%); padding: 4px 14px; }
 .g-jump { border-radius: 0; border: 2px solid var(--ink); background: var(--bg); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
 .g-jump.down { box-shadow: 0 0 0 var(--ink); transform: translate(4px, 4px); }
-@media (max-width: 720px) { .g-jump { width: 58px; height: 58px; left: 10px; bottom: 10px; } .g-keys li:nth-child(4) { display: none; } }
+@media (max-width: 720px) { .g-jump { width: 58px; height: 58px; left: 10px; bottom: 10px; } .g-keys li:last-child { display: none; } }
 /* the section dial becomes the crank while a run is live */
 .crank { position: absolute; inset: 0; z-index: 8; display: none; border-radius: inherit; background: var(--frame); color: var(--frame-fg); cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; outline: none; }
 .screen.gaming .crank { display: block; animation: crankIn .35s var(--ease-out); }
@@ -795,8 +795,8 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   #gTitle .g-quick { flex-direction: column; align-items: stretch; gap: 8px; }
   #gTitle .g-go { justify-content: center; font-size: 9.5px; height: 28px; }
   .g-quick .q { font-size: 9px; }
-  #gTitle .g-lede { font-size: 11px; }
-  #gTitle .g-keys li { grid-template-columns: 40px minmax(0, 1fr); gap: 8px; font-size: 8px; }
+  #gTitle .g-lede { font-size: 8px; }
+  #gTitle .g-keys li { grid-template-columns: 48px minmax(0, 1fr); gap: 8px; font-size: 8px; }
   #gTitle .g-keys b { font-size: 7.5px; }
   .g-hud { padding: 0 6px; gap: 8px; } .g-hud i { font-size: 8px; } .g-hud b { font-size: 11px; } .g-exit { padding: 0 8px; font-size: 9px; }
   .gp-seg button { font-size: 10px; padding: 0 4px; height: 24px; }
