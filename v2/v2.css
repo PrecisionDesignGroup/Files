@@ -716,8 +716,10 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .g-stage { inset: 0 0 40px; }
   .g-title { bottom: 52px; padding: 14px; gap: 10px; }
   
-  .g-hud { gap: 12px; height: 30px; }
-  .g-hud span:nth-child(4) { display: none; }
+  .g-hud { gap: 10px; height: 30px; min-width: 0; }
+  .g-hud span:nth-child(3), .g-hud span:nth-child(4) { display: none; }
+  .g-hud span { gap: 6px; }
+  .g-exit { flex: none; padding: 0 10px; }
   .g-hud b { font-size: 12px; }
   .crank-dir { font-size: 8px; left: 4px; right: 4px; }
 }
