@@ -615,6 +615,57 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .side { top: 14px; bottom: 14px; gap: 12px; }
   .side .jog-msg { margin-bottom: -10px; }
 }
+
+/* ---------- studio v2: same system as Services — display list, hairline rows, mono labels ---------- */
+.screen.sec-studio .stage { grid-template-rows: auto 0 minmax(0, 1fr); }
+.screen.sec-studio #panels, .screen.sec-studio [data-panel="studio"] { min-height: 0; height: 100%; }
+.st { height: 100%; min-height: 0; display: grid; grid-template-columns: minmax(0, min(38%, 400px)) minmax(0, 1fr); gap: clamp(20px, 4vw, 64px); color: var(--ink); }
+.st-l { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: clamp(16px, 2.6vh, 26px); }
+.st-head { margin: 0; display: flex; flex-direction: column; gap: 2px; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .98; font-size: clamp(1.5rem, 2.9vw, 2.7rem); letter-spacing: .005em; }
+.st-head span { opacity: .16; white-space: nowrap; animation: stUp .5s var(--ease-out) backwards; }
+.st-head span:nth-child(2) { animation-delay: .04s; } .st-head span:nth-child(3) { animation-delay: .08s; } .st-head span:nth-child(4) { animation-delay: .12s; }
+.st-head span.on { opacity: 1; }
+@keyframes stUp { from { transform: translateY(.35em); opacity: 0; } }
+.st-d { display: grid; gap: 12px; max-width: 44ch; }
+.st-quick { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.st-quick .q { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.st-quick .q b { color: var(--ink); font-weight: 600; }
+.st-go { flex: none; display: inline-flex; align-items: center; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 12px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.st-lede { margin: 0; font-size: 13.5px; line-height: 1.45; color: var(--ink); text-wrap: pretty; }
+.st-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.st-chips span { padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+.st-spec { margin: 0; display: grid; }
+.st-spec div { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+.st-spec div:last-child { border-bottom: 1px solid var(--line); }
+.st-spec dt { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); padding-top: 1px; }
+.st-spec dd { margin: 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); line-height: 1.45; }
+.st-how { padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--ink); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; text-align: left; }
+.st-spec small { display: block; margin-top: 2px; font-size: 10px; letter-spacing: .04em; text-transform: none; color: var(--ink-soft); }
+.st-r { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 10px; }
+.st-cap { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.st-grid { margin: 0; padding: 0; list-style: none; min-height: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-auto-rows: minmax(64px, 1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); overflow-y: auto; scrollbar-width: none; overscroll-behavior: contain; }
+.st-grid::-webkit-scrollbar { display: none; }
+.st-grid li { position: relative; display: grid; place-items: center; padding: 18% 14%; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); animation: stCell .5s var(--ease-out) backwards; }
+.st-grid li:nth-child(5n+2) { animation-delay: .03s; } .st-grid li:nth-child(5n+3) { animation-delay: .06s; } .st-grid li:nth-child(5n+4) { animation-delay: .09s; } .st-grid li:nth-child(5n) { animation-delay: .12s; }
+@keyframes stCell { from { opacity: 0; } }
+.st-grid li span { position: absolute; left: 7px; top: 6px; font-family: var(--font-mono); font-size: 9px; letter-spacing: .08em; color: var(--ink-soft); opacity: .7; }
+.st-grid img { display: block; width: auto; height: auto; max-width: 100%; max-height: 38px; object-fit: contain; opacity: .82; transition: opacity .2s; }
+.st-grid li:hover img { opacity: 1; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .st-grid img { filter: invert(1); } }
+:root[data-theme="dark"] .st-grid img { filter: invert(1); }
+@media (max-width: 980px) { .st-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  [data-panel="studio"] { overflow-y: auto; scrollbar-width: none; overscroll-behavior: contain; -webkit-mask: linear-gradient(#000 calc(100% - 22px), transparent); mask: linear-gradient(#000 calc(100% - 22px), transparent); }
+  [data-panel="studio"]::-webkit-scrollbar { display: none; }
+  .st { height: auto; grid-template-columns: minmax(0, 1fr); gap: 22px; padding-bottom: 24px; }
+  .st-l { justify-content: flex-start; gap: 14px; }
+  .st-head { font-size: clamp(1.6rem, 9vw, 2.2rem); }
+  .st-quick { flex-wrap: wrap; }
+  .st-lede { font-size: 13px; }
+  .st-spec div { grid-template-columns: 72px minmax(0, 1fr); }
+  .st-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 64px; overflow: visible; }
+  .st-grid img { max-height: 26px; }
+}
 </style>
 
 <div class="frame">
@@ -669,20 +720,65 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 
         <!-- STUDIO -->
         <div class="panel" data-panel="studio" hidden>
-          <div class="studio">
-            <div>
-              <p class="lede">A creative studio for fashion and lifestyle brands. We work across brand identity, apparel graphics, cut-and-sew programs, graphic capsules, packaging, art direction and collection design.</p>
-              <p class="clients">Clients include Earl Sweatshirt, Burna Boy, Joe Freshgoods, Carrots, New Balance, 7-Eleven, Warner Music Group, Sony Music, Dreamville, Roc Nation, XLARGE, Cardi B, Coachella, SNIPES, Skechers, Zumiez and Sprite.</p>
+          <div class="st">
+            <div class="st-l">
+              <div class="st-d">
+                <div class="st-quick"><span class="q"><b>Independent studio</b> · Fashion + lifestyle</span><a class="st-go" href="mailto:info@precisiondesign.club?subject=Start%20Your%20Project">Start a project →</a></div>
+                <p class="st-lede">We build brands for fashion and lifestyle labels, from the first logo to the finished collection.</p>
+                <div class="st-chips" aria-label="What we do"><span>Brand identity</span><span>Apparel graphics</span><span>Cut &amp; sew</span><span>Graphic capsules</span><span>Packaging</span><span>Art direction</span><span>Collection design</span></div>
+                <dl class="st-spec">
+                  <div><dt>Led by</dt><dd>Jakobi McLemore<small>Formerly senior graphic designer, Warner Music Group &amp; Sony Music</small></dd></div>
+                  <div><dt>Clients</dt><dd>40+ brands &amp; artists</dd></div>
+                  <div><dt>New here?</dt><dd><button type="button" class="st-how" id="howtoBtn">See how to use the site →</button></dd></div>
+                </dl>
+              </div>
             </div>
-            <div class="principles">
-              <div class="glass"><b>LED BY</b>Jakobi McLemore, formerly a senior graphic designer with work for Warner Music Group and Sony Music.</div>
-              <button type="button" class="glass howto-btn" id="howtoBtn"><b>NEW HERE?</b>See how to use the site →</button>
+            <div class="st-r">
+              <div class="st-cap"><span>Worked with</span><span>40 clients</span></div>
+              <ol class="st-grid" aria-label="Clients we have worked with">
+                <li><span>01</span><img src="logos/jfg.png" alt="JFG" width="120" height="120" loading="lazy" decoding="async"></li>
+                <li><span>02</span><img src="logos/dreamville.png" alt="Dreamville" width="273" height="96" loading="lazy" decoding="async"></li>
+                <li><span>03</span><img src="logos/trap-house.png" alt="Trap House" width="160" height="140" loading="lazy" decoding="async"></li>
+                <li><span>04</span><img src="logos/burna-boy.png" alt="Burna Boy" width="116" height="140" loading="lazy" decoding="async"></li>
+                <li><span>05</span><img src="logos/holiday.png" alt="Holiday" width="271" height="70" loading="lazy" decoding="async"></li>
+                <li><span>06</span><img src="logos/matte.png" alt="Matte" width="197" height="113" loading="lazy" decoding="async"></li>
+                <li><span>07</span><img src="logos/tuter.png" alt="Tuter" width="180" height="140" loading="lazy" decoding="async"></li>
+                <li><span>08</span><img src="logos/persona.png" alt="Persona" width="237" height="140" loading="lazy" decoding="async"></li>
+                <li><span>09</span><img src="logos/333-half-evil.png" alt="333 Half-Evil" width="219" height="140" loading="lazy" decoding="async"></li>
+                <li><span>10</span><img src="logos/7-eleven.png" alt="7-Eleven" width="271" height="60" loading="lazy" decoding="async"></li>
+                <li><span>11</span><img src="logos/xlarge.png" alt="XLARGE" width="264" height="62" loading="lazy" decoding="async"></li>
+                <li><span>12</span><img src="logos/portrait.png" alt="Portrait" width="97" height="140" loading="lazy" decoding="async"></li>
+                <li><span>13</span><img src="logos/cardi-b.png" alt="Cardi B" width="310" height="53" loading="lazy" decoding="async"></li>
+                <li><span>14</span><img src="logos/monica.png" alt="Monica" width="320" height="115" loading="lazy" decoding="async"></li>
+                <li><span>15</span><img src="logos/zumiez.png" alt="Zumiez" width="268" height="65" loading="lazy" decoding="async"></li>
+                <li><span>16</span><img src="logos/skechers.png" alt="Skechers" width="266" height="37" loading="lazy" decoding="async"></li>
+                <li><span>17</span><img src="logos/thats-a-awful-lot-of-cou.png" alt="That&#x27;s a Awful Lot of Cough Syrup" width="102" height="140" loading="lazy" decoding="async"></li>
+                <li><span>18</span><img src="logos/c4.png" alt="C4" width="191" height="75" loading="lazy" decoding="async"></li>
+                <li><span>19</span><img src="logos/pythia.png" alt="Pythia" width="230" height="55" loading="lazy" decoding="async"></li>
+                <li><span>20</span><img src="logos/psychworld.png" alt="Psychworld" width="268" height="70" loading="lazy" decoding="async"></li>
+                <li><span>21</span><img src="logos/ice-kream.png" alt="Ice Kream" width="309" height="94" loading="lazy" decoding="async"></li>
+                <li><span>22</span><img src="logos/carrots.png" alt="Carrots" width="274" height="74" loading="lazy" decoding="async"></li>
+                <li><span>23</span><img src="logos/posture.png" alt="Posture" width="251" height="140" loading="lazy" decoding="async"></li>
+                <li><span>24</span><img src="logos/nrx.png" alt="NRX" width="222" height="57" loading="lazy" decoding="async"></li>
+                <li><span>25</span><img src="logos/hip-hop-50.png" alt="Hip Hop 50" width="117" height="140" loading="lazy" decoding="async"></li>
+                <li><span>26</span><img src="logos/stomp-down.png" alt="Stomp Down" width="271" height="120" loading="lazy" decoding="async"></li>
+                <li><span>27</span><img src="logos/roc-nation.png" alt="Roc Nation" width="270" height="56" loading="lazy" decoding="async"></li>
+                <li><span>28</span><img src="logos/coachella.png" alt="Coachella" width="270" height="51" loading="lazy" decoding="async"></li>
+                <li><span>29</span><img src="logos/heavens.png" alt="Heavens" width="269" height="70" loading="lazy" decoding="async"></li>
+                <li><span>30</span><img src="logos/new-balance.png" alt="New Balance" width="270" height="128" loading="lazy" decoding="async"></li>
+                <li><span>31</span><img src="logos/rally-golf-club.png" alt="Rally Golf Club" width="143" height="140" loading="lazy" decoding="async"></li>
+                <li><span>32</span><img src="logos/brkfst.png" alt="BrkFst" width="196" height="137" loading="lazy" decoding="async"></li>
+                <li><span>33</span><img src="logos/manifest.png" alt="Manifest" width="277" height="64" loading="lazy" decoding="async"></li>
+                <li><span>34</span><img src="logos/trill-burgers.png" alt="Trill Burgers" width="252" height="130" loading="lazy" decoding="async"></li>
+                <li><span>35</span><img src="logos/frederick-scott.png" alt="Frederick Scott" width="294" height="33" loading="lazy" decoding="async"></li>
+                <li><span>36</span><img src="logos/pooh-shiesty.png" alt="Pooh Shiesty" width="151" height="140" loading="lazy" decoding="async"></li>
+                <li><span>37</span><img src="logos/sprite.png" alt="Sprite" width="278" height="113" loading="lazy" decoding="async"></li>
+                <li><span>38</span><img src="logos/sony-music.png" alt="Sony Music" width="267" height="33" loading="lazy" decoding="async"></li>
+                <li><span>39</span><img src="logos/warner-music-group.png" alt="Warner Music Group" width="269" height="120" loading="lazy" decoding="async"></li>
+                <li><span>40</span><img src="logos/felt.png" alt="Felt" width="266" height="135" loading="lazy" decoding="async"></li>
+              </ol>
             </div>
-            <div class="logos" aria-label="Clients we have worked with">
-              <span class="logos-label">Worked with</span>
-              <div class="logo-row a"><div class="logo-track"><img src="logos/jfg.png" alt="JFG" width="120" height="120" decoding="async"><img src="logos/dreamville.png" alt="Dreamville" width="273" height="96" decoding="async"><img src="logos/trap-house.png" alt="Trap House" width="160" height="140" decoding="async"><img src="logos/burna-boy.png" alt="Burna Boy" width="116" height="140" decoding="async"><img src="logos/holiday.png" alt="Holiday" width="271" height="70" decoding="async"><img src="logos/matte.png" alt="Matte" width="197" height="113" decoding="async"><img src="logos/tuter.png" alt="Tuter" width="180" height="140" decoding="async"><img src="logos/persona.png" alt="Persona" width="237" height="140" decoding="async"><img src="logos/333-half-evil.png" alt="333 Half-Evil" width="219" height="140" decoding="async"><img src="logos/7-eleven.png" alt="7-Eleven" width="271" height="60" decoding="async"><img src="logos/xlarge.png" alt="XLARGE" width="264" height="62" decoding="async"><img src="logos/portrait.png" alt="Portrait" width="97" height="140" decoding="async"><img src="logos/cardi-b.png" alt="Cardi B" width="310" height="53" decoding="async"><img src="logos/monica.png" alt="Monica" width="320" height="115" decoding="async"><img src="logos/zumiez.png" alt="Zumiez" width="268" height="65" decoding="async"><img src="logos/skechers.png" alt="Skechers" width="266" height="37" decoding="async"><img src="logos/thats-a-awful-lot-of-cou.png" alt="That&#x27;s a Awful Lot of Cough Syrup" width="102" height="140" decoding="async"><img src="logos/c4.png" alt="C4" width="191" height="75" decoding="async"><img src="logos/pythia.png" alt="Pythia" width="230" height="55" decoding="async"><img src="logos/psychworld.png" alt="Psychworld" width="268" height="70" decoding="async"><img src="logos/jfg.png" alt="" aria-hidden="true" width="120" height="120" decoding="async"><img src="logos/dreamville.png" alt="" aria-hidden="true" width="273" height="96" decoding="async"><img src="logos/trap-house.png" alt="" aria-hidden="true" width="160" height="140" decoding="async"><img src="logos/burna-boy.png" alt="" aria-hidden="true" width="116" height="140" decoding="async"><img src="logos/holiday.png" alt="" aria-hidden="true" width="271" height="70" decoding="async"><img src="logos/matte.png" alt="" aria-hidden="true" width="197" height="113" decoding="async"><img src="logos/tuter.png" alt="" aria-hidden="true" width="180" height="140" decoding="async"><img src="logos/persona.png" alt="" aria-hidden="true" width="237" height="140" decoding="async"><img src="logos/333-half-evil.png" alt="" aria-hidden="true" width="219" height="140" decoding="async"><img src="logos/7-eleven.png" alt="" aria-hidden="true" width="271" height="60" decoding="async"><img src="logos/xlarge.png" alt="" aria-hidden="true" width="264" height="62" decoding="async"><img src="logos/portrait.png" alt="" aria-hidden="true" width="97" height="140" decoding="async"><img src="logos/cardi-b.png" alt="" aria-hidden="true" width="310" height="53" decoding="async"><img src="logos/monica.png" alt="" aria-hidden="true" width="320" height="115" decoding="async"><img src="logos/zumiez.png" alt="" aria-hidden="true" width="268" height="65" decoding="async"><img src="logos/skechers.png" alt="" aria-hidden="true" width="266" height="37" decoding="async"><img src="logos/thats-a-awful-lot-of-cou.png" alt="" aria-hidden="true" width="102" height="140" decoding="async"><img src="logos/c4.png" alt="" aria-hidden="true" width="191" height="75" decoding="async"><img src="logos/pythia.png" alt="" aria-hidden="true" width="230" height="55" decoding="async"><img src="logos/psychworld.png" alt="" aria-hidden="true" width="268" height="70" decoding="async"></div></div>
-              <div class="logo-row b"><div class="logo-track"><img src="logos/ice-kream.png" alt="Ice Kream" width="309" height="94" decoding="async"><img src="logos/carrots.png" alt="Carrots" width="274" height="74" decoding="async"><img src="logos/posture.png" alt="Posture" width="251" height="140" decoding="async"><img src="logos/nrx.png" alt="NRX" width="222" height="57" decoding="async"><img src="logos/hip-hop-50.png" alt="Hip Hop 50" width="117" height="140" decoding="async"><img src="logos/stomp-down.png" alt="Stomp Down" width="271" height="120" decoding="async"><img src="logos/roc-nation.png" alt="Roc Nation" width="270" height="56" decoding="async"><img src="logos/coachella.png" alt="Coachella" width="270" height="51" decoding="async"><img src="logos/heavens.png" alt="Heavens" width="269" height="70" decoding="async"><img src="logos/new-balance.png" alt="New Balance" width="270" height="128" decoding="async"><img src="logos/rally-golf-club.png" alt="Rally Golf Club" width="143" height="140" decoding="async"><img src="logos/brkfst.png" alt="BrkFst" width="196" height="137" decoding="async"><img src="logos/manifest.png" alt="Manifest" width="277" height="64" decoding="async"><img src="logos/trill-burgers.png" alt="Trill Burgers" width="252" height="130" decoding="async"><img src="logos/frederick-scott.png" alt="Frederick Scott" width="294" height="33" decoding="async"><img src="logos/pooh-shiesty.png" alt="Pooh Shiesty" width="151" height="140" decoding="async"><img src="logos/sprite.png" alt="Sprite" width="278" height="113" decoding="async"><img src="logos/sony-music.png" alt="Sony Music" width="267" height="33" decoding="async"><img src="logos/warner-music-group.png" alt="Warner Music Group" width="269" height="120" decoding="async"><img src="logos/felt.png" alt="Felt" width="266" height="135" decoding="async"><img src="logos/ice-kream.png" alt="" aria-hidden="true" width="309" height="94" decoding="async"><img src="logos/carrots.png" alt="" aria-hidden="true" width="274" height="74" decoding="async"><img src="logos/posture.png" alt="" aria-hidden="true" width="251" height="140" decoding="async"><img src="logos/nrx.png" alt="" aria-hidden="true" width="222" height="57" decoding="async"><img src="logos/hip-hop-50.png" alt="" aria-hidden="true" width="117" height="140" decoding="async"><img src="logos/stomp-down.png" alt="" aria-hidden="true" width="271" height="120" decoding="async"><img src="logos/roc-nation.png" alt="" aria-hidden="true" width="270" height="56" decoding="async"><img src="logos/coachella.png" alt="" aria-hidden="true" width="270" height="51" decoding="async"><img src="logos/heavens.png" alt="" aria-hidden="true" width="269" height="70" decoding="async"><img src="logos/new-balance.png" alt="" aria-hidden="true" width="270" height="128" decoding="async"><img src="logos/rally-golf-club.png" alt="" aria-hidden="true" width="143" height="140" decoding="async"><img src="logos/brkfst.png" alt="" aria-hidden="true" width="196" height="137" decoding="async"><img src="logos/manifest.png" alt="" aria-hidden="true" width="277" height="64" decoding="async"><img src="logos/trill-burgers.png" alt="" aria-hidden="true" width="252" height="130" decoding="async"><img src="logos/frederick-scott.png" alt="" aria-hidden="true" width="294" height="33" decoding="async"><img src="logos/pooh-shiesty.png" alt="" aria-hidden="true" width="151" height="140" decoding="async"><img src="logos/sprite.png" alt="" aria-hidden="true" width="278" height="113" decoding="async"><img src="logos/sony-music.png" alt="" aria-hidden="true" width="267" height="33" decoding="async"><img src="logos/warner-music-group.png" alt="" aria-hidden="true" width="269" height="120" decoding="async"><img src="logos/felt.png" alt="" aria-hidden="true" width="266" height="135" decoding="async"></div></div>
-            </div>
+          </div>
         </div>
 
       </div>
