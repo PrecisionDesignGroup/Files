@@ -718,13 +718,13 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .g-jump.down { transform: translateY(3px); box-shadow: 0 0 0 var(--ink); }
 .screen.gaming .g-jump { display: flex; }
 /* 1-bit bitmap look for Play: two tones (charcoal + bone), dithered shadows, pixel type */
-.g { --bg: #2B2925; --surface: #2B2925; --line: #DAD6CA; --ink: #DAD6CA; --ink-soft: #A39F93; --accent: #DAD6CA; --accent-ink: #2B2925;
-  --dith: repeating-conic-gradient(#DAD6CA 0 25%, transparent 0 50%) 0 0 / 4px 4px;
-  background: #2B2925; border-radius: 14px; overflow: hidden; }
+.g { --bg: #080808; --surface: #080808; --line: #FFFFFF; --ink: #FFFFFF; --ink-soft: #BDBDBD; --accent: #FFFFFF; --accent-ink: #080808;
+  --dith: repeating-conic-gradient(#FFFFFF 0 25%, transparent 0 50%) 0 0 / 4px 4px;
+  background: #080808; border-radius: 14px; overflow: hidden; }
 .g-stage { border: 0; border-radius: 0; }
 .g-hud { border-top: 2px solid var(--line); padding: 0 12px; }
 [data-panel="play"] canvas { image-rendering: pixelated; image-rendering: crisp-edges; }
-[data-panel="play"] .g-title { left: 12px; border-radius: 0; border: 2px solid var(--ink); box-shadow: none; width: min(400px, calc(100% - 24px)); }
+[data-panel="play"] .g-title { grid-template-columns: minmax(0, 1fr); left: 12px; border-radius: 0; border: 2px solid var(--ink); box-shadow: none; width: min(400px, calc(100% - 24px)); }
 [data-panel="play"] .g-title::after { content: ""; position: absolute; z-index: -1; left: 6px; top: 6px; right: -8px; bottom: -8px; background: var(--dith); pointer-events: none; clip-path: polygon(calc(100% - 8px) 0, 100% 0, 100% 100%, 0 100%, 0 calc(100% - 8px), calc(100% - 8px) calc(100% - 8px)); }
 .g-head, .gp-h, .g-banner b { font-family: "Silkscreen", var(--font-mono); font-weight: 700; letter-spacing: 0; line-height: 1; }
 .g-head { font-size: clamp(1.5rem, 2.6vw, 2.3rem); }
@@ -741,7 +741,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .gp-arts button { border: 2px solid var(--ink); padding: 2px; background: transparent; }
 .gp-arts button canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; }
 .gp-arts button[aria-checked="true"] { outline: 0; box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink); }
-.gp-prev { border: 2px solid var(--ink); background: #2B2925 !important; }
+.gp-prev { border: 2px solid var(--ink); background: #080808 !important; }
 .g-exit { border: 2px solid var(--ink); background: transparent; }
 .g-banner b { background: var(--bg); padding: 4px 12px; }
 .g-banner span { clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%); padding: 4px 14px; }
@@ -770,7 +770,15 @@ header .cw-wrap .cw-label { max-width: 72vw; }
   .gp-prev { width: 100%; height: 92px; }
   .gp-opts .gp-row { grid-template-columns: minmax(0, 1fr); }
   .g-pick { padding: 12px; }
-  .g-pick .g-go { font-size: 10.5px; padding: 0 12px 0 20px; }
+  .g-pick .g-go { flex: 1; justify-content: center; font-size: 10.5px; padding: 0 12px 0 20px; }
+  [data-panel="play"] .g-title { padding: 12px; }
+  .g-head { font-size: clamp(1.1rem, 7vw, 1.6rem); }
+  #gTitle .g-quick { flex-direction: column; align-items: stretch; gap: 8px; }
+  #gTitle .g-go { justify-content: center; font-size: 10.5px; }
+  .g-quick .q { font-size: 9px; }
+  .g-lede { font-size: 12px; }
+  .g-keys li { grid-template-columns: 44px minmax(0, 1fr); gap: 8px; font-size: 9px; }
+  .g-keys b { font-size: 8.5px; }
   .g-hud { padding: 0 6px; gap: 8px; } .g-hud i { font-size: 8px; } .g-hud b { font-size: 11px; } .g-exit { padding: 0 8px; font-size: 9px; }
   .gp-seg button { font-size: 10px; padding: 0 4px; height: 24px; }
   .gp-l { display: none; } .gp-s { display: inline; }
