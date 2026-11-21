@@ -127,7 +127,9 @@
   function audio() {
     if (muted) return null;
     try {
+      try { if (navigator.audioSession) navigator.audioSession.type = "ambient"; } catch {}
       ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume();
+      clearTimeout(audio.t); audio.t = setTimeout(() => { try { ac.suspend(); } catch {} }, 1500); // pause when quiet (stops iPhone's floating player)
       if (!master) { master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination); }
       if (!noiseBuf) { noiseBuf = ac.createBuffer(1, ac.sampleRate * .6, ac.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
       return ac;
@@ -745,6 +747,7 @@
   }
   new MutationObserver(() => setActive(screenEl.classList.contains("sec-play"))).observe(screenEl, { attributes: true, attributeFilter: ["class"] });
   new ResizeObserver(() => { if (active) resize(); }).observe(wrap);
+  document.addEventListener("visibilitychange", () => { if (document.hidden && ac) { try { ac.suspend(); } catch {} } });
   document.addEventListener("visibilitychange", () => { if (active && !document.hidden && !raf) { last = 0; raf = requestAnimationFrame(frame); } });
   window.addEventListener("pdtheme", readColors);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
