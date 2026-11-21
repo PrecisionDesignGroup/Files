@@ -267,12 +267,13 @@ try{
      UI clicks are marked as ambient sound (never a media session) and the audio is paused as soon as it goes quiet. */
   try { if (navigator.audioSession) navigator.audioSession.type = "ambient"; } catch {}
   let actx, actxT;
+  const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   function clickSound() {
-    if (!userTurn) return;
+    if (!userTurn || IOS) return; // no dial clicks on iPhone/iPad: any page audio there opens Safari's floating player
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
       if (actx.state === "suspended") actx.resume();
-      clearTimeout(actxT); actxT = setTimeout(() => { try { actx.suspend(); } catch {} }, 900);
+      clearTimeout(actxT); actxT = setTimeout(() => { const a = actx; actx = null; try { a.close(); } catch {} }, 900);
       const len = Math.floor(actx.sampleRate * .012), buf = actx.createBuffer(1, len, actx.sampleRate), ch = buf.getChannelData(0);
       for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
       const src = actx.createBufferSource(), bp = actx.createBiquadFilter(), g = actx.createGain();
@@ -1729,12 +1730,13 @@ try{
   /* ---------- sound: retro chip sounds made on the fly with Web Audio (no files) ---------- */
   let muted = false; try { muted = localStorage.getItem("pd-ascent-mute") === "1"; } catch {}
   let master = null, noiseBuf = null;
+  function closeAudio() { clearTimeout(audio.t); const a = ac; ac = null; master = null; noiseBuf = null; if (a) { try { a.close(); } catch {} } }
   function audio() {
     if (muted) return null;
     try {
       try { if (navigator.audioSession) navigator.audioSession.type = "ambient"; } catch {}
       ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume();
-      clearTimeout(audio.t); audio.t = setTimeout(() => { try { ac.suspend(); } catch {} }, 1500); // pause when quiet (stops iPhone's floating player)
+      clearTimeout(audio.t); audio.t = setTimeout(closeAudio, 1500); // shut audio fully when quiet: iPhone Safari keeps a floating player while a context exists
       if (!master) { master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination); }
       if (!noiseBuf) { noiseBuf = ac.createBuffer(1, ac.sampleRate * .6, ac.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
       return ac;
@@ -1924,6 +1926,7 @@ try{
     crank.focus({ preventScroll: true });
   }
   function exit() {
+    closeAudio();
     playing = false; holdDir = keyDir = 0; pending = 0;
     screenEl.classList.remove("gaming"); document.documentElement.classList.remove("pd-gaming"); if (pick) pick.hidden = true; ui.title.hidden = false; hud();
     try { rail.focus({ preventScroll: true }); } catch {}
@@ -2352,7 +2355,7 @@ try{
   }
   new MutationObserver(() => setActive(screenEl.classList.contains("sec-play"))).observe(screenEl, { attributes: true, attributeFilter: ["class"] });
   new ResizeObserver(() => { if (active) resize(); }).observe(wrap);
-  document.addEventListener("visibilitychange", () => { if (document.hidden && ac) { try { ac.suspend(); } catch {} } });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) closeAudio(); });
   document.addEventListener("visibilitychange", () => { if (active && !document.hidden && !raf) { last = 0; raf = requestAnimationFrame(frame); } });
   window.addEventListener("pdtheme", readColors);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
