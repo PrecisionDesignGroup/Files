@@ -263,12 +263,16 @@ try{
     const slot = Math.round(pos);
     if (slot !== lastSlot) { lastDir = Math.sign(slot - lastSlot); lastSlot = slot; detent(slot); }
   }
-  let actx;
+  /* iPhone Safari shows a floating "now playing" window for pages whose Web Audio keeps running.
+     UI clicks are marked as ambient sound (never a media session) and the audio is paused as soon as it goes quiet. */
+  try { if (navigator.audioSession) navigator.audioSession.type = "ambient"; } catch {}
+  let actx, actxT;
   function clickSound() {
     if (!userTurn) return;
     try {
       actx = actx || new (window.AudioContext || window.webkitAudioContext)();
       if (actx.state === "suspended") actx.resume();
+      clearTimeout(actxT); actxT = setTimeout(() => { try { actx.suspend(); } catch {} }, 900);
       const len = Math.floor(actx.sampleRate * .012), buf = actx.createBuffer(1, len, actx.sampleRate), ch = buf.getChannelData(0);
       for (let i = 0; i < len; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 4);
       const src = actx.createBufferSource(), bp = actx.createBiquadFilter(), g = actx.createGain();
@@ -1728,7 +1732,9 @@ try{
   function audio() {
     if (muted) return null;
     try {
+      try { if (navigator.audioSession) navigator.audioSession.type = "ambient"; } catch {}
       ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === "suspended") ac.resume();
+      clearTimeout(audio.t); audio.t = setTimeout(() => { try { ac.suspend(); } catch {} }, 1500); // pause when quiet (stops iPhone's floating player)
       if (!master) { master = ac.createGain(); master.gain.value = .9; master.connect(ac.destination); }
       if (!noiseBuf) { noiseBuf = ac.createBuffer(1, ac.sampleRate * .6, ac.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
       return ac;
@@ -2346,6 +2352,7 @@ try{
   }
   new MutationObserver(() => setActive(screenEl.classList.contains("sec-play"))).observe(screenEl, { attributes: true, attributeFilter: ["class"] });
   new ResizeObserver(() => { if (active) resize(); }).observe(wrap);
+  document.addEventListener("visibilitychange", () => { if (document.hidden && ac) { try { ac.suspend(); } catch {} } });
   document.addEventListener("visibilitychange", () => { if (active && !document.hidden && !raf) { last = 0; raf = requestAnimationFrame(frame); } });
   window.addEventListener("pdtheme", readColors);
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
