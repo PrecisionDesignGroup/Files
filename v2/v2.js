@@ -4,7 +4,7 @@ try{
 
 /* first-visit intro (see html.pd-intro in the CSS) */
 try { const q = /[?&]intro=1/.test(location.search); let seen = null; try { seen = localStorage.getItem("pd-v2-intro"); } catch (_) {}
-  if ((q || !seen) && !matchMedia("(prefers-reduced-motion: reduce)").matches) { document.documentElement.classList.add("pd-intro"); try { localStorage.setItem("pd-v2-intro", "1"); } catch (_) {} }
+  if ((q || !seen) && !/^#play/.test(location.hash) && !matchMedia("(prefers-reduced-motion: reduce)").matches) { document.documentElement.classList.add("pd-intro"); try { localStorage.setItem("pd-v2-intro", "1"); } catch (_) {} }
 } catch (_) {}
 (() => {
   const SECTIONS = {

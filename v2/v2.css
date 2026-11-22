@@ -853,23 +853,24 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .soon-a:hover { opacity: 1; }
 
 /* ---------- first-visit intro: the page comes together, then the side nav pops out like a bubble.
-   main script adds html.pd-intro once per browser (localStorage "pd-v2-intro"); ?intro=1 replays it. Off for reduced motion. */
-html.pd-intro .screen { animation: inScreen 1.05s cubic-bezier(.2, .8, .2, 1) both; }
+   main script adds html.pd-intro once per browser (localStorage "pd-v2-intro"); ?intro=1 replays it. Off for reduced motion.
+   Fill mode is "backwards" on purpose: a leftover scale on .screen would trap the full-frame game (position: fixed) inside it. */
+html.pd-intro .screen { animation: inScreen 1.05s cubic-bezier(.2, .8, .2, 1) backwards; }
 @keyframes inScreen { from { opacity: 0; scale: .9; } 55% { opacity: 1; } to { opacity: 1; scale: 1; } }
-html.pd-intro .art-layer { animation: inArt 1.5s .3s cubic-bezier(.16, 1, .3, 1) both; }
+html.pd-intro .art-layer { animation: inArt 1.5s .3s cubic-bezier(.16, 1, .3, 1) backwards; }
 @keyframes inArt { from { scale: 1.14; } }
-html.pd-intro .top > * { animation: inDrop .7s cubic-bezier(.16, 1, .3, 1) both; }
+html.pd-intro .top > * { animation: inDrop .7s cubic-bezier(.16, 1, .3, 1) backwards; }
 html.pd-intro .top > :nth-child(1) { animation-delay: .45s; }
 html.pd-intro .top > :nth-child(2) { animation-delay: .56s; }
 html.pd-intro .top > :nth-child(n+3) { animation-delay: .64s; }
 @keyframes inDrop { from { opacity: 0; translate: 0 -22px; filter: blur(6px); } }
-html.pd-intro .headline-wrap { animation: inRise .95s .58s cubic-bezier(.16, 1, .3, 1) both; }
-html.pd-intro #panels { animation: inRise .9s .78s cubic-bezier(.16, 1, .3, 1) both; }
+html.pd-intro .headline-wrap { animation: inRise .95s .58s cubic-bezier(.16, 1, .3, 1) backwards; }
+html.pd-intro #panels { animation: inRise .9s .78s cubic-bezier(.16, 1, .3, 1) backwards; }
 @keyframes inRise { from { opacity: 0; translate: 0 46px; filter: blur(8px); } }
-html.pd-intro .marks i { animation: inMark .6s 1s cubic-bezier(.16, 1, .3, 1) both; }
+html.pd-intro .marks i { animation: inMark .6s 1s cubic-bezier(.16, 1, .3, 1) backwards; }
 @keyframes inMark { from { opacity: 0; scale: 2.4; } }
 /* the bubble: the dial swells out of the screen edge, overshoots, wobbles and settles */
-html.pd-intro .rail { transform-origin: 100% 50%; animation: inBubble 1.1s 1.05s both; }
+html.pd-intro .rail { transform-origin: 100% 50%; animation: inBubble 1.1s 1.05s backwards; }
 @keyframes inBubble {
   0%   { opacity: 0; scale: .04 .3;  animation-timing-function: cubic-bezier(.2, .7, .3, 1); }
   12%  { opacity: 1; }
@@ -879,9 +880,9 @@ html.pd-intro .rail { transform-origin: 100% 50%; animation: inBubble 1.1s 1.05s
   86%  { scale: .985 1.015; }
   100% { opacity: 1; scale: 1 1; }
 }
-html.pd-intro .rail .wheel { animation: inFade .5s 1.5s ease-out both; }
+html.pd-intro .rail .wheel { animation: inFade .5s 1.5s ease-out backwards; }
 @keyframes inFade { from { opacity: 0; } }
-html.pd-intro .side-top > *, html.pd-intro .side .jog, html.pd-intro .side .jog-msg { animation: inPop .75s both; }
+html.pd-intro .side-top > *, html.pd-intro .side .jog, html.pd-intro .side .jog-msg { animation: inPop .75s backwards; }
 html.pd-intro .side-top > :nth-child(1) { animation-delay: 1.35s; }
 html.pd-intro .side-top > :nth-child(2) { animation-delay: 1.45s; }
 html.pd-intro .side .jog { animation-delay: 1.55s; }
@@ -895,3 +896,4 @@ html.pd-intro .side .jog-msg { animation-delay: 1.7s; }
   100% { opacity: 1; scale: 1; }
 }
 @media (prefers-reduced-motion: reduce) { html.pd-intro * { animation: none !important; } }
+html.pd-intro.pd-gaming .screen { animation: none; }
