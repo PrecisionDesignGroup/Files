@@ -82,7 +82,7 @@ const css=document.createElement("style");css.textContent=`
 const opt=o=>o.map(x=>`<option>${e(x)}</option>`).join("");
 const sel=(n,o,r)=>`<select name="${n}"${r?" required":""}><option value="">Select…</option>${opt(o)}</select>`;
 const lab=(t,r)=>`<span>${e(t)}${r?' <i class="req">*</i>':""}</span>`;
-const policy=d=>`The <b>$${d} deposit</b> is non-refundable and also counts as your <b>consultation fee</b>. If you move forward, it goes toward your project. If you decide not to proceed after the consultation, you're only charged for the consultation.`;
+const policy=d=>`The <b>deposit</b> is non-refundable and also counts as your <b>consultation fee</b>. If you move forward, it goes toward your project. If you decide not to proceed after the consultation, you're only charged for the consultation.`;
 function field(q,i,pre){
   const n="q"+i;
   if(q.t==="chips")return `<fieldset><legend>${e(q.k)}</legend><div class="chips">${q.o.map(x=>`<label><input type="checkbox" name="${n}" value="${e(x)}"${(pre[q.k]||[]).includes(x)?" checked":""}><span>${e(x)}</span></label>`).join("")}</div></fieldset>`;
@@ -94,7 +94,7 @@ window.svFormInline=function(id,host,onBack){
   const it=(window.SVCV||[]).find(p=>p.id===id),c=F[id];if(!it||!c||!host)return false;
   const svu=host.closest(".svu");if(svu)svu.classList.add("fm");
   host.className="svu-d svf";
-  host.innerHTML=`<div class="svf-top"><span class="st0"><b>Step 1/2</b> · $${c.dep} deposit</span><button type="button" class="svf-back">← Back</button></div>
+  host.innerHTML=`<div class="svf-top"><span class="st0"><b>Step 1/2</b> · Deposit required</span><button type="button" class="svf-back">← Back</button></div>
   <div class="svf-sc"><div class="svf-body">
   <p class="dep">${policy(c.dep)}<br>Step 1: send this form. Step 2: pay the deposit on Stripe.</p>
   <form novalidate>
@@ -106,7 +106,7 @@ window.svFormInline=function(id,host,onBack){
     <label>${lab("References — link")}<input name="refs" inputmode="url" placeholder="Drive, Dropbox, Pinterest or Instagram link"></label>
     <label>${lab("References — description")}<textarea name="refdesc" rows="2" placeholder="What do you like about these references?"></textarea><span class="help">Share any references that help show the direction you want.${EMAIL?` You can also email files to ${e(EMAIL)} with your name and business.`:""}</span></label>
     <label>${lab("Notes to Precision Design")}<textarea name="notes" rows="2"></textarea></label>
-    <label class="agree"><input type="checkbox" name="agree" required><span>I understand the $${c.dep} deposit is non-refundable, counts as my consultation fee, and goes toward my project if I proceed.</span></label>
+    <label class="agree"><input type="checkbox" name="agree" required><span>I understand the deposit is non-refundable, counts as my consultation fee, and goes toward my project if I proceed.</span></label>
     <div class="svf-ts"></div>
     <div class="foot"><button class="go" type="submit">Send &amp; continue to deposit</button><span class="st" role="status" aria-live="polite"></span></div>
   </form></div></div>`;
@@ -133,8 +133,8 @@ window.svFormInline=function(id,host,onBack){
     try{window.pdEv&&pdEv("form_submit",{form:"service_intake",service:it.t,sent_by:sent?"webflow":"email"})}catch(_){}
     host.querySelector(".st0").innerHTML=`<b>Step 2/2</b> · Deposit`;
     host.querySelector(".svf-body").innerHTML=`<div class="done"><h3>Now your deposit</h3>
-      <p>${sent?"Your project details were sent to Precision Design. ":"Your project details are ready to send to Precision Design in your email app. "}Pay your <b>$${c.dep}</b> ${e(it.t)} deposit to lock in your consultation. Once paid, Precision Design will reach out with your project intake and everything about your project.</p>
-      <div class="foot"><a class="go" href="${e(c.link)}" target="_blank" rel="noopener" onclick="try{window.pdEv&&pdEv('begin_checkout',{item:'${e(it.t)} deposit',value:${c.dep},currency:'USD'})}catch(_){}">Pay $${c.dep} deposit on Stripe ↗</a></div>
+      <p>${sent?"Your project details were sent to Precision Design. ":"Your project details are ready to send to Precision Design in your email app. "}Pay your <b>${e(it.t)}</b> deposit to lock in your consultation. Once paid, Precision Design will reach out with your project intake and everything about your project.</p>
+      <div class="foot"><a class="go" href="${e(c.link)}" target="_blank" rel="noopener" onclick="try{window.pdEv&&pdEv('begin_checkout',{item:'${e(it.t)} deposit',value:${c.dep},currency:'USD'})}catch(_){}">Pay deposit on Stripe ↗</a></div>
       <p style="margin-top:16px;font-size:11.5px">${policy(c.dep)}</p></div>`;
     sc.scrollTop=0;
   });

@@ -259,8 +259,10 @@ document.addEventListener("click",x=>{const b=x.target.closest&&x.target.closest
 if(/^#help$/.test(location.hash)||/[?&]howto=1/.test(location.search))setTimeout(()=>openHowTo("link"),1200);
 /* the how-to no longer pops up on its own: it opens from the Studio page link (or #help) */
 
-/* /shop?nyp=1 (the old share link) opens the offer */
-if(/[?&]nyp=1/.test(location.search))setTimeout(()=>{try{if(screenEl&&!screenEl.classList.contains("sec-shop"))document.querySelector('.rail-btn[data-sec="shop"]').click()}catch(_){}setTimeout(openNYP,900)},1200);
+/* Name Your Price ended 2026-11-22. The old share link /shop?nyp=1 now just opens Shop.
+   To bring it back: re-add the "nyp" card to SHOPV in index.html, update NYP_END, and add
+   setTimeout(openNYP,900) back here for ?nyp=1. */
+if(/[?&]nyp=1/.test(location.search))setTimeout(()=>{try{if(screenEl&&!screenEl.classList.contains("sec-shop"))document.querySelector('.rail-btn[data-sec="shop"]').click()}catch(_){}},1200);
 })();
 /* the first project is drawn before this file runs: give it the same treatment */
 (function(){try{const sc=document.getElementById("screen"),sec=sc&&[...sc.classList].find(c=>c.startsWith("sec-"));const k=sec&&sec.slice(4);
