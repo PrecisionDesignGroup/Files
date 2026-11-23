@@ -1943,14 +1943,14 @@ try{
     (SFX.hit[kind] || (() => tone(220, .25, "sawtooth", .06, -160)))();
     try { navigator.vibrate && navigator.vibrate(40); } catch {}
   }
-  /* power-ups shrink the higher you are: full time up to floor 10, then 0.6s less per floor, never under 5s */
-  const powerFor = (base, fl) => Math.max(5, Math.round(base - Math.max(0, fl - 9) * .6));
+  /* every poster makes you invincible: 5s below floor 10, then a random 1–5s from floor 10 up (where the monster starts; fl is 0-based).
+     A new poster never cuts short time you already have. The ninth also gives the sword. */
+  const powerFor = fl => fl < 9 ? 5 : 1 + Math.floor(Math.random() * 5);
   function collect(id) {
-    const fl = Math.floor(id / 10);
-    taken.add(id); got++; SFX.poster();
-    if (got === 9) { sword = true; power = powerFor(20, fl); SFX.sword(); banner("Sword unlocked", `Walk into the monster to cut it down · ${power}s invincible`); }
-    else if (got % 3 === 0) { power = powerFor(got >= 6 ? 20 : 15, fl); SFX.power(); banner("Invincible", `${power} seconds · ${got} posters`); }
-    else banner(`Poster ${got}`, got < 3 ? `${3 - got} more for 15s invincible` : got < 6 ? `${6 - got} more for 20s invincible` : `${9 - got} more for the sword`);
+    const fl = Math.floor(id / 10), add = powerFor(fl);
+    taken.add(id); got++; SFX.poster(); power = Math.max(power, add);
+    if (got === 9) { sword = true; SFX.sword(); banner("Sword unlocked", `Walk into the monster to cut it down · ${add}s invincible`); }
+    else { SFX.power(); banner(`${add}s invincible`, got < 9 ? `Poster ${got} · ${9 - got} to the sword` : `Poster ${got}`); }
     hud();
   }
   ui.start.addEventListener("click", openPick);
@@ -2367,7 +2367,7 @@ try{
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
   setActive(screenEl.classList.contains("sec-play"));
   hud();
-  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get posters() { return got; }, set posters(v) { got = v; }, get power() { return power; }, get sword() { return sword; }, get floor() { return cp + 1; } };
+  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get posters() { return got; }, set posters(v) { got = v; }, get power() { return power; }, set power(v) { power = v; }, collect, get sword() { return sword; }, get floor() { return cp + 1; } };
 })();
 
 }catch(e){console.error("game.js",e)}

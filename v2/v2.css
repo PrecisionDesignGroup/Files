@@ -763,7 +763,7 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .gp-prev { border: 2px solid var(--ink); background: #080808 !important; }
 .g-exit { border: 2px solid var(--ink); background: transparent; }
 .g-banner b { background: var(--bg); padding: 4px 12px; }
-.g-banner span { clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%); padding: 4px 14px; }
+.g-banner span { clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%); padding: 4px 14px; color: var(--bg); }
 .g-jump { border-radius: 0; border: 2px solid var(--ink); background: var(--bg); color: var(--ink); box-shadow: 4px 4px 0 var(--ink); }
 .g-jump.down { box-shadow: 0 0 0 var(--ink); transform: translate(4px, 4px); }
 @media (max-width: 720px) { .g-jump { width: 58px; height: 58px; left: 10px; bottom: 10px; } .g-keys li:last-child { display: none; } }
