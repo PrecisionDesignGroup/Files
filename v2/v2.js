@@ -1534,6 +1534,26 @@ function openNYP(){
 }
 window.pdOpenNYP=openNYP;
 
+/* ---- Precision Ascent reward (floor 20): claim 20% off the next project; the code goes to the studio inbox ---- */
+function openReward(code,floor){
+  fpSec=(screenEl&&[...screenEl.classList].find(c=>c.startsWith("sec-")))||"sec-play";
+  const p=openPanel(`<b>Ascent reward</b> · 20% off`,`<h3 class="pdfp-h">Claim your 20% off</h3>
+  <p class="dep">You climbed to floor ${floor||20}. Send this and we'll reply by email with your 20% off locked in for your next project. Your code: <b>${e(code||"PDG20")}</b></p>
+  <form novalidate>
+    <div class="row"><label>${lab("Name",1)}<input name="name" autocomplete="name" required></label><label>${lab("Email",1)}<input name="email" type="email" autocomplete="email" required></label></div>
+    <div class="row"><label>${lab("Brand name")}<input name="brand" autocomplete="organization"></label><label>${lab("Project type")}<select name="type"><option value="">Not sure yet</option>${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></label></div>
+    <label>${lab("What do you want made?")}<textarea name="notes" rows="3" placeholder="Optional. A sentence or two is plenty."></textarea></label>
+    <div class="ts"></div>
+    <div class="foot"><button class="go" type="submit">Claim 20% off</button><span class="st" role="status" aria-live="polite"></span></div>
+  </form>`);if(!p)return;
+  const f=p.querySelector("form");
+  wireForm(f,{required:["name","email"],build:v=>{const msg=["PRECISION ASCENT REWARD: 20% OFF NEXT PROJECT","",`Code: ${code}`,`Reached floor: ${floor||20}`,`Name: ${v("name")}`,`Email: ${v("email")}`,`Brand: ${v("brand")||"—"}`,`Project type: ${v("type")||"Not sure yet"}`,`Notes: ${v("notes")||"—"}`,"","Reply to confirm the 20% off on their next project."].join("\n");
+    return {form:"ascent_reward",subject:"Ascent reward claim: 20% off ("+code+")",fields:{Name:v("name"),Email:v("email"),Business:v("brand"),Website:"",Message:msg}}},
+    onDone:(ok,v)=>{try{localStorage.setItem("pd-ascent-claimed",code)}catch(_){}
+      p.querySelector(".st0").innerHTML="<b>Claimed</b>";p.querySelector(".svf-body").innerHTML=`<div class="done"><h3>${ok?"You're all set":"Almost there"}</h3><p>${ok?`Thanks, ${e(v("name").split(" ")[0])}. We got your code <b>${e(code)}</b> and we'll reply by email to lock in your 20% off.`:"Your email app should have opened with your claim filled in. Hit send and we'll reply."}</p></div>`}});
+}
+window.pdOpenReward=openReward;
+
 /* ---- per-project hook: GA view, share address, links ---- */
 let cur=null,curSec=null,vt=0,lastViewed="";
 const pjLink=document.getElementById("pjLink");
@@ -1620,7 +1640,7 @@ try{
   if (!screenEl || !rail || !panel) return;
   const $ = (s) => panel.querySelector(s);
   const cv = $("#gCanvas"), ctx = cv.getContext("2d", { willReadFrequently: true }), wrap = $(".g-stage");
-  const ui = { floor: $("#gFloor"), h: $("#gH"), falls: $("#gFalls"), best: $("#gBest"), best2: $("#gBest2"), banner: $("#gBanner"), title: $("#gTitle"), start: $("#gStart"), exit: $("#gExit"), post: $("#gPost") };
+  const ui = { floor: $("#gFloor"), h: $("#gH"), falls: $("#gFalls"), best: $("#gBest"), best2: $("#gBest2"), banner: $("#gBanner"), reward: $("#gReward"), claim: $("#gClaim"), title: $("#gTitle"), start: $("#gStart"), exit: $("#gExit"), post: $("#gPost") };
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const SPR = 20, F = 26, TILT = .3, K = 2 * Math.PI / SPR, MAXV = 7.5;
@@ -1924,6 +1944,30 @@ try{
     try { window.gtag && gtag("event", "game_pick_open"); } catch {}
   }
 
+  /* ---------- floor 20 reward: 20% off the next project. Earned once per browser; the code is kept so it can be claimed later
+     from the title card. "Claim" opens a form (live.js pdOpenReward) that sends the code to the studio inbox. ---------- */
+  const REWARD_FLOOR = 20; let rewardOn = false;
+  const rewardCode = () => { try { return localStorage.getItem("pd-ascent-reward") || ""; } catch { return ""; } };
+  function newCode() { const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c = ""; for (let i = 0; i < 4; i++) c += A[Math.floor(Math.random() * A.length)]; return "PDG20-" + c; }
+  function showClaimLink() { if (ui.claim) ui.claim.hidden = !rewardCode(); }
+  function showReward() {
+    if (!ui.reward) return;
+    const code = newCode(); try { localStorage.setItem("pd-ascent-reward", code); } catch {}
+    $("#gRwCode").textContent = code;
+    const cf = ui.reward.querySelector(".gr-confetti"); cf.innerHTML = Array.from({ length: 26 }, (_, i) => `<i style="left:${(i * 37 + 7) % 100}%;--dx:${(i % 5 - 2) * 14}px;animation-duration:${2.2 + (i % 7) * .35}s;animation-delay:${-(i % 9) * .3}s"></i>`).join("");
+    rewardOn = true; holdDir = keyDir = 0; pending = 0; power = Math.max(power, 3);
+    ui.reward.hidden = false; showClaimLink();
+    [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => tone(f, i > 4 ? .22 : .1, "square", .05, 0, i * .09));
+    try { navigator.vibrate && navigator.vibrate([30, 40, 30, 40, 60]); } catch {}
+    try { window.gtag && gtag("event", "game_reward", { floor: REWARD_FLOOR }); } catch {}
+    setTimeout(() => { try { $("#gRwClaim").focus({ preventScroll: true }); } catch {} }, 400);
+  }
+  function hideReward() { if (ui.reward) ui.reward.hidden = true; rewardOn = false; }
+  function claimReward() { const code = rewardCode(); hideReward(); if (playing) exit(); if (window.pdOpenReward) window.pdOpenReward(code, REWARD_FLOOR); }
+  if (ui.reward) { $("#gRwLater").addEventListener("click", () => { hideReward(); try { crank.focus({ preventScroll: true }); } catch {} }); $("#gRwClaim").addEventListener("click", claimReward); }
+  if (ui.claim) ui.claim.addEventListener("click", claimReward);
+  showClaimLink();
+
   /* ---------- run control ---------- */
   function start() {
     playing = true; jumpT = 0; sp = .5; camH = 0; camA = .5; cp = 0; falls = 0; dead = 0; invul = 1; pending = 0; t = 0; lastStep = 0; got = 0; power = 0; sword = false; slashT = 0; taken.clear(); slain.clear();
@@ -1934,6 +1978,7 @@ try{
   function exit() {
     closeAudio();
     playing = false; holdDir = keyDir = 0; pending = 0;
+    hideReward(); showClaimLink();
     screenEl.classList.remove("gaming"); document.documentElement.classList.remove("pd-gaming"); if (pick) pick.hidden = true; ui.title.hidden = false; hud();
     try { rail.focus({ preventScroll: true }); } catch {}
   }
@@ -2299,7 +2344,8 @@ try{
       camA += (sp - camA) * Math.min(1, dt * 8); camH += (footH(sp) - camH) * Math.min(1, dt * 6); face = 1;
       return;
     }
-    if (dead > 0) {
+    if (rewardOn) { /* paused on the floor 20 reward card */ }
+    else if (dead > 0) {
       dead -= dt;
       if (dead <= 0) { dead = 0; sp = L0(cp) + .6; camA = sp; invul = 1.2; pending = 0; tone(392, .08); }
     } else {
@@ -2321,6 +2367,7 @@ try{
         const next = floorData(n), tip = next.doors.length ? "Boulders ahead — jump them or duck into doorways" : n === 1 ? "Ghosts: jump over them" : n === 2 ? "Blades: go when they swing away — jumping won't help" : "";
         const tip2 = n === 9 ? (sword ? "A monster! Walk into it with your sword" : "A monster! Jump it, or get 9 posters for the sword") : tip;
         banner(`Floor ${String(cp + 1).padStart(2, "0")}`, tip2); tone(659, .1); setTimeout(() => tone(988, .16), 100);
+        if (cp + 1 === REWARD_FLOOR && !rewardCode()) showReward();
       }
       // collisions
       if (sword) { const fNow = Math.floor(sp / F);
@@ -2367,7 +2414,7 @@ try{
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => setTimeout(readColors, 30));
   setActive(screenEl.classList.contains("sec-play"));
   hud();
-  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get posters() { return got; }, set posters(v) { got = v; }, get power() { return power; }, set power(v) { power = v; }, collect, get sword() { return sword; }, get floor() { return cp + 1; } };
+  window.pdAscent = { jump, ghost: () => { for (const h of floorData(Math.floor(sp / F)).hz) if (h.t === "ghost") return state(h, t).s; return null; }, start, exit, get s() { return sp; }, set s(v) { sp = v; camA = v; }, get falls() { return falls; }, get posters() { return got; }, set posters(v) { got = v; }, get power() { return power; }, set power(v) { power = v; }, collect, get sword() { return sword; }, showReward, get rewardOn() { return rewardOn; }, get floor() { return cp + 1; } };
 })();
 
 }catch(e){console.error("game.js",e)}
