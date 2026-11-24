@@ -857,6 +857,40 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .soon-a { color: inherit; font-size: 14px; opacity: .75; text-underline-offset: 3px; }
 .soon-a:hover { opacity: 1; }
 
+/* ---------- floor 20 reward: 20% off the next project ---------- */
+.g-reward { position: absolute; inset: 0 0 46px; z-index: 5; display: grid; place-items: center; padding: 0 var(--gr, 0px) 0 var(--gl, 0px); overflow: hidden; background: rgba(8, 8, 8, .72); animation: grIn .35s ease-out backwards; }
+.g-reward[hidden] { display: none; }
+@keyframes grIn { from { opacity: 0; } }
+.gr-rays { position: absolute; left: 50%; top: 50%; width: 220vmax; height: 220vmax; margin: -110vmax 0 0 -110vmax; opacity: .22;
+  background: repeating-conic-gradient(#fff 0 6deg, transparent 6deg 18deg); animation: grSpin 14s linear infinite; }
+@keyframes grSpin { to { rotate: 360deg; } }
+.gr-confetti { position: absolute; inset: 0; pointer-events: none; }
+.gr-confetti i { position: absolute; top: -12px; width: 6px; height: 6px; background: #fff; animation: grFall linear infinite; }
+.gr-confetti i:nth-child(3n) { width: 4px; height: 10px; }
+.gr-confetti i:nth-child(4n) { background: transparent; border: 2px solid #fff; }
+@keyframes grFall { to { translate: var(--dx, 0) 110vh; rotate: 540deg; } }
+.gr-card { position: relative; display: grid; justify-items: center; gap: 10px; width: min(340px, calc(100% - 20px)); padding: 22px 16px 20px; text-align: center;
+  background: var(--bg); color: var(--ink); border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink); animation: grPop .7s .15s backwards; }
+@keyframes grPop { 0% { opacity: 0; scale: .2; animation-timing-function: cubic-bezier(.2, .7, .3, 1); } 15% { opacity: 1; } 55% { scale: 1.12; animation-timing-function: ease-in-out; } 78% { scale: .95; } 100% { scale: 1; } }
+.gr-k, .gr-sub, .gr-code i, .gr-later, .gr-claim { font-family: "Silkscreen", var(--font-mono); letter-spacing: .04em; text-transform: uppercase; }
+.gr-k { margin: 0; font-size: 11px; color: var(--ink-soft); }
+.gr-h { margin: 0; display: grid; font-family: "Silkscreen", var(--font-mono); font-weight: 700; line-height: .85; text-transform: uppercase; }
+.gr-h span:first-child { font-size: clamp(3.6rem, 16vw, 5.4rem); letter-spacing: -.02em; animation: grStamp .55s .55s backwards; }
+.gr-h span:last-child { font-size: clamp(1.6rem, 7vw, 2.4rem); animation: grStamp .55s .7s backwards; }
+@keyframes grStamp { 0% { opacity: 0; scale: 2.6; } 60% { opacity: 1; scale: .92; } 100% { scale: 1; } }
+.gr-h em { font-style: normal; font-family: "Big Shoulders Display", var(--font-display); font-weight: 900; margin-left: .04em; }
+.gr-sub { margin: 0; font-size: 10px; max-width: 26ch; }
+.gr-code { margin: 4px 0 0; display: grid; gap: 4px; padding: 8px 14px; border: 1px dashed var(--ink); animation: grIn .4s 1s backwards; }
+.gr-code i { font-style: normal; font-size: 9px; color: var(--ink-soft); }
+.gr-code b { font-family: "Silkscreen", var(--font-mono); font-size: clamp(13px, 4vw, 18px); white-space: nowrap; letter-spacing: .08em; user-select: all; -webkit-user-select: all; }
+.gr-btns { display: grid; gap: 8px; justify-items: center; margin-top: 6px; animation: grIn .4s 1.15s backwards; }
+.gr-btns .g-go { height: 38px; padding: 0 18px; font-size: 12px; }
+.gr-later { border: 0; background: none; color: var(--ink-soft); font-size: 10px; cursor: pointer; padding: 6px; text-decoration: underline; text-underline-offset: 3px; }
+.gr-claim { justify-self: start; border: 1px solid var(--ink); background: var(--ink); color: var(--bg); font-size: 10px; padding: 8px 10px; cursor: pointer; text-align: left; animation: grBlink 1.6s steps(2) infinite; }
+.gr-claim[hidden] { display: none; }
+@keyframes grBlink { 50% { background: var(--bg); color: var(--ink); } }
+@media (prefers-reduced-motion: reduce) { .gr-rays, .gr-confetti, .gr-claim { animation: none !important; } }
+
 /* ---------- first-visit intro: the page comes together, then the side nav pops out like a bubble.
    main script adds html.pd-intro once per browser (localStorage "pd-v2-intro"); ?intro=1 replays it. Off for reduced motion.
    Fill mode is "backwards" on purpose: a leftover scale on .screen would trap the full-frame game (position: fixed) inside it. */
@@ -963,6 +997,7 @@ html.pd-intro.pd-gaming .screen { animation: none; }
               <h2 class="g-head"><span>Precision</span><span class="on">Ascent</span></h2>
               <div class="g-quick"><span class="q"><b>Best floor <span id="gBest2">00</span></b> · Endless tower</span><button class="g-go" id="gStart" type="button">Pick your climber →</button></div>
               <p class="g-lede">Your dial turns into a crank. Turn it up to climb, back it off to dodge. Every floor saves your spot. Each poster gives you invincibility. Collect nine to fight the monsters.</p>
+              <button class="gr-claim" id="gClaim" type="button" hidden>★ You reached floor 20 · Claim your 20% off →</button>
               <ul class="g-keys"><li><b>Dial</b>Drag or scroll</li><li><b>Hold</b>Top climbs · bottom backs off</li><li><b>Jump</b>Button or space · clears spikes, ghosts &amp; boulders</li><li><b>Posters</b>Jump into them to collect</li><li><b>Keys</b>↑ ↓ · Esc to quit</li></ul>
             </div>
             <div class="g-title g-pick" id="gPick" hidden>
@@ -983,6 +1018,16 @@ html.pd-intro.pd-gaming .screen { animation: none; }
               <button class="g-exit" id="gExit" type="button">Quit</button>
             </div>
             <div class="g-banner" id="gBanner" aria-live="assertive"></div>
+            <div class="g-reward" id="gReward" role="dialog" aria-modal="true" aria-labelledby="gRwH" hidden>
+              <div class="gr-rays" aria-hidden="true"></div><div class="gr-confetti" aria-hidden="true"></div>
+              <div class="gr-card">
+                <p class="gr-k">Floor 20 reached</p>
+                <h3 class="gr-h" id="gRwH"><span>20<em>%</em></span><span>off</span></h3>
+                <p class="gr-sub">your next project with Precision Design</p>
+                <p class="gr-code"><i>Your code</i><b id="gRwCode">PDG20</b></p>
+                <div class="gr-btns"><button class="g-go" id="gRwClaim" type="button">Claim my 20% →</button><button class="gr-later" id="gRwLater" type="button">Keep climbing</button></div>
+              </div>
+            </div>
           </div>
         </div>
         <!-- APPAREL / COLLECTIONS: placeholders until photos arrive -->

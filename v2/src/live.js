@@ -196,6 +196,26 @@ function openNYP(){
 }
 window.pdOpenNYP=openNYP;
 
+/* ---- Precision Ascent reward (floor 20): claim 20% off the next project; the code goes to the studio inbox ---- */
+function openReward(code,floor){
+  fpSec=(screenEl&&[...screenEl.classList].find(c=>c.startsWith("sec-")))||"sec-play";
+  const p=openPanel(`<b>Ascent reward</b> · 20% off`,`<h3 class="pdfp-h">Claim your 20% off</h3>
+  <p class="dep">You climbed to floor ${floor||20}. Send this and we'll reply by email with your 20% off locked in for your next project. Your code: <b>${e(code||"PDG20")}</b></p>
+  <form novalidate>
+    <div class="row"><label>${lab("Name",1)}<input name="name" autocomplete="name" required></label><label>${lab("Email",1)}<input name="email" type="email" autocomplete="email" required></label></div>
+    <div class="row"><label>${lab("Brand name")}<input name="brand" autocomplete="organization"></label><label>${lab("Project type")}<select name="type"><option value="">Not sure yet</option>${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></label></div>
+    <label>${lab("What do you want made?")}<textarea name="notes" rows="3" placeholder="Optional. A sentence or two is plenty."></textarea></label>
+    <div class="ts"></div>
+    <div class="foot"><button class="go" type="submit">Claim 20% off</button><span class="st" role="status" aria-live="polite"></span></div>
+  </form>`);if(!p)return;
+  const f=p.querySelector("form");
+  wireForm(f,{required:["name","email"],build:v=>{const msg=["PRECISION ASCENT REWARD: 20% OFF NEXT PROJECT","",`Code: ${code}`,`Reached floor: ${floor||20}`,`Name: ${v("name")}`,`Email: ${v("email")}`,`Brand: ${v("brand")||"—"}`,`Project type: ${v("type")||"Not sure yet"}`,`Notes: ${v("notes")||"—"}`,"","Reply to confirm the 20% off on their next project."].join("\n");
+    return {form:"ascent_reward",subject:"Ascent reward claim: 20% off ("+code+")",fields:{Name:v("name"),Email:v("email"),Business:v("brand"),Website:"",Message:msg}}},
+    onDone:(ok,v)=>{try{localStorage.setItem("pd-ascent-claimed",code)}catch(_){}
+      p.querySelector(".st0").innerHTML="<b>Claimed</b>";p.querySelector(".svf-body").innerHTML=`<div class="done"><h3>${ok?"You're all set":"Almost there"}</h3><p>${ok?`Thanks, ${e(v("name").split(" ")[0])}. We got your code <b>${e(code)}</b> and we'll reply by email to lock in your 20% off.`:"Your email app should have opened with your claim filled in. Hit send and we'll reply."}</p></div>`}});
+}
+window.pdOpenReward=openReward;
+
 /* ---- per-project hook: GA view, share address, links ---- */
 let cur=null,curSec=null,vt=0,lastViewed="";
 const pjLink=document.getElementById("pjLink");
