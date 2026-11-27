@@ -390,8 +390,8 @@ body { -webkit-font-smoothing: antialiased; }
   touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; transition: opacity .3s var(--ease-out), transform .4s var(--ease-spring), visibility .3s; }
 .jog.dragging { cursor: grabbing; }
 .jog:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.screen:not(.work):not(.sec-process):not(.sec-studio) .jog { opacity: 0; visibility: hidden; transform: scale(.85); pointer-events: none; }
-.screen.sec-process .jog-num, .screen.sec-studio .jog-num { opacity: 0; }
+.screen:not(.work):not(.sec-process):not(.sec-studio):not(.sec-sale) .jog { opacity: 0; visibility: hidden; transform: scale(.85); pointer-events: none; }
+.screen.sec-process .jog-num, .screen.sec-studio .jog-num, .screen.sec-sale .jog-num { opacity: 0; }
 .jog-ticks { position: absolute; inset: 0; -webkit-mask: linear-gradient(transparent, #000 30%, #000 70%, transparent); mask: linear-gradient(transparent, #000 30%, #000 70%, transparent); }
 .jog-ticks i { position: absolute; left: 50%; top: 50%; width: 22px; height: 2px; margin: -1px 0 0 -11px; border-radius: 2px; background: var(--frame-line); will-change: transform; }
 .jog-ticks i.major { width: 30px; margin-left: -15px; background: #6a6c72; }
@@ -885,6 +885,59 @@ header .cw-wrap .cw-label { max-width: 72vw; }
 .gr-claim[hidden] { display: none; }
 @keyframes grBlink { 50% { background: var(--bg); color: var(--ink); } }
 @media (prefers-reduced-motion: reduce) { .gr-rays, .gr-confetti, .gr-claim { animation: none !important; } }
+
+/* ---------- Black Friday weekend: coin drop (temporary) ---------- */
+.screen.sec-sale .headline-wrap { visibility: hidden; }
+.screen.sec-sale [data-panel="sale"] { position: absolute; inset: 0; z-index: 1; }
+.screen.sec-sale .top { position: relative; z-index: 3; }
+.sl { --gl: 34px; --gr: calc(var(--rail-w) + 64px); position: absolute; inset: 0; padding: 96px var(--gr) 28px var(--gl); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 34px; align-items: stretch; }
+.screen.left .sl { --gl: calc(var(--rail-w) + 64px); --gr: 34px; }
+.sl-info { align-self: center; display: grid; gap: 16px; min-width: 0; }
+.sl-days { margin: 0; display: grid; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .9; letter-spacing: -.01em; font-size: clamp(2.2rem, 4.6vw, 4.6rem); }
+.sl-days span { opacity: .18; animation: stUp .5s var(--ease-out) backwards; }
+.sl-days span:nth-child(2) { animation-delay: .06s; } .sl-days span:nth-child(3) { animation-delay: .12s; }
+.sl-days span.on { opacity: 1; }
+.sl-lede { margin: 0; max-width: 34ch; font-size: 15px; line-height: 1.45; color: var(--ink-soft); text-wrap: pretty; }
+.sl-lede b { color: var(--ink); font-weight: 600; }
+.sl-cd { margin: 0; font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.sl-cd b { color: var(--ink); font-weight: 600; }
+.sl-how { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; counter-reset: sl; }
+.sl-how li { counter-increment: sl; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--ink-soft); }
+.sl-how li::before { content: counter(sl, decimal-leading-zero) "  "; color: var(--ink); }
+.sl-play { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; min-height: 0; }
+.sl-board { position: relative; min-height: 0; display: grid; place-items: center; }
+.sl-board canvas { position: absolute; left: 50%; top: 50%; translate: -50% -50%; display: block; touch-action: none; cursor: grab; border-radius: 18px; background: var(--glass); border: 1px solid var(--glass-line); }
+.sl-ctrl { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.sl-go { border: 0; cursor: pointer; height: 44px; padding: 0 22px; border-radius: 999px; background: var(--ink); color: var(--bg); font: 600 14px var(--font-ui); transition: transform .2s var(--ease-spring); }
+.sl-go:active { transform: scale(.95); }
+.sl-go:disabled { opacity: .55; cursor: default; }
+.sl-go[hidden], .sl-msg[hidden] { display: none; }
+.sl-msg { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.sl-res { position: absolute; left: 50%; top: 50%; z-index: 2; translate: -50% -50%; width: min(330px, 100%); display: grid; justify-items: center; gap: 10px; padding: 22px 20px; text-align: center;
+  background: var(--bg); color: var(--ink); border: 1px solid var(--glass-line); border-radius: 22px; box-shadow: 0 24px 60px rgba(0, 0, 0, .28); }
+.sl-res[hidden] { display: none; }
+.sl-res.fresh { animation: grPop .7s .1s backwards; }
+.sl-res p { margin: 0; }
+.sl-k, .sl-code i { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); font-style: normal; }
+.sl-big { display: grid; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; line-height: .85; }
+.sl-big span:first-child { font-size: clamp(4rem, 9vw, 6rem); }
+.sl-big span:last-child { font-size: 2rem; }
+.sl-res.fresh .sl-big span { animation: grStamp .55s .45s backwards; }
+.sl-res.fresh .sl-big span:last-child { animation-delay: .6s; }
+.sl-big.sl-none span:first-child { font-size: clamp(2.6rem, 6vw, 3.6rem); }
+.sl-sub { font-size: 13px; line-height: 1.4; color: var(--ink-soft); max-width: 28ch; }
+.sl-code { display: grid; gap: 4px; padding: 8px 16px; border: 1px dashed var(--ink-soft); border-radius: 12px; }
+.sl-code b { font-family: var(--font-mono); font-size: 17px; letter-spacing: .1em; user-select: all; -webkit-user-select: all; }
+@media (max-width: 720px) {
+  .sl { --gl: 20px; --gr: calc(var(--rail-w) + 40px); padding-top: 86px; padding-bottom: 16px; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 12px; }
+  .screen.left .sl { --gl: calc(var(--rail-w) + 40px); --gr: 20px; }
+  .sl-info { align-self: start; gap: 8px; }
+  .sl-days { font-size: clamp(1.25rem, 6.4vw, 1.9rem); }
+  .sl-lede { font-size: 12.5px; }
+  .sl-how { display: none; }
+  .sl-go { height: 40px; padding: 0 18px; font-size: 13px; }
+  .sl-msg { display: none; }
+}
 
 /* ---------- first-visit intro: the page comes together, then the side nav pops out like a bubble.
    main script adds html.pd-intro once per browser (localStorage "pd-v2-intro"); ?intro=1 replays it. Off for reduced motion.

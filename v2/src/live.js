@@ -216,6 +216,26 @@ function openReward(code,floor){
 }
 window.pdOpenReward=openReward;
 
+/* ---- Black Friday weekend coin drop: claim the discount (or just start a project); the code goes to the studio inbox ---- */
+function openSaleClaim(pct,code){
+  fpSec="sec-sale";
+  const p=openPanel(`<b>Black Friday weekend</b> · ${pct?pct+"% off":"Start a project"}`,`<h3 class="pdfp-h">${pct?`Claim your ${pct}% off`:"Start a project"}</h3>
+  <p class="dep">${pct?`Your coin landed on <b>${pct}% off</b> a new project. Send this and we'll reply by email to lock it in. Your code: <b>${e(code)}</b>`:"Tell us what you need. New projects are on sale through Cyber Monday and we'll reply by email."}</p>
+  <form novalidate>
+    <div class="row"><label>${lab("Name",1)}<input name="name" autocomplete="name" required></label><label>${lab("Email",1)}<input name="email" type="email" autocomplete="email" required></label></div>
+    <div class="row"><label>${lab("Brand name")}<input name="brand" autocomplete="organization"></label><label>${lab("Project type")}<select name="type"><option value="">Not sure yet</option>${TYPES.map(t=>`<option>${t}</option>`).join("")}</select></label></div>
+    <label>${lab("What do you want made?")}<textarea name="notes" rows="3" placeholder="Optional. A sentence or two is plenty."></textarea></label>
+    <div class="ts"></div>
+    <div class="foot"><button class="go" type="submit">${pct?`Claim ${pct}% off`:"Send"}</button><span class="st" role="status" aria-live="polite"></span></div>
+  </form>`);if(!p)return;
+  const f=p.querySelector("form");
+  wireForm(f,{required:["name","email"],build:v=>{const msg=[pct?`BLACK FRIDAY COIN DROP: ${pct}% OFF NEW PROJECT`:"BLACK FRIDAY WEEKEND INQUIRY (coin landed on no luck)","",pct?`Code: ${code}`:"",`Name: ${v("name")}`,`Email: ${v("email")}`,`Brand: ${v("brand")||"—"}`,`Project type: ${v("type")||"Not sure yet"}`,`Notes: ${v("notes")||"—"}`,"",pct?`Reply to confirm ${pct}% off their new project.`:""].filter((x,i,a)=>x||a[i-1]).join("\n");
+    return {form:"black_friday",subject:pct?`Black Friday claim: ${pct}% off (${code})`:"Black Friday weekend inquiry",fields:{Name:v("name"),Email:v("email"),Business:v("brand"),Website:"",Message:msg}}},
+    onDone:(ok,v)=>{try{localStorage.setItem("pd-sale-claimed",code||"inquiry")}catch(_){}
+      p.querySelector(".st0").innerHTML="<b>Sent</b>";p.querySelector(".svf-body").innerHTML=`<div class="done"><h3>${ok?"You're all set":"Almost there"}</h3><p>${ok?`Thanks, ${e(v("name").split(" ")[0])}. ${pct?`We got your code <b>${e(code)}</b> and we'll reply by email to lock in your ${pct}% off.`:"We'll reply by email."}`:"Your email app should have opened with everything filled in. Hit send and we'll reply."}</p></div>`}});
+}
+window.pdOpenSaleClaim=openSaleClaim;
+
 /* ---- per-project hook: GA view, share address, links ---- */
 let cur=null,curSec=null,vt=0,lastViewed="";
 const pjLink=document.getElementById("pjLink");
